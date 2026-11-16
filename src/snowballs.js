@@ -16,30 +16,15 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
       if (!active() || e.button !== 0 || held || e.target.closest(excluded))
         return;
       const p = point(e);
-      if (
-        !particles().some(
-          (s) =>
-            s.kind === "winter" &&
-            s.rest &&
-            Math.hypot(s.x - p.x, s.y - p.y) < 42,
-        )
-      ) {
-        announce(
-          en
-            ? "Start on a patch of settled snow."
-            : "Parti da un accumulo di neve.",
-        );
-        return;
-      }
       e.preventDefault();
       held = {
         id: e.pointerId,
         x: p.x,
         y: p.y,
         target: p,
-        radius: 5,
+        radius: 12,
         age: 0,
-        collected: 0,
+        collected: 20,
       };
       document.documentElement.setPointerCapture(e.pointerId);
     },
@@ -154,6 +139,7 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
     if (held) {
       if (animate) {
         held.age += dt;
+        held.collected += dt * 18;
         const reach = 35 + Math.min(25, held.age * 12);
         let budget = 8;
         for (const p of particles())

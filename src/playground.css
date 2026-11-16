@@ -685,3 +685,13 @@ body[data-season="winter"] .skill-tags span,
 body[data-season="winter"] .approach-list article {
   border-color: #b0c1cf;
 }
+
+/* Suppress selection only while the user explicitly uses the snowball tool. */
+body.snowball-mode:not(.no-play) main {
+  touch-action: none;
+}
+body.snowball-mode:not(.no-play) main,
+body.snowball-mode:not(.no-play) main * {
+  user-select: none;
+  -webkit-user-select: none;
+}

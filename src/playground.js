@@ -476,6 +476,7 @@
       "aria-pressed",
       String(!!tool),
     );
+    document.body.classList.toggle("snowball-mode", tool === "snowball");
     cursor.innerHTML = tool ? svg(tool) : "";
     cursor.hidden = true;
     document.body.classList.remove("tool-pointer-active");
@@ -493,8 +494,8 @@
           )
         : tool === "snowball"
           ? t(
-              "Palla di neve · Tieni premuto sulla neve, trascina e rilascia per lanciarla. Esc per finire.",
-              "Snowball · Hold on settled snow, drag and release to throw. Esc to finish.",
+              "Palla di neve · Trascina da un punto qualsiasi e rilascia per lanciare. Esc per uscire.",
+              "Snowball · Drag from anywhere and release to throw. Esc to exit.",
             )
           : tool === "plant"
             ? t(
