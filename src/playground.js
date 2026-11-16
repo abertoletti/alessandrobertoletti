@@ -6,11 +6,11 @@
   const icons = {
     autumn: '<path d="M19.5 3.5C12 3 5 6 5 12a6 6 0 0 0 6 6c6 0 8.5-7 8.5-14.5Z" fill="#d4a373" stroke="#9b693f"/><path d="M3.5 21 15 8.5m-7 8v-5m3 2 5-.5" stroke="#9b693f"/>',
     winter: '<path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 4l3 3 3-3M9 20l3-3 3 3M4 10l4-1-1-4M17 19l-1-4 4-1M4 14l4 1-1 4M17 5l-1 4 4 1"/>',
-    spring: '<path d="M12 21v-7m0 5c-3 0-5-2-5-4 3 0 5 2 5 4" stroke="#729474"/><g fill="#e6b5bf" stroke="#bb7e90" stroke-width="1"><path d="M12 11C7 8 8 3 11 3c2 0 3 4 1 8Z"/><path d="M12 11c1-6 6-8 7-5 1 2-2 5-7 5Z"/><path d="M12 11c6-1 9 3 6 5-2 2-5-1-6-5Z"/><path d="M12 11c3 5 0 9-3 7-2-1-1-5 3-7Z"/><path d="M12 11c-4 4-9 2-8-1 0-3 5-3 8 1Z"/></g><circle cx="12" cy="11" r="2.3" fill="#efd18a" stroke="#c09e55" stroke-width="1"/>',
+    spring: '<path d="M11 12C8 4 2 2 3 9c0 4 4 5 8 4-6 0-8 6-4 7 3 1 4-3 5-6m1-2c3-8 9-10 8-3 0 4-4 5-8 4 6 0 8 6 4 7-3 1-4-3-5-6" fill="#d1b9d3" stroke="#927c99"/><path d="M12 9v9m0-9-2-3m2 3 2-3" stroke="#756b67"/>',
     summer: '<circle cx="12" cy="12" r="5.5" fill="#edc778" stroke="#bc924a"/><path d="M12 1v1.5m0 19V23M1 12h1.5m19 0H23M4.2 4.2l1.1 1.1m13.4 13.4 1.1 1.1M4.2 19.8l1.1-1.1M18.7 5.3l1.1-1.1" stroke="#bc924a"/>',
     none: '<path d="M12 2v9M6.5 5.5a8 8 0 1 0 11 0" stroke-width="1.8"/>',
     smooth: '<path d="M2 18c3 0 4-2 5-5 1-5 5-8 9-6-5 0-5 6-1 7 3 1 4-1 7-1v7H2Z" fill="#9fc7c5" stroke="#477f8b"/><path d="M3 21h18M11 10c1-2 3-3 5-3" stroke="#477f8b"/>',
-    plant: '<path d="M12 22V12C5 13 3 8 4 4c6 0 9 3 8 8Zm0 3c0-7 4-11 9-11 1 6-2 10-9 11Z" fill="#c4d5af" stroke="#66855d"/>',
+    plant: '<path d="M12 21v-7m0 5c-3 0-5-2-5-4 3 0 5 2 5 4" stroke="#729474"/><g fill="#e6b5bf" stroke="#bb7e90" stroke-width="1"><path d="M12 11C7 8 8 3 11 3c2 0 3 4 1 8Z"/><path d="M12 11c1-6 6-8 7-5 1 2-2 5-7 5Z"/><path d="M12 11c6-1 9 3 6 5-2 2-5-1-6-5Z"/><path d="M12 11c3 5 0 9-3 7-2-1-1-5 3-7Z"/><path d="M12 11c-4 4-9 2-8-1 0-3 5-3 8 1Z"/></g><circle cx="12" cy="11" r="2.3" fill="#efd18a" stroke="#c09e55" stroke-width="1"/>',
     breeze: '<path d="M2 7h14a3 3 0 1 0-3-3M2 12h20M2 17h14a3 3 0 1 1-3 3" stroke="#718b91" stroke-width="1.8"/>',
   };
   const svg = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon icon-${name}">${icons[name]}</svg>`;
@@ -125,7 +125,7 @@
   ui.querySelectorAll('.season-toggle').forEach(b=>b.addEventListener('click',()=>{const menu=document.getElementById(b.getAttribute('aria-controls'));const open=menu.hidden;closeMenus();menu.hidden=!open;b.setAttribute('aria-expanded',String(open));}));
   document.addEventListener('click',e=>{if(!ui.contains(e.target))closeMenus();});
   function particle(x,y,rest=null){const p={x,y,vx:rand(-10,15),vy:rand(18,48),size:season==='winter'?rand(1.3,3):rand(7,13),a:rand(0,6.28),spin:rand(-1.4,1.4),phase:rand(0,6.28),color:Math.floor(rand(0,4)),kind:season,rest,age:0,restAge:0,restLife:season==='winter'?rand(18,30):rand(12,22),species:season==='spring'&&(particles.filter(p=>p.kind==='spring').length%3===2)?'bee':'butterfly',bloom:0};particles.push(p);return p;}
-  function setSeason(next){season=next;washWave=null;selectTool('');flowers=[];sandDrawing=null;if(next!=='summer')sandStrokes=[];dirty=true;if(next==='none')selectTool('');updateAction();seaWind=0;wetSand=[];particles=[];spawn=0;document.body.dataset.season=next;const b=ui.querySelector('.season-toggle');b.setAttribute('aria-label',`${t('Scegli stagione','Choose season')}: ${names[next]}`);b.innerHTML=svg(next)+`<span>${names[next]}</span><span class="chevron">⌄</span>`;ui.querySelectorAll('[data-season-choice]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.seasonChoice===next)));if(dirty)measure();if(next!=='none'&&enabled()){
+  function setSeason(next){season=next;washWave=null;selectTool('');flowers=[];sandDrawing=null;if(next!=='summer')sandStrokes=[];dirty=true;if(next==='none')selectTool('');updateAction();seaWind=0;wetSand=[];particles=[];spawn=0;document.body.dataset.season=next;const b=ui.querySelector('.season-toggle');b.setAttribute('aria-label',`${t('Scegli stagione','Choose season')}: ${names[next]}`);b.innerHTML=svg(next)+`<span>${names[next]}</span><span class="chevron" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;ui.querySelectorAll('[data-season-choice]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.seasonChoice===next)));if(dirty)measure();if(next!=='none'&&enabled()){
     surfaces.forEach(s=>{if(next==='winter'&&(s.y<scrollY-60||s.y>scrollY+H+60))return;const count=next==='winter'?Math.min(45,Math.ceil(s.w/6)):next==='autumn'?(s.glyph?(Math.random()<.19?1:0):Math.min(4,Math.ceil(s.w/130))):0;for(let i=0;i<count;i++){const x=s.x+rand(1,Math.max(2,s.w-1));const p=particle(x,s.y-rand(0,3),s);p.offset=x-s.x;p.restAge=rand(0,p.restLife*.45);p.a=rand(-.5,.5);}});
     for(let i=0;i<(next==='winter'?60:next==='autumn'?12:next==='spring'?6:0);i++)particle(rand(0,W),scrollY+rand(0,H));
   }closeMenus();}
@@ -133,7 +133,7 @@
   function updateAction(){
     const action=ui.querySelector('.season-action');
     const icon=season==='summer'?'smooth':season==='spring'?'plant':'breeze';
-    const label=season==='summer'?t('Liscia la sabbia','Smooth the sand'):season==='spring'?t('Pianta un fiore','Plant a flower'):t('Brezza','Breeze');
+    const label=season==='summer'?t('Liscia la sabbia','Smooth the sand'):season==='spring'?t('Fai sbocciare','Make it bloom'):t('Brezza','Breeze');
     action.innerHTML=svg(icon)+`<span>${label}</span>`;action.setAttribute('aria-label',label);action.title=label;
     action.disabled=season==='none'||((season==='autumn'||season==='winter')&&(!enabled()||reduced.matches));
     if(season==='summer'&&washWave)action.disabled=true;
