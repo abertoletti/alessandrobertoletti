@@ -91,6 +91,11 @@ h3 { font-size:23px; font-weight:500; letter-spacing:-.5px; margin:8px 0; }
 .interests > div > span { font-size:16px; }
 .interests i { font-style:normal; font-size:13px; padding-left:12px; color:var(--muted); }
 .contact { background:#28362f; color:#f1f3ee; }
+.companies { padding:18px 0 65px; }
+.companies h2 { font-size:24px; letter-spacing:-.5px; }
+.company-logos { list-style:none; padding:0; margin:28px 0 0; display:grid; grid-template-columns:repeat(3,1fr); align-items:center; gap:32px; }
+.company-logos li { min-height:110px; display:flex; align-items:center; justify-content:center; }
+.company-logos img { max-width:100%; object-fit:contain; }
 .contact .eyebrow,.contact-bottom p { color:#b5c2b9; }
 .contact h2 { font-size:clamp(45px,5.5vw,72px); letter-spacing:-2.5px; }
 .contact .name-dot { color:#a4b7a5; }
@@ -160,6 +165,8 @@ footer button { border:0; background:transparent; font-size:10px; padding:15px; 
   .interests > div { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
   .interests > div > span { font-size:14px; }
   .contact h2 { font-size:44px; letter-spacing:-1.5px; }
+  .companies { padding-bottom:45px; }
+  .company-logos { gap:20px; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); }
   .contact-bottom { display:block; margin-top:28px; }
   .contact-bottom p { font-size:13px; }
   .contact-bottom a { display:inline-block; font-size:clamp(15px,4.4vw,21px); margin-top:25px; }

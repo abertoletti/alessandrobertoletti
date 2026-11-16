@@ -41,3 +41,11 @@ Timeline ricavata dal curriculum e corretta secondo le indicazioni del proprieta
 - GeoPieno: README, frontend/README.md e descrizione store 0.9.4 in frontend/marketing/releases/0.9.4/apple-review/metadata/store-listing-it.json del repository GeoPieno. Marchio da frontend/public/geopieno-mark-bare.svg.
 - Keepify: README, apps/website/README.md e docs/product/status.md del repository Keepify. Logo approvato da output/branding/keepify-brand-kit/brand/logo-color.svg. Le app mobile sono descritte come test privato, senza promettere disponibilità pubblica negli store.
 - Solo informazioni di prodotto e asset di branding: nessun dato di utenti, credenziale o registrazione importati.
+
+## Company logo sources
+
+The “Ho lavorato con / I’ve worked with” section reflects the employment and consulting relationships described by the owner. Original logo assets were retrieved from the official websites on 2026-11-16:
+
+- FrameTECH: https://www.longwave.it/chi-siamo/la-nostra-storia/ (historical company logo).
+- Logol: https://www.logol.com/.
+- Dynabit: https://www.dynabit.it/.
