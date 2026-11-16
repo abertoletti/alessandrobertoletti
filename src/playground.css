@@ -129,3 +129,7 @@ body[data-season=summer] .sand-hint,body[data-season=summer] .header { position:
 @media(pointer:coarse) { .sand-hint span { display:none; } }
 
 body[data-season=summer] { background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22240%22%20height%3D%22240%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%22.8%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22/%3E%3CfeColorMatrix%20type%3D%22saturate%22%20values%3D%220%22/%3E%3C/filter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url%28%23n%29%22%20opacity%3D%22.12%22/%3E%3C/svg%3E"); background-size:240px 240px; background-position:0 0; }
+
+/* The contextual action keeps its name visible, including on mobile. */
+.season-action span { display:inline!important; }
+@media(max-width:700px) { .season-action { font-size:10px; padding:6px 8px; gap:4px; } .season-action .icon { width:22px; height:22px; } .header-actions { gap:4px; } }

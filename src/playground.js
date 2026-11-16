@@ -9,12 +9,14 @@
     spring: '<path d="M12 21v-7m0 5c-3 0-5-2-5-4 3 0 5 2 5 4" stroke="#729474"/><g fill="#e6b5bf" stroke="#bb7e90" stroke-width="1"><path d="M12 11C7 8 8 3 11 3c2 0 3 4 1 8Z"/><path d="M12 11c1-6 6-8 7-5 1 2-2 5-7 5Z"/><path d="M12 11c6-1 9 3 6 5-2 2-5-1-6-5Z"/><path d="M12 11c3 5 0 9-3 7-2-1-1-5 3-7Z"/><path d="M12 11c-4 4-9 2-8-1 0-3 5-3 8 1Z"/></g><circle cx="12" cy="11" r="2.3" fill="#efd18a" stroke="#c09e55" stroke-width="1"/>',
     summer: '<circle cx="12" cy="12" r="5.5" fill="#edc778" stroke="#bc924a"/><path d="M12 1v1.5m0 19V23M1 12h1.5m19 0H23M4.2 4.2l1.1 1.1m13.4 13.4 1.1 1.1M4.2 19.8l1.1-1.1M18.7 5.3l1.1-1.1" stroke="#bc924a"/>',
     none: '<path d="M12 2v9M6.5 5.5a8 8 0 1 0 11 0" stroke-width="1.8"/>',
+    smooth: '<path d="M4 17h16M6 13h12M8 9h8m-4 0V3" stroke="#98794f"/><path d="M4 20h16" stroke="#c9ac7c"/>',
+    plant: '<path d="M12 22V12C5 13 3 8 4 4c6 0 9 3 8 8Zm0 3c0-7 4-11 9-11 1 6-2 10-9 11Z" fill="#c4d5af" stroke="#66855d"/>',
     breeze: '<path d="M2 7h14a3 3 0 1 0-3-3M2 12h20M2 17h14a3 3 0 1 1-3 3" stroke="#718b91" stroke-width="1.8"/>',
   };
   const svg = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon icon-${name}">${icons[name]}</svg>`;
   const names = {autumn:t('Autunno','Autumn'),winter:t('Inverno','Winter'),spring:t('Primavera','Spring'),summer:t('Estate','Summer'),none:t('Disattiva','Off')};
   const ui = document.createElement('div');ui.className='environment-controls';
-  ui.innerHTML=`<div class="control-group"><button class="environment-button season-toggle" aria-label="${t('Scegli stagione','Choose season')}" aria-expanded="false" aria-controls="season-menu"></button><div class="environment-menu" id="season-menu" hidden><p>${t('Un cambio di atmosfera','A change of atmosphere')}</p>${Object.keys(names).map(s=>`<button data-season-choice="${s}" aria-pressed="false">${svg(s)}<span>${names[s]}</span><span class="selected-mark" aria-hidden="true">✓</span></button>`).join('')}</div></div><button class="environment-button breeze-toggle" aria-pressed="false" aria-label="${t('Brezza','Breeze')}" disabled>${svg('breeze')}<span>${t('Brezza','Breeze')}</span></button>`;
+  ui.innerHTML=`<div class="control-group"><button class="environment-button season-toggle" aria-label="${t('Scegli stagione','Choose season')}" aria-expanded="false" aria-controls="season-menu"></button><div class="environment-menu" id="season-menu" hidden><p>${t('Un cambio di atmosfera','A change of atmosphere')}</p>${Object.keys(names).map(s=>`<button data-season-choice="${s}" aria-pressed="false">${svg(s)}<span>${names[s]}</span><span class="selected-mark" aria-hidden="true">✓</span></button>`).join('')}</div></div><button class="environment-button season-action breeze-toggle" aria-pressed="false" aria-label="${t('Brezza','Breeze')}" disabled>${svg('breeze')}<span>${t('Brezza','Breeze')}</span></button>`;
   document.querySelector('.header-actions').append(ui);
   const dock=document.createElement('div');dock.className='tool-dock';dock.hidden=true;dock.innerHTML='<span></span><button type="button">×</button>';document.body.append(dock);
   dock.querySelector('button').ariaLabel=t('Disattiva brezza','Turn breeze off');
@@ -22,10 +24,11 @@
   const sunlight=document.createElement('div');sunlight.className='summer-light';sunlight.setAttribute('aria-hidden','true');document.body.append(sunlight);
   const beach=document.createElement('div');beach.className='beach-end';beach.setAttribute('aria-hidden','true');document.body.append(beach);
   const beachHint=document.createElement('p');beachHint.className='sand-hint';
-  beachHint.innerHTML=`<span>${t('Tieni premuto e trascina sulla sabbia per lasciare un segno. Il mare ti aspetta in fondo.','Hold and drag on the sand to leave a mark. The sea awaits at the bottom.')}</span><button type="button">${t('Liscia la sabbia','Smooth the sand')}</button>`;
+  beachHint.innerHTML=`<span>${t('Tieni premuto e trascina sulla sabbia per lasciare un segno. Il mare ti aspetta in fondo.','Hold and drag on the sand to leave a mark. The sea awaits at the bottom.')}</span>`;
   document.querySelector('.hero').append(beachHint);
   let sandStrokes=[],sandDrawing=null;
-  beachHint.querySelector('button').onclick=()=>{sandStrokes=[];sandDrawing=null;};
+  let flowers=[];
+  const flowerStatus=document.createElement('span');flowerStatus.className='sr-only';flowerStatus.setAttribute('role','status');document.body.append(flowerStatus);
   document.addEventListener('pointerdown',e=>{
     if(season!=='summer'||tool||!enabled()||e.button!==0||e.pointerType==='touch'||e.target.closest('a,button,input,select,textarea,header,.tool-dock'))return;
     e.preventDefault();sandDrawing={points:[{x:e.clientX,y:e.clientY+scrollY,opacity:1}],id:e.pointerId};sandStrokes.push(sandDrawing);
@@ -42,12 +45,27 @@
   function drawSand(){
     ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
     for(const stroke of sandStrokes){
-      for(let i=1;i<stroke.points.length;i++){
-        const a=stroke.points[i-1],b=stroke.points[i];if(Math.max(a.y,b.y)<scrollY||Math.min(a.y,b.y)>scrollY+H)continue;
-        const opacity=Math.min(a.opacity,b.opacity);if(opacity<.02)continue;
-        ctx.globalAlpha=opacity;
-        for(const [offset,width,color] of [[1.5,4,'#fff3d99c'],[-.7,3,'#9c79455c'],[0,1.2,'#79572c55']]){
-          ctx.beginPath();ctx.moveTo(a.x,a.y-scrollY+offset);ctx.lineTo(b.x,b.y-scrollY+offset);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();
+      const points=stroke.points;
+      if(!points.some(p=>p.y>scrollY-30&&p.y<scrollY+H+30))continue;
+      const normal=i=>{const a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],l=Math.hypot(b.x-a.x,b.y-a.y)||1;return {x:-(b.y-a.y)/l,y:(b.x-a.x)/l};};
+      // Continuous banks avoid overlapping segment caps and dark joints.
+      for(const [offset,width,color] of [[0,15,'#d4b77f45'],[-5,4.5,'#f9e5bbbf'],[5,4,'#b6976570'],[0,7,'#a4835066'],[1,4,'#9875485c'],[-1.2,1.7,'#d1b37e99']]){
+        let bucket=-1;
+        ctx.strokeStyle=color;ctx.lineWidth=width;
+        for(let i=0;i<points.length;i++){
+          const p=points[i],n=normal(i),alpha=Math.round(p.opacity*10)/10;
+          const edge=offset+(Math.abs(offset)>3?Math.sin(i*.9)*.45:0);
+          const x=p.x+n.x*edge,y=p.y-scrollY+n.y*edge;
+          if(alpha!==bucket){if(bucket>=0)ctx.stroke();ctx.beginPath();ctx.globalAlpha=alpha;bucket=alpha;const prev=points[Math.max(0,i-1)],pn=normal(Math.max(0,i-1));ctx.moveTo(prev.x+pn.x*edge,prev.y-scrollY+pn.y*edge);}
+          ctx.lineTo(x,y);
+        }ctx.stroke();
+      }
+      for(let i=1;i<points.length;i++){
+        const p=points[i],n=normal(i);if(p.y<scrollY-20||p.y>scrollY+H+20)continue;
+        ctx.globalAlpha=p.opacity;
+        for(const side of [-1,1]){
+          const offset=side*(6+grain(i+points[0].y)*4);
+          ctx.fillStyle=side<0?'#fff0cd99':'#a98a5366';ctx.beginPath();ctx.ellipse(p.x+n.x*offset,p.y-scrollY+n.y*offset,.6+grain(i+9)*1.2,.4+grain(i+13)*.6,0,0,Math.PI*2);ctx.fill();
         }
       }
     }ctx.restore();
@@ -107,20 +125,31 @@
   ui.querySelectorAll('.season-toggle').forEach(b=>b.addEventListener('click',()=>{const menu=document.getElementById(b.getAttribute('aria-controls'));const open=menu.hidden;closeMenus();menu.hidden=!open;b.setAttribute('aria-expanded',String(open));}));
   document.addEventListener('click',e=>{if(!ui.contains(e.target))closeMenus();});
   function particle(x,y,rest=null){const p={x,y,vx:rand(-10,15),vy:rand(18,48),size:season==='winter'?rand(1.3,3):rand(7,13),a:rand(0,6.28),spin:rand(-1.4,1.4),phase:rand(0,6.28),color:Math.floor(rand(0,4)),kind:season,rest,age:0,restAge:0,restLife:season==='winter'?rand(18,30):rand(12,22),bloom:0};particles.push(p);return p;}
-  function setSeason(next){season=next;sandDrawing=null;if(next!=='summer')sandStrokes=[];dirty=true;if(next==='none')selectTool('');ui.querySelector('.breeze-toggle').disabled=next==='none'||!enabled()||reduced.matches;seaWind=0;wetSand=[];particles=[];spawn=0;document.body.dataset.season=next;const b=ui.querySelector('.season-toggle');b.setAttribute('aria-label',`${t('Scegli stagione','Choose season')}: ${names[next]}`);b.innerHTML=svg(next)+`<span>${names[next]}</span><span class="chevron">⌄</span>`;ui.querySelectorAll('[data-season-choice]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.seasonChoice===next)));if(dirty)measure();if(next!=='none'&&enabled()){
+  function setSeason(next){season=next;selectTool('');flowers=[];sandDrawing=null;if(next!=='summer')sandStrokes=[];dirty=true;if(next==='none')selectTool('');updateAction();seaWind=0;wetSand=[];particles=[];spawn=0;document.body.dataset.season=next;const b=ui.querySelector('.season-toggle');b.setAttribute('aria-label',`${t('Scegli stagione','Choose season')}: ${names[next]}`);b.innerHTML=svg(next)+`<span>${names[next]}</span><span class="chevron">⌄</span>`;ui.querySelectorAll('[data-season-choice]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.seasonChoice===next)));if(dirty)measure();if(next!=='none'&&enabled()){
     surfaces.forEach(s=>{if(next==='winter'&&(s.y<scrollY-60||s.y>scrollY+H+60))return;const count=next==='winter'?Math.min(45,Math.ceil(s.w/6)):next==='autumn'?(s.glyph?(Math.random()<.19?1:0):Math.min(4,Math.ceil(s.w/130))):0;for(let i=0;i<count;i++){const x=s.x+rand(1,Math.max(2,s.w-1));const p=particle(x,s.y-rand(0,3),s);p.offset=x-s.x;p.restAge=rand(0,p.restLife*.45);p.a=rand(-.5,.5);}});
     for(let i=0;i<(next==='winter'?60:next==='autumn'?12:next==='spring'?5:0);i++)particle(rand(0,W),scrollY+rand(0,H));
   }closeMenus();}
   ui.querySelectorAll('[data-season-choice]').forEach(b=>b.addEventListener('click',()=>{if(!enabled()&&b.dataset.seasonChoice!=='none'&&!reduced.matches)document.querySelector('#play-toggle').click();setSeason(b.dataset.seasonChoice);}));
+  function updateAction(){
+    const action=ui.querySelector('.season-action');
+    const icon=season==='summer'?'smooth':season==='spring'?'plant':'breeze';
+    const label=season==='summer'?t('Liscia la sabbia','Smooth the sand'):season==='spring'?t('Pianta un fiore','Plant a flower'):t('Brezza','Breeze');
+    action.innerHTML=svg(icon)+`<span>${label}</span>`;action.setAttribute('aria-label',label);action.title=label;
+    action.disabled=season==='none'||((season==='autumn'||season==='winter')&&(!enabled()||reduced.matches));
+    if(season==='summer')action.removeAttribute('aria-pressed');else action.setAttribute('aria-pressed',String(!!tool));
+  }
   function selectTool(next){
-    tool=next==='breeze'&&season!=='none'&&enabled()&&!reduced.matches?'breeze':'';
-    ui.querySelector('.breeze-toggle').setAttribute('aria-pressed',String(!!tool));
-    cursor.innerHTML=tool?svg('breeze'):'';cursor.hidden=true;
+    tool=(next==='breeze'&&(season==='autumn'||season==='winter')&&enabled()&&!reduced.matches)||(next==='plant'&&season==='spring')?next:'';
+    ui.querySelector('.season-action').setAttribute('aria-pressed',String(!!tool));
+    cursor.innerHTML=tool?svg(tool):'';cursor.hidden=true;
     document.body.classList.remove('tool-pointer-active');dock.hidden=!tool;
-    dock.querySelector('span').textContent=tool?t('Brezza · Muovi il puntatore o trascina un dito. Esc per fermarla.','Breeze · Move your pointer or drag a finger. Esc to stop.'):'';
+    dock.querySelector('span').textContent=tool==='plant'?t('Scegli un punto nella pagina per piantare un fiore. Esc per finire.','Choose a spot on the page to plant a flower. Esc to finish.'):tool?t('Brezza · Muovi il puntatore o trascina un dito. Esc per fermarla.','Breeze · Move your pointer or drag a finger. Esc to stop.'):'';
     closeMenus();
   }
-  ui.querySelector('.breeze-toggle').onclick=()=>selectTool(tool?'':'breeze');
+  ui.querySelector('.season-action').onclick=()=>{
+    if(season==='summer'){sandStrokes=[];sandDrawing=null;flowerStatus.textContent=t('Sabbia lisciata.','Sand smoothed.');}
+    else selectTool(tool?'':season==='spring'?'plant':'breeze');
+  };
   dock.querySelector('button').onclick=()=>selectTool('');
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){const openButton=ui.querySelector('[aria-expanded="true"]');closeMenus();if(openButton)openButton.focus();selectTool('');}});
   function moveWind(e){
@@ -137,6 +166,27 @@
   document.addEventListener('pointerup',e=>{if(e.pointerType==='touch')pointer.inside=false;},{passive:true});
   document.addEventListener('pointerleave',()=>{pointer.inside=false;cursor.hidden=true;document.body.classList.remove('tool-pointer-active');});
   document.addEventListener('click',e=>{if(!tool&&season==='spring')particles.forEach(p=>{if(p.rest&&Math.hypot(p.x-e.clientX,p.y-e.clientY-scrollY)<25){p.rest=null;p.flight=null;}});});
+  document.addEventListener('click',e=>{
+    if(tool!=='plant'||season!=='spring'||e.target.closest('a,button,input,select,textarea,header,.tool-dock'))return;
+    const flower={x:e.clientX,y:e.clientY+scrollY,age:reduced.matches?6:0,h:28+Math.random()*16,color:Math.floor(Math.random()*3)};
+    flowers.push(flower);if(flowers.length>24)flowers.shift();
+    flowerStatus.textContent=t('Fiore piantato.','Flower planted.');
+  });
+  function drawFlowers(dt,animate){
+    for(const f of flowers){
+      if(animate)f.age+=dt;else if(reduced.matches)f.age=6;
+      const growth=Math.min(1,f.age/2.5),bloom=Math.max(0,Math.min(1,(f.age-2.2)/2));
+      const y=f.y-scrollY;if(y<-60||y>H+60)continue;
+      ctx.save();ctx.translate(f.x,y);ctx.strokeStyle='#678557';ctx.lineWidth=1.7;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(-5,-f.h*growth*.5,0,-f.h*growth);ctx.stroke();
+      ctx.fillStyle='#91ad76';
+      for(const side of [-1,1]){ctx.save();ctx.translate(-1,-f.h*growth*.45);ctx.scale(growth,growth);ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(side*15,-12,side*14,-2);ctx.quadraticCurveTo(side*8,4,0,0);ctx.fill();ctx.restore();}
+      ctx.translate(0,-f.h*growth);ctx.fillStyle=['#d59ba9','#c2b1da','#e6bc77'][f.color];
+      const opening=.15+bloom*.85;
+      for(let i=0;i<6;i++){ctx.save();ctx.rotate(i*Math.PI/3);ctx.beginPath();ctx.ellipse(0,-6*opening,3.4*opening,6*opening,0,0,Math.PI*2);ctx.fill();ctx.restore();}
+      ctx.fillStyle='#e4ba60';ctx.beginPath();ctx.arc(0,0,1.5+bloom*1.4,0,Math.PI*2);ctx.fill();ctx.restore();
+    }
+  }
   let seaTime=0,seaWind=0;
   let wetSand=[],seaHeight=0;
   const grain=n=>{const value=Math.sin(n*127.1+311.7)*43758.5453;return value-Math.floor(value);};
@@ -219,15 +269,20 @@
   function drawParticle(p,time){const sy=p.y-scrollY;if(sy< -35||sy>H+35)return;ctx.save();if(p.kind==='autumn'||p.kind==='winter')ctx.globalAlpha=Math.max(0,Math.min(1,(p.restLife-p.restAge)/4,(90-p.age)/4));ctx.translate(p.x,sy);ctx.rotate(p.a);if(p.kind==='autumn'){ctx.scale(1,.6+Math.abs(Math.sin(p.phase+time*.001))*.4);leaf(p);}else if(p.kind==='winter'){ctx.fillStyle='#fff';ctx.shadowColor='#839ba944';ctx.shadowBlur=p.rest?2:0;ctx.beginPath();ctx.ellipse(0,0,p.size*(p.rest?1.8:1),p.size,0,0,Math.PI*2);ctx.fill();}else if(p.kind==='spring'){ctx.fillStyle=['#d1a258','#e3be73','#b1b9a1','#d9ab67'][p.color];const wing=Math.max(.12,Math.abs(Math.sin(time*(p.rest?.0015:.014)+p.phase)));ctx.scale(wing,1);ctx.beginPath();ctx.ellipse(-5,-3,6,9,-.5,0,7);ctx.ellipse(5,-3,6,9,.5,0,7);ctx.fill();ctx.fillStyle='#665749';ctx.fillRect(-.7,-5,1.4,11);}ctx.restore();}
   function flyButterfly(p,dt,time,live) {
     if(p.rest){
+      if(!p.rest.flower&&flowers.some(f=>f.age>3&&Math.hypot(f.x-p.x,f.y-p.y)<480)){p.rest=null;p.flight=null;return;}
       p.restAge+=dt;p.x=p.rest.x+p.offset+p.rest.body.x;p.y=p.rest.y+p.rest.body.y-7;p.a=0;
       if(p.restAge>p.pause){p.previous=p.rest;p.rest=null;p.flight=null;}
       return;
     }
     if(!p.flight){
+      const blooming=flowers.filter(f=>f.age>3&&Math.hypot(f.x-p.x,f.y-f.h-p.y)<480);
+      const nearest=blooming.sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];
+      const flowerTarget=nearest?{x:nearest.x-3,y:nearest.y-nearest.h+7,w:6,body:{x:0,y:0},flower:true}:null;
       const choices=live.filter(s=>s!==p.previous&&s.y>scrollY+80&&s.y<scrollY+H-30);
-      const target=choices[Math.floor(Math.random()*choices.length)];
+      const target=flowerTarget||choices[Math.floor(Math.random()*choices.length)];
       p.flight={x:p.x,y:p.y,target,offset:target?rand(1,Math.max(2,target.w-1)):0,endX:rand(30,W-30),endY:scrollY+rand(100,Math.max(110,H-60)),elapsed:0,duration:rand(3,5.5),arc:rand(-100,100)};
     }
+    if(!p.flight.target?.flower&&flowers.some(f=>f.age>3&&Math.hypot(f.x-p.x,f.y-p.y)<480)){p.flight=null;return;}
     const f=p.flight;f.elapsed+=dt;const u=Math.min(1,f.elapsed/f.duration),e=u*u*(3-2*u);
     const tx=f.target?f.target.x+f.offset+f.target.body.x:f.endX,ty=f.target?f.target.y+f.target.body.y-7:f.endY;
     p.x=f.x+(tx-f.x)*e+Math.sin(u*Math.PI)*f.arc;
@@ -247,6 +302,7 @@
         else{p.vx*=Math.exp(-.65*dt);p.vy+=((p.kind==='winter'?12:22)-p.vy*.45)*dt;p.x+=(p.vx+Math.sin(time*.0012+p.phase)*(p.kind==='winter'?9:22))*dt;p.y+=p.vy*dt;p.a+=p.spin*dt;if(p.vy>0&&p.age>.8){const surface=live.find(s=>p.x>s.x&&p.x<s.x+s.w&&py<=s.y+s.body.y&&p.y>=s.y+s.body.y);if(surface){p.rest=surface;p.restAge=0;p.offset=p.x-surface.x;p.y=surface.y;p.vx=p.vy=0;p.a=rand(-.4,.4);}}}
       }drawParticle(p,time);}
     particles=particles.filter(p=>(!(p.kind==='autumn'||p.kind==='winter')||(p.age<90&&p.restAge<p.restLife))&&(p.kind==='spring'||p.rest||p.y<scrollY+H+150&&p.x>-350&&p.x<W+350));
+    if(season==='spring')drawFlowers(dt,animate);
     if(season==='summer'){drawSand();const bottom=document.documentElement.scrollHeight-scrollY;if(bottom<H+220){ctx.save();ctx.translate(0,bottom-H);drawSea(dt,animate);ctx.restore();}}
     if(tool==='breeze'&&pointer.inside&&animate){ctx.strokeStyle='#79938855';ctx.lineWidth=1;for(let i=0;i<5;i++){const offset=(time*.15+i*30)%150;ctx.beginPath();ctx.ellipse(pointer.x+offset,pointer.y,offset*.3+5,offset*.15+3,0,-.7,.7);ctx.stroke();}}
     requestAnimationFrame(loop);
