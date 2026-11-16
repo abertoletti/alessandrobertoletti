@@ -1,5 +1,12 @@
-// Add a local image path here when the portrait is ready, e.g. 'public/portrait.webp'.
-const portraitImage = null;
+// Portrait variants with localized under-eye correction; original edits are preserved.
+const portraitImages = {none:'neutral-v2',spring:'spring',summer:'summer',autumn:'autumn',winter:'winter'};
+const playfulPortraits = {spring:'fun-spring-moto',summer:'fun-summer-v2',autumn:'fun-autumn',winter:'fun-winter'};
+// Each season selection draws once: one third playful, two thirds professional.
+function choosePortrait(season, random = Math.random) {
+  return playfulPortraits[season] && random() < 1 / 3
+    ? playfulPortraits[season]
+    : portraitImages[season] || portraitImages.none;
+}
 const english = document.documentElement.lang === 'en';
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let play = !reducedMotion.matches;
@@ -48,11 +55,44 @@ function render() {
   }
 }
 render();
-if (portraitImage) {
-  const photo = new Image();
-  photo.onload = () => { const scale = Math.max(600 / photo.width, 600 / photo.height); paint.drawImage(photo, (600 - photo.width * scale) / 2, (600 - photo.height * scale) / 2, photo.width * scale, photo.height * scale); render(); document.querySelector('.portrait-tag').textContent = 'ALESSANDRO BERTOLETTI'; };
-  photo.src = new URL((english ? '../' : './') + portraitImage, document.baseURI).href;
+const photoCache = new Map();
+let portraitRequest = 0, portraitFade = 0;
+async function showPortrait(season = 'none') {
+  const request = ++portraitRequest;
+  let name = choosePortrait(season);
+  function loadPhoto(name) {
+    if (!photoCache.has(name)) {
+    const photo = new Image();
+    photo.src = new URL(`${english ? '../' : './'}public/portraits/corrected/${name}.png`, document.baseURI).href;
+    photoCache.set(name, photo.decode().then(() => photo));
+    }
+    return photoCache.get(name);
+  }
+  let photo;
+  try { photo = await loadPhoto(name); } catch {
+    photoCache.delete(name);
+    name = portraitImages[season] || portraitImages.none;
+    try { photo = await loadPhoto(name); } catch { photoCache.delete(name); return; }
+  }
+  if (request !== portraitRequest) return;
+  cancelAnimationFrame(portraitFade);
+  const previous = document.createElement('canvas');previous.width=previous.height=600;
+  previous.getContext('2d').drawImage(texture,0,0);
+  const crop = portraitFrame(name, photo.width, photo.height), start=performance.now();
+  document.querySelector('.portrait-tag').hidden=true;
+  button.dataset.portrait=name;
+  function blend(now) {
+    const u=reducedMotion.matches?1:Math.min(1,(now-start)/650);
+    paint.globalAlpha=1;paint.drawImage(previous,0,0);paint.globalAlpha=u;
+    paint.drawImage(photo,crop.x,crop.y,crop.width,crop.height);
+    paint.globalAlpha=1;render();
+    if(u<1)portraitFade=requestAnimationFrame(blend);
+  }
+  portraitFade=requestAnimationFrame(blend);
 }
+new MutationObserver(()=>showPortrait(document.body.dataset.season)).observe(document.body,{attributes:true,attributeFilter:['data-season']});
+showPortrait(document.body.dataset.season);
+
 function spring() {
   vx = (vx - dx * .14) * .76; vy = (vy - dy * .14) * .76; dx += vx; dy += vy; render();
   if (Math.abs(dx) + Math.abs(dy) + Math.abs(vx) + Math.abs(vy) > .15) frame = requestAnimationFrame(spring);

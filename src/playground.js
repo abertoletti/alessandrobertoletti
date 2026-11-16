@@ -11,26 +11,49 @@
     none: '<path d="M12 2v9M6.5 5.5a8 8 0 1 0 11 0" stroke-width="1.8"/>',
     smooth: '<path d="M2 18c3 0 4-2 5-5 1-5 5-8 9-6-5 0-5 6-1 7 3 1 4-1 7-1v7H2Z" fill="#9fc7c5" stroke="#477f8b"/><path d="M3 21h18M11 10c1-2 3-3 5-3" stroke="#477f8b"/>',
     plant: '<path d="M12 21v-7m0 5c-3 0-5-2-5-4 3 0 5 2 5 4" stroke="#729474"/><g fill="#e6b5bf" stroke="#bb7e90" stroke-width="1"><path d="M12 11C7 8 8 3 11 3c2 0 3 4 1 8Z"/><path d="M12 11c1-6 6-8 7-5 1 2-2 5-7 5Z"/><path d="M12 11c6-1 9 3 6 5-2 2-5-1-6-5Z"/><path d="M12 11c3 5 0 9-3 7-2-1-1-5 3-7Z"/><path d="M12 11c-4 4-9 2-8-1 0-3 5-3 8 1Z"/></g><circle cx="12" cy="11" r="2.3" fill="#efd18a" stroke="#c09e55" stroke-width="1"/>',
+    shovel: '<path d="M9 2h6v4a3 3 0 0 1-6 0Z" fill="#d2ac72" stroke="#866240"/><path d="M12 9v6" stroke="#866240" stroke-width="2.5"/><path d="M7 14h10v4c0 3-5 5-5 5s-5-2-5-5Z" fill="#9cbcc0" stroke="#547e88"/>',
+    thaw: '<path d="M12 2C11 7 5 10 5 15a7 7 0 0 0 14 0c0-3-2-6-4-8 0 3-1 4-2 5 1-4-1-7-1-10Z" fill="#e9aa61" stroke="#b6773e"/><path d="M12 13c-1 2-3 4-3 5a3 3 0 0 0 6 0c0-1-2-3-3-5Z" fill="#b7dfe8" stroke="#608fa5"/>',
     breeze: '<path d="M2 7h14a3 3 0 1 0-3-3M2 12h20M2 17h14a3 3 0 1 1-3 3" stroke="#718b91" stroke-width="1.8"/>',
   };
   const svg = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon icon-${name}">${icons[name]}</svg>`;
   const names = {autumn:t('Autunno','Autumn'),winter:t('Inverno','Winter'),spring:t('Primavera','Spring'),summer:t('Estate','Summer'),none:t('Disattiva','Off')};
   const ui = document.createElement('div');ui.className='environment-controls';
-  ui.innerHTML=`<div class="control-group"><button class="environment-button season-toggle" aria-label="${t('Scegli stagione','Choose season')}" aria-expanded="false" aria-controls="season-menu"></button><div class="environment-menu" id="season-menu" hidden><p>${t('Un cambio di atmosfera','A change of atmosphere')}</p>${Object.keys(names).map(s=>`<button data-season-choice="${s}" aria-pressed="false">${svg(s)}<span>${names[s]}</span><span class="selected-mark" aria-hidden="true">✓</span></button>`).join('')}</div></div><button class="environment-button season-action breeze-toggle" aria-pressed="false" aria-label="${t('Brezza','Breeze')}" disabled>${svg('breeze')}<span>${t('Brezza','Breeze')}</span></button>`;
+  ui.innerHTML=`<div class="control-group"><button class="environment-button season-toggle" aria-label="${t('Scegli stagione','Choose season')}" aria-expanded="false" aria-controls="season-menu"></button><div class="environment-menu" id="season-menu" hidden><p>${t('Un cambio di atmosfera','A change of atmosphere')}</p>${Object.keys(names).map(s=>`<button data-season-choice="${s}" aria-pressed="false">${svg(s)}<span>${names[s]}</span><span class="selected-mark" aria-hidden="true">✓</span></button>`).join('')}</div></div><button class="environment-button season-action breeze-toggle" aria-pressed="false" aria-label="${t('Soffio','Blow')}" disabled>${svg('breeze')}<span>${t('Soffio','Blow')}</span></button>`;
   document.querySelector('.header-actions').append(ui);
+  const shell=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  shell.setAttribute('viewBox','0 0 96 44');shell.classList.add('liquid-shell');shell.setAttribute('aria-hidden','true');
+  shell.innerHTML='<path/>';ui.prepend(shell);
+  let morphFrame=0,morphProgress=0;
+  function drawShell(q){
+    const waist=2+20*q,lower=44-waist;
+    const path=q>.995
+      ? 'M22 2a20 20 0 1 0 0 40a20 20 0 1 0 0-40M74 2a20 20 0 1 0 0 40a20 20 0 1 0 0-40'
+      : `M22 2C33 2 42 ${2+9*q} 42 ${waist}C46 ${waist} 50 ${waist} 54 ${waist}C54 ${2+9*q} 63 2 74 2A20 20 0 0 1 74 42C63 42 54 ${42-9*q} 54 ${lower}C50 ${lower} 46 ${lower} 42 ${lower}C42 ${42-9*q} 33 42 22 42A20 20 0 0 1 22 2Z`;
+    shell.firstChild.setAttribute('d',path);
+  }
+  function morphControls(active){
+    cancelAnimationFrame(morphFrame);ui.classList.toggle('is-split',active);
+    const from=morphProgress,to=active?1:0,start=performance.now();
+    if(reduced.matches){morphProgress=to;drawShell(to);return;}
+    function tick(now){const u=Math.min(1,(now-start)/1050),ease=u*u*(3-2*u);morphProgress=from+(to-from)*ease;drawShell(morphProgress);const bounce=Math.sin(u*Math.PI*3)*Math.sin(u*Math.PI)*.055;shell.style.transform=`scale(${1+bounce},${1-bounce*.65})`;if(u<1)morphFrame=requestAnimationFrame(tick);}
+    morphFrame=requestAnimationFrame(tick);
+  }
+  drawShell(0);
   const dock=document.createElement('div');dock.className='tool-dock';dock.hidden=true;dock.innerHTML='<span></span><button type="button">×</button>';document.body.append(dock);
-  dock.querySelector('button').ariaLabel=t('Disattiva brezza','Turn breeze off');
+  dock.querySelector('button:not(.clean-sand)').ariaLabel=t('Disattiva brezza','Turn breeze off');
   const cursor=document.createElement('div');cursor.className='physical-cursor';cursor.hidden=true;cursor.ariaHidden='true';document.body.append(cursor);
   const sunlight=document.createElement('div');sunlight.className='summer-light';sunlight.setAttribute('aria-hidden','true');document.body.append(sunlight);
   const beach=document.createElement('div');beach.className='beach-end';beach.setAttribute('aria-hidden','true');document.body.append(beach);
   const beachHint=document.createElement('p');beachHint.className='sand-hint';
-  beachHint.innerHTML=`<span>${t('Tieni premuto e trascina sulla sabbia per lasciare un segno. Il mare ti aspetta in fondo.','Hold and drag on the sand to leave a mark. The sea awaits at the bottom.')}</span>`;
+  beachHint.innerHTML=`<span>${t('Attiva la paletta, poi tieni premuto e trascina per scavare. Il mare ti aspetta in fondo.','Activate the shovel, then hold and drag to dig. The sea awaits at the bottom.')}</span>`;
   document.querySelector('.hero').append(beachHint);
+  const waveButton=document.createElement('button');waveButton.className='clean-sand';waveButton.type='button';waveButton.textContent=t('Pulisci 🌊','Clean 🌊');waveButton.hidden=true;dock.insertBefore(waveButton,dock.querySelector('button:not(.clean-sand)'));
+  waveButton.onclick=()=>{if(washWave)return;sandDrawing=null;if(reduced.matches||!enabled())sandStrokes=[];else washWave={elapsed:0};flowerStatus.textContent=t('Arriva un’onda.','A wave is coming.');};
   let sandStrokes=[],sandDrawing=null;
-  let flowers=[],flowerSerial=0,washWave=null;
+  let flowers=[],flowerSerial=0,washWave=null,droplets=[];
   const flowerStatus=document.createElement('span');flowerStatus.className='sr-only';flowerStatus.setAttribute('role','status');document.body.append(flowerStatus);
   document.addEventListener('pointerdown',e=>{
-    if(season!=='summer'||tool||washWave||!enabled()||e.button!==0||e.pointerType==='touch'||e.target.closest('a,button,input,select,textarea,header,.tool-dock'))return;
+    if(season!=='summer'||tool!=='shovel'||washWave||!enabled()||e.button!==0||e.pointerType==='touch'||e.target.closest('a,button,input,select,textarea,header,.tool-dock'))return;
     e.preventDefault();sandDrawing={points:[{x:e.clientX,y:e.clientY+scrollY,opacity:1}],id:e.pointerId};sandStrokes.push(sandDrawing);
     if(sandStrokes.length>100)sandStrokes.shift();
     document.documentElement.setPointerCapture(e.pointerId);
@@ -49,7 +72,7 @@
       if(!points.some(p=>p.y>scrollY-30&&p.y<scrollY+H+30))continue;
       const normal=i=>{const a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],l=Math.hypot(b.x-a.x,b.y-a.y)||1;return {x:-(b.y-a.y)/l,y:(b.x-a.x)/l};};
       // Continuous banks avoid overlapping segment caps and dark joints.
-      for(const [offset,width,color] of [[0,15,'#d4b77f45'],[-5,4.5,'#f9e5bbbf'],[5,4,'#b6976570'],[0,7,'#a4835066'],[1,4,'#9875485c'],[-1.2,1.7,'#d1b37e99']]){
+      for(const [offset,width,color] of [[0,21,'#d4b77f45'],[-7,5.5,'#f9e5bbbf'],[7,5,'#b6976570'],[0,10,'#a4835066'],[1,4,'#9875485c'],[-1.2,1.7,'#d1b37e99']]){
         let bucket=-1;
         ctx.strokeStyle=color;ctx.lineWidth=width;
         for(let i=0;i<points.length;i++){
@@ -64,7 +87,7 @@
         const p=points[i],n=normal(i);if(p.y<scrollY-20||p.y>scrollY+H+20)continue;
         ctx.globalAlpha=p.opacity;
         for(const side of [-1,1]){
-          const offset=side*(6+grain(i+points[0].y)*4);
+          const offset=side*(8+grain(i+points[0].y)*4);
           ctx.fillStyle=side<0?'#fff0cd99':'#a98a5366';ctx.beginPath();ctx.ellipse(p.x+n.x*offset,p.y-scrollY+n.y*offset,.6+grain(i+9)*1.2,.4+grain(i+13)*.6,0,0,Math.PI*2);ctx.fill();
         }
       }
@@ -125,33 +148,35 @@
   ui.querySelectorAll('.season-toggle').forEach(b=>b.addEventListener('click',()=>{const menu=document.getElementById(b.getAttribute('aria-controls'));const open=menu.hidden;closeMenus();menu.hidden=!open;b.setAttribute('aria-expanded',String(open));}));
   document.addEventListener('click',e=>{if(!ui.contains(e.target))closeMenus();});
   function particle(x,y,rest=null){const p={x,y,vx:rand(-10,15),vy:rand(18,48),size:season==='winter'?rand(1.3,3):rand(7,13),a:rand(0,6.28),spin:rand(-1.4,1.4),phase:rand(0,6.28),color:Math.floor(rand(0,4)),kind:season,rest,age:0,restAge:0,restLife:season==='winter'?rand(18,30):rand(12,22),species:season==='spring'&&(particles.filter(p=>p.kind==='spring').length%3===2)?'bee':'butterfly',bloom:0};particles.push(p);return p;}
-  function setSeason(next){season=next;washWave=null;selectTool('');flowers=[];sandDrawing=null;if(next!=='summer')sandStrokes=[];dirty=true;if(next==='none')selectTool('');updateAction();seaWind=0;wetSand=[];particles=[];spawn=0;document.body.dataset.season=next;const b=ui.querySelector('.season-toggle');b.setAttribute('aria-label',`${t('Scegli stagione','Choose season')}: ${names[next]}`);b.innerHTML=svg(next)+`<span>${names[next]}</span><span class="chevron" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;ui.querySelectorAll('[data-season-choice]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.seasonChoice===next)));if(dirty)measure();if(next!=='none'&&enabled()){
+  function setSeason(next){morphControls(next!=='none');droplets=[];season=next;washWave=null;selectTool('');flowers=[];sandDrawing=null;if(next!=='summer')sandStrokes=[];dirty=true;if(next==='none')selectTool('');updateAction();seaWind=0;wetSand=[];particles=[];spawn=0;document.body.dataset.season=next;const b=ui.querySelector('.season-toggle');b.setAttribute('aria-label',next==='none'?t('Atmosfera · disattivata','Atmosphere · off'):`${t('Scegli stagione','Choose season')}: ${names[next]}`);b.title=next==='none'?t('Scegli un’atmosfera','Choose an atmosphere'):names[next];b.innerHTML=svg(next)+`<span>${next==='none'?t('Atmosfera','Atmosphere'):names[next]}</span><span class="chevron" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;ui.querySelectorAll('[data-season-choice]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.seasonChoice===next)));if(dirty)measure();if(next!=='none'&&enabled()){
     surfaces.forEach(s=>{if(next==='winter'&&(s.y<scrollY-60||s.y>scrollY+H+60))return;const count=next==='winter'?Math.min(45,Math.ceil(s.w/6)):next==='autumn'?(s.glyph?(Math.random()<.19?1:0):Math.min(4,Math.ceil(s.w/130))):0;for(let i=0;i<count;i++){const x=s.x+rand(1,Math.max(2,s.w-1));const p=particle(x,s.y-rand(0,3),s);p.offset=x-s.x;p.restAge=rand(0,p.restLife*.45);p.a=rand(-.5,.5);}});
     for(let i=0;i<(next==='winter'?60:next==='autumn'?12:next==='spring'?6:0);i++)particle(rand(0,W),scrollY+rand(0,H));
   }closeMenus();}
   ui.querySelectorAll('[data-season-choice]').forEach(b=>b.addEventListener('click',()=>{if(!enabled()&&b.dataset.seasonChoice!=='none'&&!reduced.matches)document.querySelector('#play-toggle').click();setSeason(b.dataset.seasonChoice);}));
   function updateAction(){
     const action=ui.querySelector('.season-action');
-    const icon=season==='summer'?'smooth':season==='spring'?'plant':'breeze';
-    const label=season==='summer'?t('Liscia la sabbia','Smooth the sand'):season==='spring'?t('Fai sbocciare','Make it bloom'):t('Brezza','Breeze');
+    const icon=season==='summer'?'shovel':season==='spring'?'plant':season==='winter'?'thaw':'breeze';
+    const label=season==='summer'?t('Scava nella sabbia','Dig in the sand'):season==='spring'?t('Fai sbocciare','Make it bloom'):season==='winter'?t('Disgelo','Thaw'):t('Soffio','Blow');
+    action.inert=season==='none';action.setAttribute('aria-hidden',String(season==='none'));
     action.innerHTML=svg(icon)+`<span>${label}</span>`;action.setAttribute('aria-label',label);action.title=label;
     action.disabled=season==='none'||((season==='autumn'||season==='winter')&&(!enabled()||reduced.matches));
     if(season==='summer'&&washWave)action.disabled=true;
     if(season==='summer')action.removeAttribute('aria-pressed');else action.setAttribute('aria-pressed',String(!!tool));
   }
   function selectTool(next){
-    tool=(next==='breeze'&&(season==='autumn'||season==='winter')&&enabled()&&!reduced.matches)||(next==='plant'&&season==='spring')?next:'';
+    tool=(((next==='breeze'&&season==='autumn')||(next==='thaw'&&season==='winter'))&&enabled()&&!reduced.matches)||((next==='plant'&&season==='spring')||(next==='shovel'&&season==='summer'))?next:'';
     ui.querySelector('.season-action').setAttribute('aria-pressed',String(!!tool));
     cursor.innerHTML=tool?svg(tool):'';cursor.hidden=true;
-    document.body.classList.remove('tool-pointer-active');dock.hidden=!tool;
-    dock.querySelector('span').textContent=tool==='plant'?t('Scegli un punto nella pagina per piantare un fiore. Esc per finire.','Choose a spot on the page to plant a flower. Esc to finish.'):tool?t('Brezza · Muovi il puntatore o trascina un dito. Esc per fermarla.','Breeze · Move your pointer or drag a finger. Esc to stop.'):'';
+    document.body.classList.remove('tool-pointer-active');dock.hidden=!tool;waveButton.hidden=tool!=='shovel';
+    dock.querySelector('button:not(.clean-sand)').ariaLabel=t('Disattiva strumento','Turn tool off');
+    dock.querySelector('span').textContent=tool==='shovel'?t('Paletta · Tieni premuto e trascina per scavare. Esc per finire.','Shovel · Hold and drag to dig. Esc to finish.'):tool==='thaw'?t('Disgelo · Soffermati sulla neve per scioglierla. Esc per finire.','Thaw · Hold your pointer near snow to melt it. Esc to finish.'):tool==='plant'?t('Scegli un punto nella pagina per piantare un fiore. Esc per finire.','Choose a spot on the page to plant a flower. Esc to finish.'):tool?t('Soffio · Muovi il puntatore o trascina un dito. Esc per fermarla.','Blow · Move your pointer or drag a finger. Esc to stop.'):'';
     closeMenus();
   }
   ui.querySelector('.season-action').onclick=()=>{
-    if(season==='summer'){sandDrawing=null;if(reduced.matches||!enabled()){sandStrokes=[];flowerStatus.textContent=t('Sabbia lisciata.','Sand smoothed.');}else{washWave={elapsed:0};flowerStatus.textContent=t('Arriva un’onda.','A wave is coming.');updateAction();}}
-    else selectTool(tool?'':season==='spring'?'plant':'breeze');
+    if(season==='summer'){selectTool(tool?'':'shovel');return;}
+    selectTool(tool?'':season==='spring'?'plant':season==='winter'?'thaw':'breeze');
   };
-  dock.querySelector('button').onclick=()=>selectTool('');
+  dock.querySelector('button:not(.clean-sand)').onclick=()=>selectTool('');
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){const openButton=ui.querySelector('[aria-expanded="true"]');closeMenus();if(openButton)openButton.focus();selectTool('');}});
   function moveWind(e){
     const oldX=pointer.x,oldY=pointer.y;
@@ -177,7 +202,7 @@
     const palettes=[['#fff9e9','#ded6b5','#d3a948'],['#d98fa9','#ae547b','#d8ad5a'],['#e89170','#be533d','#514736'],['#b4a3d4','#7c64a7','#d9bd66']];
     for(const f of flowers){
       if(animate)f.age+=dt;else if(reduced.matches)f.age=12;
-      const grow=Math.min(1,f.age/6),growth=grow*grow*(3-2*grow),bloom=Math.max(0,Math.min(1,(f.age-6)/5));
+      const grow=Math.min(1,f.age/5),growth=grow*grow*(3-2*grow),bloom=Math.max(0,Math.min(1,(f.age-5)/4.2));
       const y=f.y-scrollY;if(y<-90||y>H+90)continue;
       const topX=f.lean*growth,topY=-f.h*growth;
       ctx.save();ctx.translate(f.x,y);ctx.lineCap='round';
@@ -218,7 +243,7 @@
       const y=p.y-scrollY,edge=washFront(p.x,elapsed);
       if(!retreat&&y>=edge)p.waveWet=true;
       // No time-based fade: a groove vanishes exactly behind the receding foam.
-      if(retreat&&p.waveWet&&y<=edge)p.opacity=0;
+      if(retreat&&p.waveWet&&y<=edge+12)p.opacity=0;
     }
     if(elapsed>=washTiming.retreatStart+washTiming.retreatDuration){sandStrokes=[];washWave=null;updateAction();flowerStatus.textContent=t('Sabbia lisciata dall’onda.','The wave has smoothed the sand.');}
   }
@@ -380,6 +405,16 @@
     p.a=Math.sin(time*.003+p.phase)*.2*Math.sin(u*Math.PI);
     if(u===1){p.rest=f.target||null;p.offset=f.offset;p.restAge=0;p.pause=p.species==='bee'?rand(3,5):rand(4,7);p.flight=null;}
   }
+  function drawThaw(dt,animate){
+    for(const d of droplets){
+      if(animate){d.age+=dt;if(d.age>d.hold){d.vy+=80*dt;d.y+=d.vy*dt;d.x+=d.vx*dt;}}
+      ctx.save();ctx.translate(d.x,d.y-scrollY);ctx.globalAlpha=Math.min(1,d.age*5)*Math.max(0,1-(d.age-1.2)/1.3);
+      const shine=ctx.createRadialGradient(-.5,-.5,.1,0,0,d.size*1.8);shine.addColorStop(0,'#f8ffff');shine.addColorStop(.4,'#b7dce7bb');shine.addColorStop(1,'#638eaa66');
+      ctx.fillStyle=shine;ctx.beginPath();ctx.ellipse(0,0,d.size,d.size*(d.age>d.hold?1.65:.75),0,0,Math.PI*2);ctx.fill();ctx.restore();
+    }
+    droplets=droplets.filter(d=>d.age<2.5&&d.y<scrollY+H+30);
+    if(tool==='thaw'&&pointer.inside&&animate){const heat=ctx.createRadialGradient(pointer.x,pointer.y,8,pointer.x,pointer.y,105);heat.addColorStop(0,'#f4cf8522');heat.addColorStop(1,'#f4cf8500');ctx.fillStyle=heat;ctx.fillRect(pointer.x-105,pointer.y-105,210,210);}
+  }
   function loop(time){const dt=Math.min((time-last)/1000||.016,.035);last=time;if(dirty)measure();ctx.clearRect(0,0,W,H);const animate=enabled()&&!reduced.matches&&!document.hidden;
     if(season==='summer'&&animate)updateSun(dt);
     if(animate){
@@ -388,11 +423,16 @@
     if(season==='spring')drawFlowers(dt,animate);
     const live=surfaces.filter(s=>s.y>scrollY-30&&s.y<scrollY+H+40);
     for(const p of particles){if(animate){p.age+=dt;if(p.rest&&(p.kind==='autumn'||p.kind==='winter'))p.restAge+=dt;const py=p.y;const dx=p.x-pointer.x,dy=p.y-(pointer.y+scrollY),dist=Math.hypot(dx,dy);if(tool==='breeze'&&pointer.inside&&dist<170){p.rest=null;const force=(1-dist/170)*1800;p.vx+=(dx/Math.max(dist,15)+.7)*force*dt;p.vy+=(dy/Math.max(dist,15)-.65)*force*dt;p.spin+=dt*3;}
+        if(p.kind==='winter'&&tool==='thaw'&&pointer.inside&&dist<105){
+          const loss=dt*(1-dist/105)*1.9;p.size=Math.max(0,p.size-loss);p.melt=(p.melt||0)+loss;
+          if(p.melt>.55&&droplets.length<180){p.melt=0;droplets.push({x:p.x,y:p.y,age:0,hold:rand(.25,.8),size:rand(1,2.2),vx:rand(-4,4),vy:0});}
+        }
         if(p.kind==='spring'){if(tool==='breeze'&&pointer.inside&&dist<170){p.previous=p.rest;p.rest=null;p.flight=null;p.x+=dt*100;p.y-=dt*100;}flyButterfly(p,dt,time,live);}
         else if(p.rest){p.x=p.rest.x+p.offset+p.rest.body.x;p.y=p.rest.y+p.rest.body.y-2;p.a+=Math.sin(time*.001+p.phase)*dt*.08;}
         else{p.vx*=Math.exp(-.65*dt);p.vy+=((p.kind==='winter'?12:22)-p.vy*.45)*dt;p.x+=(p.vx+Math.sin(time*.0012+p.phase)*(p.kind==='winter'?9:22))*dt;p.y+=p.vy*dt;p.a+=p.spin*dt;if(p.vy>0&&p.age>.8){const surface=live.find(s=>p.x>s.x&&p.x<s.x+s.w&&py<=s.y+s.body.y&&p.y>=s.y+s.body.y);if(surface){p.rest=surface;p.restAge=0;p.offset=p.x-surface.x;p.y=surface.y;p.vx=p.vy=0;p.a=rand(-.4,.4);}}}
       }drawParticle(p,time);}
-    particles=particles.filter(p=>(!(p.kind==='autumn'||p.kind==='winter')||(p.age<90&&p.restAge<p.restLife))&&(p.kind==='spring'||p.rest||p.y<scrollY+H+150&&p.x>-350&&p.x<W+350));
+    particles=particles.filter(p=>p.size>.15&&(!(p.kind==='autumn'||p.kind==='winter')||(p.age<90&&p.restAge<p.restLife))&&(p.kind==='spring'||p.rest||p.y<scrollY+H+150&&p.x>-350&&p.x<W+350));
+    if(season==='winter')drawThaw(dt,animate);
     if(season==='summer'){updateWashWave(dt,animate);drawSand();const bottom=document.documentElement.scrollHeight-scrollY;if(bottom<H+220){ctx.save();ctx.translate(0,bottom-H);drawSea(dt,animate);ctx.restore();}drawWashWave();}
     if(tool==='breeze'&&pointer.inside&&animate){ctx.strokeStyle='#79938855';ctx.lineWidth=1;for(let i=0;i<5;i++){const offset=(time*.15+i*30)%150;ctx.beginPath();ctx.ellipse(pointer.x+offset,pointer.y,offset*.3+5,offset*.15+3,0,-.7,.7);ctx.stroke();}}
     requestAnimationFrame(loop);

@@ -16,7 +16,7 @@ Aprire http://127.0.0.1:4173. `npm run check` verifica la sintassi; `npm run bui
 
 ## Contenuti da completare
 
-- Foto: aggiungere `public/portrait.webp` e impostare `portraitImage` in `src/main.js`. Il placeholder resta intenzionalmente separato dalla foto nel CV.
+- Foto: cinque ritratti in `public/portraits/`, generati con ElevenLabs dalla foto fornita dall’utente. `src/main.js` seleziona la versione neutra o stagionale con dissolvenza e conserva il ritratto elastico. La foto originale aziendale non viene pubblicata nel repository.
 - GeoPieno e Keepify: schede, funzionalità, link e marchi ricavati dai repository. Eventuali screenshot e approfondimenti sul contributo personale si possono aggiungere in entrambe le lingue.
 - Altri progetti: sostituire o ampliare l’area Coming Soon.
 - Contatto: solo email, senza social, telefono o indirizzo.
@@ -63,3 +63,19 @@ Breeze applies wind impulses to leaves and snow in autumn and winter. Summer wav
 GeoPieno remains static. Keepify recomposes its actual description over approximately four seconds while preserving accessible text, then restores the plain paragraph. It starts when the Projects heading reaches the center band on desktop, or its own heading reaches it on mobile. Reduced motion keeps the description static.
 
 Validation: syntax/build checks, IT/EN browser walkthrough, actual wave response and relaxation, document-anchored sand drawing, tidal erasure and wash timing, flower variety/growth, distributed insect visits and flower-to-flower movement, particle wind response, link navigation with Breeze active, mobile layout and static reduced-motion rendering. Source: `src/playground.js` and `src/playground.css`.
+
+Atmosphere controls start as a single “Atmosfera” / “Atmosphere” button. Selecting a season splits the control into two capsules with an SVG liquid neck that narrows over 1.7 seconds. Active controls display icons only, with accessible labels and hover titles; switching off merges them again. The action is inert and hidden while off. Reduced-motion preferences skip the morph.
+
+Winter has its own Disgelo / Thaw tool: snow within 105 px of the pointer melts progressively, releasing short-lived droplets that gather briefly and fall. Autumn retains Breeze, spring Make it bloom, and summer Smooth the sand. Seasonal changes clear droplets and active tools.
+
+Portrait variants: neutral studio/navy overshirt; spring sage and garden; summer linen and sea; autumn copper foliage; winter wool and snow. Generated via ElevenLabs gpt-image-2.5-sunburst, flow `eC2kkIvoYipaC7ifRv47`. Assets load on demand and are cached; stale loads cannot override newer season choices.
+
+Additional portrait studies are available at `public/portraits/index.html`: ski, snorkeling (shirtless beach portrait), Ducati Multistrada road trip and olive harvest. Each season selection uses a single random draw: 2/3 professional portrait, 1/3 playful portrait. Atmosphere off always uses neutral-v2. Failed playful-image loads fall back to the professional image. The default portrait now uses `neutral-v2.png` (light blue shirt); the original neutral study is retained for comparison. The Teams profile photo was viewed in the desktop app, but no original image was exported or used for generation.
+
+## Stato attuale del sito
+
+Ordine delle sezioni: introduzione, Come lavoro, Progetti, Percorso, aziende e Contatti. Il pulsante principale iniziale porta a Come lavoro; quello secondario ai progetti. Entrambe le lingue condividono layout e interazioni, verificati da 320 a 1440 px.
+
+Le immagini utilizzate sono in `public/portraits/corrected/`: nove ritratti con correzione fotografica locale delle occhiaie. Le versioni precedenti sono conservate per il confronto nella galleria. `src/portrait-framing.js` uniforma le inquadrature, lasciando più spazio al panorama nella foto in moto.
+
+Gli strumenti attuali sono Soffio in autunno, Disgelo in inverno, Fai sbocciare in primavera e Paletta in estate. Il pannello della paletta contiene Pulisci 🌊, che richiama l’onda. La crescita del fiore richiede circa cinque secondi, seguita da 4,2 secondi per la fioritura. La divisione dei controlli dura circa 1,05 secondi e include un rimbalzo leggero. Queste indicazioni sostituiscono i dettagli delle precedenti iterazioni descritti sopra.

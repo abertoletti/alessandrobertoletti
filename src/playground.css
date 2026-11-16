@@ -42,7 +42,6 @@ body[data-season=autumn] .about { background:#f0e2cf; }
 body[data-season=autumn] .about-copy p,body[data-season=autumn] .approach-list p { color:#705a47; }
 body[data-season=autumn] .skill-tags span,body[data-season=autumn] .approach-list article { border-color:#d8c2a8; }
 body[data-season=autumn] .portrait { background:#e8ddcb; }
-body[data-season=autumn] .portrait canvas { filter:sepia(.2) saturate(.85); }
 body[data-season=autumn] .contact { background:#49372c; }
 body[data-season=autumn] .contact .eyebrow,body[data-season=autumn] .contact-bottom p { color:#d6c1ac; }
 body[data-season=winter] { --paper:#f3f6f7; }
@@ -132,3 +131,37 @@ body[data-season=summer] { background-image:url("data:image/svg+xml,%3Csvg%20xml
 /* The contextual action keeps its name visible, including on mobile. */
 .season-action span { display:inline!important; }
 @media(max-width:700px) { .season-action { font-size:10px; padding:6px 8px; gap:4px; } .season-action .icon { width:22px; height:22px; } .header-actions { gap:4px; } }
+/* A single SVG outline pinches into two icon-only controls over 1.7 seconds. */
+.environment-controls { position:relative; display:block; width:96px; height:44px; flex:0 0 96px; isolation:isolate; }
+.environment-controls .control-group { position:absolute; inset:0; pointer-events:none; }
+.environment-controls .season-toggle { position:absolute; left:0; top:0; width:96px; height:44px; padding:0; justify-content:center; transition:width 1.05s cubic-bezier(.22,1.2,.36,1); pointer-events:auto; }
+.environment-controls .environment-button { background:transparent; border-color:transparent; box-shadow:none; }
+.environment-controls .season-toggle > .icon,.environment-controls .chevron { display:none; }
+.environment-controls .season-toggle > span:not(.chevron) { display:inline; font-size:11px; }
+.environment-controls.is-split .season-toggle { width:44px; }
+.environment-controls.is-split .season-toggle > .icon { display:block; }
+.environment-controls.is-split .season-toggle > span { display:none!important; }
+.environment-controls .season-action { position:absolute; right:0; top:0; width:44px; height:44px; padding:0; justify-content:center; opacity:0; visibility:hidden; transform:translateX(-26px) scale(.6); transition:transform 1.05s cubic-bezier(.22,1.2,.36,1),opacity .8s ease,visibility 1.05s; }
+.environment-controls .season-action span { display:none!important; }
+.environment-controls.is-split .season-action { opacity:1; visibility:visible; transform:none; transition:transform 1.05s cubic-bezier(.22,1.2,.36,1),opacity .55s .15s ease,visibility 0s; }
+.environment-controls .icon { width:25px; height:25px; }
+.environment-controls .environment-button:hover { background:#ffffff35; }
+.environment-controls .environment-button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.environment-controls .season-action[aria-pressed=true] { background:#b8cdb633; }
+.liquid-shell { position:absolute; inset:0; width:96px; height:44px; pointer-events:none; z-index:-1; overflow:visible; }
+.liquid-shell path { fill:color-mix(in srgb,var(--paper) 88%,white); stroke:var(--line); stroke-width:1; }
+.environment-controls .environment-menu { pointer-events:auto; }
+@media(prefers-reduced-motion:reduce) { .environment-controls .season-toggle,.environment-controls .season-action { transition:none; } }
+
+/* Language and atmosphere are separate groups; the paired actions stay close. */
+.header-actions { gap:24px; }
+.environment-controls::before { content:""; position:absolute; left:-13px; top:12px; width:1px; height:20px; background:var(--line); pointer-events:none; }
+@media(max-width:700px) { .header-actions { gap:16px; } .environment-controls::before { left:-9px; } }
+
+.icon-summer { transform-origin:50% 50%; transform-box:view-box; display:block; }
+
+
+.tool-dock .clean-sand { width:auto; height:32px; padding:0 12px; border-radius:18px; font:inherit; color:inherit; cursor:pointer; white-space:nowrap; }
+.tool-dock .clean-sand[hidden] { display:none; }
+body[data-season=summer] .tool-dock { bottom:24px; }
+@media(max-width:500px) { .tool-dock { gap:10px; } .tool-dock .clean-sand { padding:0 9px; } }
