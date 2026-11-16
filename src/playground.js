@@ -27,6 +27,18 @@
   dock.querySelector('button').ariaLabel=t('Riponi strumento','Put tool away');
   const recovery=document.createElement('div');recovery.className='recovery';recovery.hidden=true;recovery.innerHTML=`<span>${t('Hai rotto tutto? Ricostruiamo.','Broke something? Let’s rebuild.')}</span><button>${t('Ricostruiamo','Rebuild')}</button><ol>${[t('Analisi','Assess'),t('Priorità','Prioritize'),t('Ricostruzione','Rebuild')].map(x=>`<li>${x}</li>`).join('')}</ol><div class="repair-progress"></div><span role="status" class="repair-status"></span>`;document.body.append(recovery);
   const cursor=document.createElement('div');cursor.className='physical-cursor';cursor.hidden=true;cursor.ariaHidden='true';document.body.append(cursor);
+  const sunlight=document.createElement('div');sunlight.className='summer-light';sunlight.setAttribute('aria-hidden','true');document.body.append(sunlight);
+  let solarTime=0,solarFrame=0;
+  function updateSun(dt){
+    solarTime+=dt;solarFrame+=dt;if(solarFrame<.1)return;solarFrame=0;
+    const phase=solarTime*Math.PI*2/100-.9;
+    const x=50+38*Math.sin(phase),y=10+12*(1-Math.cos(phase));
+    document.body.style.setProperty('--sun-x',x.toFixed(2)+'%');
+    document.body.style.setProperty('--sun-y',y.toFixed(2)+'%');
+    document.body.style.setProperty('--shadow-x',((50-x)*.38).toFixed(2)+'px');
+    document.body.style.setProperty('--shadow-y',(10+y*.35).toFixed(2)+'px');
+    document.body.style.setProperty('--text-shadow-x',((50-x)*.045).toFixed(2)+'px');
+  }
   const canvas=document.createElement('canvas');canvas.className='weather-canvas';canvas.ariaHidden='true';document.body.append(canvas);const ctx=canvas.getContext('2d');
   let W=innerWidth,H=innerHeight,particles=[],surfaces=[],tool='',season='none',last=0,spawn=0,repairing=false,repairStage=0,dirty=true;
   const pointer={x:-1000,y:-1000,inside:false};
@@ -117,6 +129,7 @@
     if(u===1){p.rest=f.target||null;p.offset=f.offset;p.restAge=0;p.pause=rand(3,6);p.flight=null;}
   }
   function loop(time){const dt=Math.min((time-last)/1000||.016,.035);last=time;if(dirty)measure();ctx.clearRect(0,0,W,H);const animate=enabled()&&!reduced.matches&&!document.hidden;
+    if(season==='summer'&&animate)updateSun(dt);
     if(animate){bodies.forEach(b=>{const r=b.rect;let tx=0,ty=b.hit>=3?12:0,angle=b.hit?b.angle:0;const dx=pointer.x-(r.x+r.w/2),dy=pointer.y+scrollY-(r.y+r.h/2);if(tool==='magnet'&&pointer.inside&&Math.hypot(dx,dy)<300){const mass=Math.max(1,Math.sqrt(r.w*r.h)/60);tx=dx*.65/mass;ty=dy*.65/mass;angle=dx*.025/mass;}if(tool==='level'&&pointer.inside){angle=(pointer.x/W-.5)*7;tx=angle*2;}if(repairing&&repairStage<3){tx=b.x;ty=b.y;}b.vx+=(tx-b.x)*36*dt;b.vy+=(ty-b.y)*36*dt;b.vx*=Math.exp(-9*dt);b.vy*=Math.exp(-9*dt);b.x+=b.vx*dt;b.y+=b.vy*dt;b.rotation+=(angle-b.rotation)*Math.min(1,dt*10);if(Math.abs(b.x)+Math.abs(b.y)+Math.abs(b.rotation)>.05)b.el.style.transform=`translate(${b.x}px,${b.y}px) rotate(${b.rotation}deg)`;else b.el.style.removeProperty('transform');});
       spawn+=dt;const interval=season==='winter'?.075:season==='autumn'?.7:2;if((season==='autumn'||season==='winter'||season==='spring'&&particles.length<5)&&!repairing&&spawn>interval&&particles.length<1100){spawn=0;particle(rand(-20,W+20),scrollY-20);}
     }
@@ -142,7 +155,7 @@
   const story = document.createElement('div');
   story.className = 'project-story fuel-story'; story.setAttribute('aria-hidden','true');
   story.innerHTML = '<span class="road"></span><span class="story-car"><svg viewBox="0 0 80 34" aria-hidden="true"><path d="m9 19 10-3 9-12h24l13 13 9 3v8H5v-6Z" fill="#527f6b"/><path d="m25 15 7-8h17l9 9Z" fill="#d0e2df"/><path d="M42 7v10" stroke="#527f6b" stroke-width="3"/><circle cx="20" cy="27" r="6" fill="#303c36"/><circle cx="62" cy="27" r="6" fill="#303c36"/><circle cx="20" cy="27" r="2.5" fill="#b7c4b8"/><circle cx="62" cy="27" r="2.5" fill="#b7c4b8"/><path d="M70 21h5M5 22h5" stroke="#efdbad" stroke-width="3"/></svg></span><span class="story-pump"><svg viewBox="0 0 28 38" aria-hidden="true"><path d="M4 36V5h15v31M1 36h22" fill="#dfe7dc" stroke="#668273" stroke-width="2"/><path d="M7 8h9v9H7Z" fill="#6e9584"/><path d="m20 8 5 5v16q-4 4-4-2V17" fill="none" stroke="#668273" stroke-width="2"/><path d="M9 24h6" stroke="#668273" stroke-width="2"/></svg></span>';
-  projects[0].querySelector('.project-heading').append(story);
+  projects[0].prepend(story);
   const activeWords = new Set();
   function composeDescription(project) {
     if (!enabled() || reduced.matches) return;
@@ -162,7 +175,7 @@
       return word.animate([
       {transform:`translate(${offset}px,${rand(-20,20)}px) rotate(${rand(-12,12)}deg)`,opacity:.35},
       {transform:'translate(0,0) rotate(0)',opacity:1}
-    ],{duration:1350,delay:120+i*13,easing:'cubic-bezier(.2,.75,.25,1)',fill:'both'});});
+    ],{duration:2700,delay:200+i*22,easing:'cubic-bezier(.2,.75,.25,1)',fill:'both'});});
     const finish=()=>{animations.forEach(a=>a.cancel());paragraph.textContent=original;activeWords.delete(finish);};
     activeWords.add(finish);
     Promise.all(animations.map(a=>a.finished)).then(finish).catch(()=>{});
