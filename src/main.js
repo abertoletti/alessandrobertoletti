@@ -73,12 +73,4 @@ function syncPlay() { const toggle = document.querySelector('#play-toggle'); tog
 document.querySelector('#play-toggle').addEventListener('click', () => { play = !play; syncPlay(); });
 reducedMotion.addEventListener('change', event => { play = !event.matches; syncPlay(); });
 syncPlay();
-let discoveries = 0;
-document.querySelector('#coming').addEventListener('click', () => {
-  discoveries++;
-  const messages = english
-    ? ['I’m working on the next projects. You’ll find them here.', 'Still in progress. Good ideas need a few tests, too.', 'You found the hidden detail. Looks like we share a curious streak.']
-    : ['Sto lavorando ai prossimi progetti. Li troverai qui.', 'Ancora in lavorazione. Le buone idee hanno bisogno anche di qualche test.', 'Hai trovato il dettaglio nascosto. La curiosità, a quanto pare, è condivisa.'];
-  document.querySelector('#secret-message').textContent = messages[Math.min(discoveries - 1, 2)];
-});
 document.querySelector('#year').textContent = new Date().getFullYear();

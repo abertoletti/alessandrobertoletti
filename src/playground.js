@@ -4,16 +4,16 @@
   const t = (it, english) => en ? english : it;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const icons = {
-    autumn: '<path fill="#bd713c" stroke="none" d="M19 3C5 2 2 9 6 15c5 5 13 0 13-12Z"/><path d="m4 21 11-13m-7 9 0-5m3 2 5-1"/>',
+    autumn: '<path d="M19.5 3.5C12 3 5 6 5 12a6 6 0 0 0 6 6c6 0 8.5-7 8.5-14.5Z" fill="#d4a373" stroke="#9b693f"/><path d="M3.5 21 15 8.5m-7 8v-5m3 2 5-.5" stroke="#9b693f"/>',
     winter: '<path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 4l3 3 3-3M9 20l3-3 3 3M4 10l4-1-1-4M17 19l-1-4 4-1M4 14l4 1-1 4M17 5l-1 4 4 1"/>',
-    spring: '<path d="M12 22v-9m0 7c-6 0-6-4-6-4 5-1 6 4 6 4"/><g fill="#d99eaa"><ellipse cx="12" cy="6" rx="3" ry="4"/><ellipse cx="7" cy="10" rx="4" ry="3"/><ellipse cx="17" cy="10" rx="4" ry="3"/><ellipse cx="12" cy="14" rx="3" ry="4"/></g><circle cx="12" cy="10" r="2.5" fill="#e5bd60"/>',
-    summer: '<circle cx="12" cy="12" r="4" fill="#e5b75f"/><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2"/>',
-    none: '<circle cx="12" cy="12" r="8"/><path d="m6 6 12 12"/>',
-    tools: '<path d="M4 8h16v12H4zM9 8V4h6v4M4 13h16m-10-2v4h4v-4"/>',
-    hammer: '<path fill="#c4c9c7" d="m8 4 5-2 8 7-4 4-7-6-3 3-3-3z"/><path fill="#ac8051" d="m12 10 3 3-9 9-3-3z"/>',
-    magnet: '<path d="M5 5v10a7 7 0 0 0 14 0V5h-4v10a3 3 0 0 1-6 0V5Z" fill="#bd6255"/><path d="M5 9h4m6 0h4"/>',
-    blower: '<path d="M2 8h12c6 0 6-6 2-6M2 12h18m-18 4h11c6 0 6 6 2 6"/>',
-    level: '<rect x="2" y="7" width="20" height="10" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 7v10m12-10v10"/>',
+    spring: '<path d="M12 21v-7m0 5c-3 0-5-2-5-4 3 0 5 2 5 4" stroke="#729474"/><g fill="#e6b5bf" stroke="#bb7e90" stroke-width="1"><path d="M12 11C7 8 8 3 11 3c2 0 3 4 1 8Z"/><path d="M12 11c1-6 6-8 7-5 1 2-2 5-7 5Z"/><path d="M12 11c6-1 9 3 6 5-2 2-5-1-6-5Z"/><path d="M12 11c3 5 0 9-3 7-2-1-1-5 3-7Z"/><path d="M12 11c-4 4-9 2-8-1 0-3 5-3 8 1Z"/></g><circle cx="12" cy="11" r="2.3" fill="#efd18a" stroke="#c09e55" stroke-width="1"/>',
+    summer: '<circle cx="12" cy="12" r="5.5" fill="#edc778" stroke="#bc924a"/><path d="M12 1v1.5m0 19V23M1 12h1.5m19 0H23M4.2 4.2l1.1 1.1m13.4 13.4 1.1 1.1M4.2 19.8l1.1-1.1M18.7 5.3l1.1-1.1" stroke="#bc924a"/>',
+    none: '<path d="M12 2v9M6.5 5.5a8 8 0 1 0 11 0" stroke-width="1.8"/>',
+    tools: '<rect x="2.5" y="8" width="19" height="13" rx="2.5" fill="#e2e8e0"/><path d="M8 8V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v3M3 13h18"/><rect x="10" y="11" width="4" height="5" rx="1" fill="#b7c5b5"/>',
+    hammer: '<g transform="rotate(38 12 12)"><rect x="10" y="9" width="4" height="13" rx="1.5" fill="#c3986c" stroke="#8e6e4e"/><path d="M5 3h13v6H5V3Z" fill="#c1ccce" stroke="#65777d"/><path d="M5 4H2v4h3m13-5 3 2v3h-3" fill="#c1ccce" stroke="#65777d"/></g>',
+    magnet: '<path d="M4 4v10a8 8 0 0 0 16 0V4h-5v10a3 3 0 0 1-6 0V4Z" fill="#be6d62" stroke="#96564d"/><path d="M4 4h5v5H4zm11 0h5v5h-5Z" fill="#dce3e4" stroke="#718489"/>',
+    blower: '<path d="M2 7h14a3 3 0 1 0-3-3M2 12h20M2 17h14a3 3 0 1 1-3 3" stroke="#718b91" stroke-width="1.8"/>',
+    level: '<rect x="1.5" y="7" width="21" height="10" rx="2" fill="#dec27e" stroke="#9c854e"/><rect x="7" y="9" width="10" height="6" rx="3" fill="#f5f4d5" stroke="#9c854e"/><path d="M10 9v6m4-6v6M4 10v4m16-4v4" stroke="#9c854e"/><ellipse class="level-bubble" cx="12" cy="12" rx="1.4" ry="1.9" fill="#a6be86" stroke="none"/>',
     restore: '<path d="M4 10a8 8 0 1 1 1 8M4 3v7h7"/>'
   };
   const svg = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon icon-${name}">${icons[name]}</svg>`;
@@ -70,9 +70,9 @@
   function closeMenus(){ui.querySelectorAll('.environment-menu').forEach(e=>e.hidden=true);ui.querySelectorAll('.environment-button').forEach(e=>e.setAttribute('aria-expanded','false'));}
   ui.querySelectorAll('.environment-button').forEach(b=>b.addEventListener('click',()=>{const menu=document.getElementById(b.getAttribute('aria-controls'));const open=menu.hidden;closeMenus();menu.hidden=!open;b.setAttribute('aria-expanded',String(open));}));
   document.addEventListener('click',e=>{if(!ui.contains(e.target))closeMenus();});
-  function particle(x,y,rest=null){const p={x,y,vx:rand(-10,15),vy:rand(18,48),size:season==='winter'?rand(1.3,3):rand(7,13),a:rand(0,6.28),spin:rand(-1.4,1.4),phase:rand(0,6.28),color:Math.floor(rand(0,4)),kind:season,rest,age:0,bloom:0};particles.push(p);return p;}
+  function particle(x,y,rest=null){const p={x,y,vx:rand(-10,15),vy:rand(18,48),size:season==='winter'?rand(1.3,3):rand(7,13),a:rand(0,6.28),spin:rand(-1.4,1.4),phase:rand(0,6.28),color:Math.floor(rand(0,4)),kind:season,rest,age:0,restAge:0,restLife:season==='winter'?rand(18,30):rand(12,22),bloom:0};particles.push(p);return p;}
   function setSeason(next){season=next;particles=[];spawn=0;document.body.dataset.season=next;const b=ui.querySelector('.season-toggle');b.setAttribute('aria-label',`${t('Scegli stagione','Choose season')}: ${names[next]}`);b.innerHTML=svg(next)+`<span>${names[next]}</span><span class="chevron">⌄</span>`;ui.querySelectorAll('[data-season-choice]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.seasonChoice===next)));if(dirty)measure();if(next!=='none'&&enabled()){
-    surfaces.forEach(s=>{if(next==='winter'&&(s.y<scrollY-60||s.y>scrollY+H+60))return;const count=next==='winter'?Math.min(45,Math.ceil(s.w/6)):next==='autumn'?(s.glyph?(Math.random()<.19?1:0):Math.min(4,Math.ceil(s.w/130))):next==='spring'?(s.glyph?(Math.random()<.05?1:0):1):0;for(let i=0;i<count;i++){const x=s.x+rand(1,Math.max(2,s.w-1));const p=particle(x,s.y-rand(0,3),s);p.offset=x-s.x;p.a=rand(-.5,.5);}});
+    surfaces.forEach(s=>{if(next==='winter'&&(s.y<scrollY-60||s.y>scrollY+H+60))return;const count=next==='winter'?Math.min(45,Math.ceil(s.w/6)):next==='autumn'?(s.glyph?(Math.random()<.19?1:0):Math.min(4,Math.ceil(s.w/130))):next==='spring'?(s.glyph?(Math.random()<.05?1:0):1):0;for(let i=0;i<count;i++){const x=s.x+rand(1,Math.max(2,s.w-1));const p=particle(x,s.y-rand(0,3),s);p.offset=x-s.x;p.restAge=rand(0,p.restLife*.45);p.a=rand(-.5,.5);}});
     for(let i=0;i<(next==='winter'?60:next==='autumn'?12:next==='summer'?5:7);i++)particle(rand(0,W),scrollY+rand(0,H));
   }closeMenus();}
   ui.querySelectorAll('[data-season-choice]').forEach(b=>b.addEventListener('click',()=>{if(!enabled()&&b.dataset.seasonChoice!=='none'&&!reduced.matches)document.querySelector('#play-toggle').click();setSeason(b.dataset.seasonChoice);}));
@@ -97,18 +97,18 @@
   }
   recovery.querySelector('button').onclick=restore;ui.querySelector('.restore-all').onclick=()=>{closeMenus();restore();};
   function leaf(p){ctx.fillStyle=['#ab6339','#c48b43','#98633e','#c6a05a'][p.color];ctx.beginPath();ctx.moveTo(-p.size,0);ctx.bezierCurveTo(-p.size*.4,-p.size*.85,p.size*.65,-p.size*.65,p.size,0);ctx.bezierCurveTo(p.size*.3,p.size*.7,-p.size*.5,p.size*.65,-p.size,0);ctx.fill();ctx.strokeStyle='#67492b88';ctx.lineWidth=.65;ctx.beginPath();ctx.moveTo(-p.size-3,1);ctx.lineTo(p.size,0);for(let i=-1;i<=1;i++){ctx.moveTo(i*p.size*.35,0);ctx.lineTo(i*p.size*.35+3,-p.size*.35);ctx.moveTo(i*p.size*.35,0);ctx.lineTo(i*p.size*.35+3,p.size*.3);}ctx.stroke();}
-  function drawParticle(p,time){const sy=p.y-scrollY;if(sy< -35||sy>H+35)return;ctx.save();ctx.translate(p.x,sy);ctx.rotate(p.a);if(p.kind==='autumn'){ctx.scale(1,.6+Math.abs(Math.sin(p.phase+time*.001))*.4);leaf(p);}else if(p.kind==='winter'){ctx.fillStyle='#fff';ctx.shadowColor='#839ba944';ctx.shadowBlur=p.rest?2:0;ctx.beginPath();ctx.ellipse(0,0,p.size*(p.rest?1.8:1),p.size,0,0,Math.PI*2);ctx.fill();}else if(p.kind==='spring'){if(p.rest){ctx.rotate(-p.a);ctx.strokeStyle='#638063';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(-4,-10,0,-18);ctx.stroke();ctx.translate(0,-18);const size=p.bloom?6:2.6;for(let i=0;i<5;i++){ctx.rotate(Math.PI*2/5);ctx.fillStyle=['#c98e9f','#e0adbb','#d29fa7','#e4bac1'][p.color];ctx.beginPath();ctx.ellipse(0,-size,size*.65,size,0,0,Math.PI*2);ctx.fill();}ctx.fillStyle='#e8c874';ctx.beginPath();ctx.arc(0,0,2,0,7);ctx.fill();}else{ctx.fillStyle='#dbadbaaa';ctx.beginPath();ctx.ellipse(0,0,p.size*.5,p.size*.25,0,0,7);ctx.fill();}}else if(p.kind==='summer'){ctx.fillStyle=['#d1a258','#e3be73','#b1b9a1','#d9ab67'][p.color];const wing=Math.max(.12,Math.abs(Math.sin(time*.012+p.phase)));ctx.scale(wing,1);ctx.beginPath();ctx.ellipse(-5,-3,6,9,-.5,0,7);ctx.ellipse(5,-3,6,9,.5,0,7);ctx.fill();ctx.fillStyle='#665749';ctx.fillRect(-.7,-5,1.4,11);}else{ctx.globalAlpha=Math.max(0,1-p.age/3);ctx.fillStyle='#8b968d';ctx.beginPath();ctx.moveTo(-p.size,p.size);ctx.lineTo(0,-p.size);ctx.lineTo(p.size,p.size*.5);ctx.fill();}ctx.restore();}
+  function drawParticle(p,time){const sy=p.y-scrollY;if(sy< -35||sy>H+35)return;ctx.save();if(p.kind==='autumn'||p.kind==='winter')ctx.globalAlpha=Math.max(0,Math.min(1,(p.restLife-p.restAge)/4,(90-p.age)/4));ctx.translate(p.x,sy);ctx.rotate(p.a);if(p.kind==='autumn'){ctx.scale(1,.6+Math.abs(Math.sin(p.phase+time*.001))*.4);leaf(p);}else if(p.kind==='winter'){ctx.fillStyle='#fff';ctx.shadowColor='#839ba944';ctx.shadowBlur=p.rest?2:0;ctx.beginPath();ctx.ellipse(0,0,p.size*(p.rest?1.8:1),p.size,0,0,Math.PI*2);ctx.fill();}else if(p.kind==='spring'){if(p.rest){ctx.rotate(-p.a);ctx.strokeStyle='#638063';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(-4,-10,0,-18);ctx.stroke();ctx.translate(0,-18);const size=p.bloom?6:2.6;for(let i=0;i<5;i++){ctx.rotate(Math.PI*2/5);ctx.fillStyle=['#c98e9f','#e0adbb','#d29fa7','#e4bac1'][p.color];ctx.beginPath();ctx.ellipse(0,-size,size*.65,size,0,0,Math.PI*2);ctx.fill();}ctx.fillStyle='#e8c874';ctx.beginPath();ctx.arc(0,0,2,0,7);ctx.fill();}else{ctx.fillStyle='#dbadbaaa';ctx.beginPath();ctx.ellipse(0,0,p.size*.5,p.size*.25,0,0,7);ctx.fill();}}else if(p.kind==='summer'){ctx.fillStyle=['#d1a258','#e3be73','#b1b9a1','#d9ab67'][p.color];const wing=Math.max(.12,Math.abs(Math.sin(time*.012+p.phase)));ctx.scale(wing,1);ctx.beginPath();ctx.ellipse(-5,-3,6,9,-.5,0,7);ctx.ellipse(5,-3,6,9,.5,0,7);ctx.fill();ctx.fillStyle='#665749';ctx.fillRect(-.7,-5,1.4,11);}else{ctx.globalAlpha=Math.max(0,1-p.age/3);ctx.fillStyle='#8b968d';ctx.beginPath();ctx.moveTo(-p.size,p.size);ctx.lineTo(0,-p.size);ctx.lineTo(p.size,p.size*.5);ctx.fill();}ctx.restore();}
   function loop(time){const dt=Math.min((time-last)/1000||.016,.035);last=time;if(dirty)measure();ctx.clearRect(0,0,W,H);const animate=enabled()&&!reduced.matches&&!document.hidden;
     if(animate){bodies.forEach(b=>{const r=b.rect;let tx=0,ty=b.hit>=3?12:0,angle=b.hit?b.angle:0;const dx=pointer.x-(r.x+r.w/2),dy=pointer.y+scrollY-(r.y+r.h/2);if(tool==='magnet'&&pointer.inside&&Math.hypot(dx,dy)<300){const mass=Math.max(1,Math.sqrt(r.w*r.h)/60);tx=dx*.65/mass;ty=dy*.65/mass;angle=dx*.025/mass;}if(tool==='level'&&pointer.inside){angle=(pointer.x/W-.5)*7;tx=angle*2;}if(repairing&&repairStage<3){tx=b.x;ty=b.y;}b.vx+=(tx-b.x)*36*dt;b.vy+=(ty-b.y)*36*dt;b.vx*=Math.exp(-9*dt);b.vy*=Math.exp(-9*dt);b.x+=b.vx*dt;b.y+=b.vy*dt;b.rotation+=(angle-b.rotation)*Math.min(1,dt*10);if(Math.abs(b.x)+Math.abs(b.y)+Math.abs(b.rotation)>.05)b.el.style.transform=`translate(${b.x}px,${b.y}px) rotate(${b.rotation}deg)`;else b.el.style.removeProperty('transform');});
       spawn+=dt;const interval=season==='winter'?.075:season==='autumn'?.7:2;if(season!=='none'&&!repairing&&spawn>interval&&particles.length<1100){spawn=0;particle(rand(-20,W+20),scrollY-20);}
     }
     const live=surfaces.filter(s=>s.y>scrollY-30&&s.y<scrollY+H+40);
-    for(const p of particles){if(animate){p.age+=dt;const py=p.y;const dx=p.x-pointer.x,dy=p.y-(pointer.y+scrollY),dist=Math.hypot(dx,dy);if(tool==='blower'&&pointer.inside&&dist<170){p.rest=null;const force=(1-dist/170)*1800;p.vx+=(dx/Math.max(dist,15)+.7)*force*dt;p.vy+=(dy/Math.max(dist,15)-.65)*force*dt;p.spin+=dt*3;}
+    for(const p of particles){if(animate){p.age+=dt;if(p.rest&&(p.kind==='autumn'||p.kind==='winter'))p.restAge+=dt;const py=p.y;const dx=p.x-pointer.x,dy=p.y-(pointer.y+scrollY),dist=Math.hypot(dx,dy);if(tool==='blower'&&pointer.inside&&dist<170){p.rest=null;const force=(1-dist/170)*1800;p.vx+=(dx/Math.max(dist,15)+.7)*force*dt;p.vy+=(dy/Math.max(dist,15)-.65)*force*dt;p.spin+=dt*3;}
         if(repairing&&repairStage===3&&p.kind==='chip'){p.x+=(p.home.x-p.x)*dt*7;p.y+=(p.home.y-p.y)*dt*7;p.age=1; }
         else if(p.rest){p.x=p.rest.x+p.offset+p.rest.body.x;p.y=p.rest.y+p.rest.body.y-2;p.a+=Math.sin(time*.001+p.phase)*dt*.08;}
-        else{p.vx*=Math.exp(-.65*dt);p.vy+=((p.kind==='chip'?300:p.kind==='winter'?12:22)-p.vy*.45)*dt;p.x+=(p.vx+Math.sin(time*.0012+p.phase)*(p.kind==='winter'?9:22))*dt;p.y+=p.vy*dt;p.a+=p.spin*dt;if(p.kind==='summer'){p.y+=Math.sin(time*.002+p.phase)*24*dt;}if(p.kind!=='chip'&&p.kind!=='summer'&&p.vy>0&&p.age>.8){const surface=live.find(s=>p.x>s.x&&p.x<s.x+s.w&&py<=s.y+s.body.y&&p.y>=s.y+s.body.y);if(surface){p.rest=surface;p.offset=p.x-surface.x;p.y=surface.y;p.vx=p.vy=0;p.a=rand(-.4,.4);}}}
+        else{p.vx*=Math.exp(-.65*dt);p.vy+=((p.kind==='chip'?300:p.kind==='winter'?12:22)-p.vy*.45)*dt;p.x+=(p.vx+Math.sin(time*.0012+p.phase)*(p.kind==='winter'?9:22))*dt;p.y+=p.vy*dt;p.a+=p.spin*dt;if(p.kind==='summer'){p.y+=Math.sin(time*.002+p.phase)*24*dt;}if(p.kind!=='chip'&&p.kind!=='summer'&&p.vy>0&&p.age>.8){const surface=live.find(s=>p.x>s.x&&p.x<s.x+s.w&&py<=s.y+s.body.y&&p.y>=s.y+s.body.y);if(surface){p.rest=surface;p.restAge=0;p.offset=p.x-surface.x;p.y=surface.y;p.vx=p.vy=0;p.a=rand(-.4,.4);}}}
       }drawParticle(p,time);}
-    particles=particles.filter(p=>p.kind==='chip'?p.age<3:p.rest||p.y<scrollY+H+150&&p.x>-350&&p.x<W+350);
+    particles=particles.filter(p=>p.kind==='chip'?p.age<3:(!(p.kind==='autumn'||p.kind==='winter')||(p.age<90&&p.restAge<p.restLife))&&(p.rest||p.y<scrollY+H+150&&p.x>-350&&p.x<W+350));
     for(const b of bodies){const r=b.rect,y=r.y-scrollY+b.y;if(y>H||y+r.h<0)continue;if(b.cracks.length){ctx.save();ctx.beginPath();ctx.rect(r.x+b.x,y,r.w,r.h);ctx.clip();ctx.translate(r.x+b.x,y);ctx.strokeStyle='#35483c99';ctx.lineWidth=.8;for(const path of b.cracks){ctx.beginPath();path.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.stroke();}ctx.restore();}
       if(repairing&&(b.hit||Math.hypot(b.x,b.y)>1)){ctx.strokeStyle='#789b95';ctx.lineWidth=1;ctx.setLineDash([4,5]);ctx.strokeRect(r.x-4+b.x,y-4,r.w+8,r.h+8);ctx.setLineDash([]);if(repairStage===1){ctx.fillStyle='#89b9a322';ctx.fillRect(r.x,y,r.w,(time*.12)%(r.h+1));}if(repairStage===2){ctx.fillStyle='#426653';ctx.beginPath();ctx.arc(r.x+r.w,y,11,0,7);ctx.fill();ctx.fillStyle='white';ctx.font='11px Arial';ctx.textAlign='center';ctx.fillText(b.el.dataset.repairOrder,r.x+r.w,y+4);}}
     }
@@ -118,13 +118,42 @@
   new MutationObserver(()=>{if(!enabled()){selectTool(tool);setSeason('none');restore();}}).observe(document.body,{attributes:true,attributeFilter:['class']});
   const current=['winter','winter','spring','spring','spring','summer','summer','summer','autumn','autumn','autumn','winter'][new Date().getMonth()];
   setSeason(enabled()&&!reduced.matches?current:'none');requestAnimationFrame(loop);
-  // Decorative project stories run once when each card enters the viewport.
-  const projects = document.querySelectorAll('.project');
-  projects.forEach((project,i) => {
-    const story=document.createElement('div');story.className=`project-story ${i===0?'fuel-story':'notes-story'}`;story.setAttribute('aria-hidden','true');
-    story.innerHTML=i===0 ? '<span class="road"></span><span class="story-car"><svg viewBox="0 0 80 34" aria-hidden="true"><path d="m9 19 10-3 9-12h24l13 13 9 3v8H5v-6Z" fill="#527f6b"/><path d="m25 15 7-8h17l9 9Z" fill="#d0e2df"/><path d="M42 7v10" stroke="#527f6b" stroke-width="3"/><circle cx="20" cy="27" r="6" fill="#303c36"/><circle cx="62" cy="27" r="6" fill="#303c36"/><circle cx="20" cy="27" r="2.5" fill="#b7c4b8"/><circle cx="62" cy="27" r="2.5" fill="#b7c4b8"/><path d="M70 21h5M5 22h5" stroke="#efdbad" stroke-width="3"/></svg></span><span class="story-pump"><svg viewBox="0 0 28 38" aria-hidden="true"><path d="M4 36V5h15v31M1 36h22" fill="#dfe7dc" stroke="#668273" stroke-width="2"/><path d="M7 8h9v9H7Z" fill="#6e9584"/><path d="m20 8 5 5v16q-4 4-4-2V17" fill="none" stroke="#668273" stroke-width="2"/><path d="M9 24h6" stroke="#668273" stroke-width="2"/></svg></span>' : `<span class="note-word word-one">${t('Idee','Ideas')}</span><span class="note-word word-two">${t('Appunti','Thoughts')}</span><span class="note-word word-three">${t('Da fare','To do')}</span><span class="story-note">✓ Keepify</span>`;
-    project.append(story);
-  });
-  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('story-visible');observer.unobserve(entry.target);}}),{threshold:.35});
+  // Animate the actual Keepify description, preserving its accessible text.
+  const projects = [...document.querySelectorAll('.project')];
+  const story = document.createElement('div');
+  story.className = 'project-story fuel-story'; story.setAttribute('aria-hidden','true');
+  story.innerHTML = '<span class="road"></span><span class="story-car"><svg viewBox="0 0 80 34" aria-hidden="true"><path d="m9 19 10-3 9-12h24l13 13 9 3v8H5v-6Z" fill="#527f6b"/><path d="m25 15 7-8h17l9 9Z" fill="#d0e2df"/><path d="M42 7v10" stroke="#527f6b" stroke-width="3"/><circle cx="20" cy="27" r="6" fill="#303c36"/><circle cx="62" cy="27" r="6" fill="#303c36"/><circle cx="20" cy="27" r="2.5" fill="#b7c4b8"/><circle cx="62" cy="27" r="2.5" fill="#b7c4b8"/><path d="M70 21h5M5 22h5" stroke="#efdbad" stroke-width="3"/></svg></span><span class="story-pump"><svg viewBox="0 0 28 38" aria-hidden="true"><path d="M4 36V5h15v31M1 36h22" fill="#dfe7dc" stroke="#668273" stroke-width="2"/><path d="M7 8h9v9H7Z" fill="#6e9584"/><path d="m20 8 5 5v16q-4 4-4-2V17" fill="none" stroke="#668273" stroke-width="2"/><path d="M9 24h6" stroke="#668273" stroke-width="2"/></svg></span>';
+  projects[0].querySelector('.project-heading').append(story);
+  const activeWords = new Set();
+  function composeDescription(project) {
+    if (!enabled() || reduced.matches) return;
+    const paragraph = project.querySelector(':scope > p');
+    const original = paragraph.textContent;
+    const accessible = document.createElement('span'); accessible.className='sr-only'; accessible.textContent=original;
+    const visual = document.createElement('span'); visual.setAttribute('aria-hidden','true');
+    const words = original.split(/(\s+)/).map(word => {
+      if (!word.trim()) {visual.append(document.createTextNode(word));return null;}
+      const span=document.createElement('span');span.className='composing-word';span.textContent=word;visual.append(span);return span;
+    }).filter(Boolean);
+    paragraph.replaceChildren(accessible,visual);
+    const bounds=paragraph.getBoundingClientRect();
+    const animations=words.map((word,i)=>{
+      const box=word.getBoundingClientRect();
+      const offset=Math.max(bounds.left-box.left,Math.min(bounds.right-box.right,rand(-32,32)));
+      return word.animate([
+      {transform:`translate(${offset}px,${rand(-20,20)}px) rotate(${rand(-12,12)}deg)`,opacity:.35},
+      {transform:'translate(0,0) rotate(0)',opacity:1}
+    ],{duration:1350,delay:120+i*13,easing:'cubic-bezier(.2,.75,.25,1)',fill:'both'});});
+    const finish=()=>{animations.forEach(a=>a.cancel());paragraph.textContent=original;activeWords.delete(finish);};
+    activeWords.add(finish);
+    Promise.all(animations.map(a=>a.finished)).then(finish).catch(()=>{});
+  }
+  new MutationObserver(()=>{if(!enabled())for(const finish of [...activeWords])finish();}).observe(document.body,{attributes:true,attributeFilter:['class']});
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(!entry.isIntersecting)return;
+    entry.target.classList.add('story-visible');
+    if(entry.target===projects[1])composeDescription(entry.target);
+    observer.unobserve(entry.target);
+  }),{threshold:.45});
   projects.forEach(project=>observer.observe(project));
 })();
