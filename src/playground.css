@@ -1,8 +1,7 @@
 /* The controls belong to the navigation; the scene never intercepts reading. */
 .header { position:relative; z-index:40; gap:22px; }
-.header > nav { gap:24px; }
-.header .contact-link { display:inline; white-space:nowrap; }
-.header .contact-link span { margin-left:3px; }
+.header > nav { gap:24px; align-items:baseline; }
+.header > nav > a { font:inherit; line-height:1.5; white-space:nowrap; }
 .header-actions { gap:14px; }
 .environment-controls { display:flex; gap:6px; align-items:center; }
 .control-group { position:relative; }
@@ -108,8 +107,6 @@ body[data-season=summer] { --paper:#faf6ec; --accent:#387779; }
   .header { height:auto; min-height:108px; flex-wrap:wrap; padding:16px 0 12px; row-gap:13px; }
   .header > nav { order:3; width:100%; justify-content:space-between; gap:10px; }
   .header-actions { margin-left:auto; }
-  .header .contact-link { display:inline; }
-  .header > nav .contact-link span { display:none; }
   .environment-menu { position:fixed; top:66px; right:20px; width:240px; max-height:calc(100dvh - 90px); overflow:auto; }
   .tool-dock { bottom:16px; padding-left:14px; }
   body[data-season=summer] .tool-dock { bottom:90px; }
