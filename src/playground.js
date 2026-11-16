@@ -201,21 +201,63 @@
       ctx.restore();
     }
   }
-  function drawWashWave(dt,animate){
+  // The very same front is used for rendering and for erasing each sand point.
+  function washFront(x,elapsed){
+    const ease=v=>v*v*(3-2*v),retreat=Math.max(0,Math.min(1,(elapsed-2.3)/3));
+    const coverage=elapsed<2.3?ease(Math.min(1,elapsed/2)):1-ease(retreat);
+    const edge=H+55-(H+125)*coverage;
+    return edge+Math.sin(x*.006+elapsed*.65)*12+Math.sin(x*.019-elapsed*1.1)*5+Math.sin(x*.057+elapsed)*1.8;
+  }
+  function updateWashWave(dt,animate){
     if(!washWave)return;
     if(!animate){sandStrokes=[];washWave=null;updateAction();return;}
     washWave.elapsed+=dt;
-    const elapsed=washWave.elapsed,retreat=Math.max(0,Math.min(1,(elapsed-2.1)/2.5));
-    const rise=Math.min(1,elapsed/1.8),ease=x=>x*x*(3-2*x);
-    const coverage=elapsed<2.1?ease(rise):1-ease(retreat);
-    const edge=H-(H+60)*coverage;
-    ctx.save();ctx.beginPath();ctx.moveTo(0,H);
-    for(let x=0;x<=W+10;x+=10)ctx.lineTo(x,edge+Math.sin(x*.009+elapsed*2)*9+Math.sin(x*.022-elapsed*3)*3);
-    ctx.lineTo(W,H);ctx.closePath();const water=ctx.createLinearGradient(0,edge,0,H+1);water.addColorStop(0,'#a9ded68c');water.addColorStop(.2,'#75bdbb70');water.addColorStop(1,'#3d899c80');ctx.fillStyle=water;ctx.fill();
-    ctx.strokeStyle='#fff9e8cc';ctx.lineWidth=3;ctx.beginPath();for(let x=0;x<=W+10;x+=6){const y=edge+Math.sin(x*.009+elapsed*2)*9+Math.sin(x*.022-elapsed*3)*3;if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();
-    for(let i=0;i<W/8;i++){const x=i*8,y=edge+Math.sin(x*.009+elapsed*2)*9+Math.sin(x*.022-elapsed*3)*3;ctx.fillStyle='#fffbed88';ctx.beginPath();ctx.ellipse(x+grain(i)*4,y+4+grain(i+2)*10,1+grain(i+7)*3,.6+grain(i+3),0,0,Math.PI*2);ctx.fill();}ctx.restore();
-    if(retreat>0){const height=document.documentElement.scrollHeight;for(const stroke of sandStrokes)for(const p of stroke.points){const washed=Math.max(0,Math.min(1,(ease(retreat)-p.y/height)*8));p.opacity=Math.min(p.opacity,1-washed);}}
-    if(elapsed>=4.6){sandStrokes=[];washWave=null;updateAction();flowerStatus.textContent=t('Sabbia lisciata dall’onda.','The wave has smoothed the sand.');}
+    const elapsed=washWave.elapsed,retreat=elapsed>2.3;
+    for(const stroke of sandStrokes)for(const p of stroke.points){
+      const y=p.y-scrollY,edge=washFront(p.x,elapsed);
+      if(!retreat&&y>=edge)p.waveWet=true;
+      // No time-based fade: a groove vanishes exactly behind the receding foam.
+      if(retreat&&p.waveWet&&y<=edge)p.opacity=0;
+    }
+    if(elapsed>=5.3){sandStrokes=[];washWave=null;updateAction();flowerStatus.textContent=t('Sabbia lisciata dall’onda.','The wave has smoothed the sand.');}
+  }
+  function drawWashWave(){
+    if(!washWave)return;
+    const elapsed=washWave.elapsed,retreat=elapsed>2.3;
+    const front=x=>washFront(x,elapsed);
+    ctx.save();
+    ctx.beginPath();ctx.moveTo(0,H);for(let x=0;x<=W+8;x+=8)ctx.lineTo(x,front(x));ctx.lineTo(W,H);ctx.closePath();
+    ctx.fillStyle='#79b5ad16';ctx.fill();ctx.clip();
+    // A shallow sheet, not a uniform blue overlay: most colour stays at the crest.
+    const crestWidth=retreat?24:40;
+    for(let offset=0;offset<crestWidth;offset+=2){
+      const depth=offset/crestWidth,alpha=(1-depth)*(depth<.2?.25:.13);
+      ctx.fillStyle=depth<.2?`rgba(220,241,226,${alpha})`:`rgba(126,177,167,${alpha})`;
+      ctx.beginPath();ctx.moveTo(0,front(0)+offset);
+      for(let x=0;x<=W+8;x+=8)ctx.lineTo(x,front(x)+offset);
+      for(let x=W+8;x>=0;x-=8)ctx.lineTo(x,front(x)+offset+2);
+      ctx.closePath();ctx.fill();
+    }
+    for(let i=0;i<W/13;i++){
+      const x=grain(i+83)*W,y=front(x)+20+grain(i+77)*125;
+      ctx.strokeStyle=`rgba(252,250,225,${.08+grain(i+12)*.15})`;ctx.lineWidth=.65;
+      ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+8,y-2,x+18+grain(i)*22,y+Math.sin(elapsed+i)*2);ctx.stroke();
+    }
+    ctx.restore();ctx.save();
+    // A broken, branching foam band follows each irregular lobe of the wave.
+    for(let x=0;x<W;x+=3){
+      const y=front(x),n=Math.floor(x/3),density=.4+grain(n+44)*.6;
+      ctx.strokeStyle=`rgba(255,253,237,${density*.85})`;ctx.lineWidth=1.2+grain(n+16)*2.8;
+      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+3,front(x+3));ctx.stroke();
+      if(grain(n+7)>.22){
+        const trail=(retreat?8:17)*grain(n+31),radius=.8+grain(n+22)*2.5;
+        ctx.strokeStyle=`rgba(255,253,237,${density*.5})`;ctx.lineWidth=.65;
+        ctx.beginPath();ctx.ellipse(x+Math.sin(elapsed+n)*1.5,y+2+trail,radius,radius*.5,grain(n)*2,0,Math.PI*2);ctx.stroke();
+      }
+      if(n%7===0){ctx.strokeStyle='#fff9e766';ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(x,y+2);ctx.bezierCurveTo(x-3,y+7,x+8,y+8,x+5,y+(retreat?10:20));ctx.stroke();}
+      if(!retreat&&n%11===0){const lift=(elapsed*1.2+grain(n))%1;ctx.fillStyle=`rgba(255,253,237,${(1-lift)*.4})`;ctx.beginPath();ctx.arc(x+lift*6,y-lift*9,.7,0,Math.PI*2);ctx.fill();}
+    }
+    ctx.restore();
   }
   let seaTime=0,seaWind=0;
   let wetSand=[],seaHeight=0;
@@ -350,7 +392,7 @@
         else{p.vx*=Math.exp(-.65*dt);p.vy+=((p.kind==='winter'?12:22)-p.vy*.45)*dt;p.x+=(p.vx+Math.sin(time*.0012+p.phase)*(p.kind==='winter'?9:22))*dt;p.y+=p.vy*dt;p.a+=p.spin*dt;if(p.vy>0&&p.age>.8){const surface=live.find(s=>p.x>s.x&&p.x<s.x+s.w&&py<=s.y+s.body.y&&p.y>=s.y+s.body.y);if(surface){p.rest=surface;p.restAge=0;p.offset=p.x-surface.x;p.y=surface.y;p.vx=p.vy=0;p.a=rand(-.4,.4);}}}
       }drawParticle(p,time);}
     particles=particles.filter(p=>(!(p.kind==='autumn'||p.kind==='winter')||(p.age<90&&p.restAge<p.restLife))&&(p.kind==='spring'||p.rest||p.y<scrollY+H+150&&p.x>-350&&p.x<W+350));
-    if(season==='summer'){drawSand();const bottom=document.documentElement.scrollHeight-scrollY;if(bottom<H+220){ctx.save();ctx.translate(0,bottom-H);drawSea(dt,animate);ctx.restore();}drawWashWave(dt,animate);}
+    if(season==='summer'){updateWashWave(dt,animate);drawSand();const bottom=document.documentElement.scrollHeight-scrollY;if(bottom<H+220){ctx.save();ctx.translate(0,bottom-H);drawSea(dt,animate);ctx.restore();}drawWashWave();}
     if(tool==='breeze'&&pointer.inside&&animate){ctx.strokeStyle='#79938855';ctx.lineWidth=1;for(let i=0;i<5;i++){const offset=(time*.15+i*30)%150;ctx.beginPath();ctx.ellipse(pointer.x+offset,pointer.y,offset*.3+5,offset*.15+3,0,-.7,.7);ctx.stroke();}}
     requestAnimationFrame(loop);
   }
