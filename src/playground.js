@@ -202,9 +202,10 @@
     }
   }
   // The very same front is used for rendering and for erasing each sand point.
+  const washTiming={advance:2.6,retreatStart:3,retreatDuration:5.5};
   function washFront(x,elapsed){
-    const ease=v=>v*v*(3-2*v),retreat=Math.max(0,Math.min(1,(elapsed-2.3)/3));
-    const coverage=elapsed<2.3?ease(Math.min(1,elapsed/2)):1-ease(retreat);
+    const ease=v=>v*v*(3-2*v),retreat=Math.max(0,Math.min(1,(elapsed-washTiming.retreatStart)/washTiming.retreatDuration));
+    const coverage=elapsed<washTiming.retreatStart?ease(Math.min(1,elapsed/washTiming.advance)):1-ease(retreat);
     const edge=H+55-(H+125)*coverage;
     return edge+Math.sin(x*.006+elapsed*.65)*12+Math.sin(x*.019-elapsed*1.1)*5+Math.sin(x*.057+elapsed)*1.8;
   }
@@ -212,18 +213,18 @@
     if(!washWave)return;
     if(!animate){sandStrokes=[];washWave=null;updateAction();return;}
     washWave.elapsed+=dt;
-    const elapsed=washWave.elapsed,retreat=elapsed>2.3;
+    const elapsed=washWave.elapsed,retreat=elapsed>washTiming.retreatStart;
     for(const stroke of sandStrokes)for(const p of stroke.points){
       const y=p.y-scrollY,edge=washFront(p.x,elapsed);
       if(!retreat&&y>=edge)p.waveWet=true;
       // No time-based fade: a groove vanishes exactly behind the receding foam.
       if(retreat&&p.waveWet&&y<=edge)p.opacity=0;
     }
-    if(elapsed>=5.3){sandStrokes=[];washWave=null;updateAction();flowerStatus.textContent=t('Sabbia lisciata dall’onda.','The wave has smoothed the sand.');}
+    if(elapsed>=washTiming.retreatStart+washTiming.retreatDuration){sandStrokes=[];washWave=null;updateAction();flowerStatus.textContent=t('Sabbia lisciata dall’onda.','The wave has smoothed the sand.');}
   }
   function drawWashWave(){
     if(!washWave)return;
-    const elapsed=washWave.elapsed,retreat=elapsed>2.3;
+    const elapsed=washWave.elapsed,retreat=elapsed>washTiming.retreatStart;
     const front=x=>washFront(x,elapsed);
     ctx.save();
     ctx.beginPath();ctx.moveTo(0,H);for(let x=0;x<=W+8;x+=8)ctx.lineTo(x,front(x));ctx.lineTo(W,H);ctx.closePath();
