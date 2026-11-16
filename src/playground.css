@@ -98,10 +98,10 @@ body[data-season=summer] .company-logos img { filter:drop-shadow(calc(var(--shad
 .breeze-toggle[aria-pressed=true] { background:#dfebe4; border-color:#8cac9a; }
 .breeze-toggle:disabled { opacity:.4; cursor:default; }
 .breeze-toggle { gap:6px; }
-body[data-season=summer] footer { padding-bottom:55px; }
-body[data-season=summer] .tool-dock { bottom:65px; }
+body[data-season=summer] footer { padding-bottom:120px; }
+body[data-season=summer] .tool-dock { bottom:120px; }
 body[data-season=summer] { --paper:#faf6ec; --accent:#387779; }
-@media(max-width:700px) { .breeze-toggle span { display:none; } body[data-season=summer] footer { padding-bottom:44px; } }
+@media(max-width:700px) { .breeze-toggle span { display:none; } body[data-season=summer] footer { padding-bottom:90px; } }
 @media(max-width:700px) {
   .header { height:auto; min-height:108px; flex-wrap:wrap; padding:16px 0 12px; row-gap:13px; }
   .header > nav { order:3; width:100%; justify-content:space-between; gap:10px; }
@@ -110,6 +110,22 @@ body[data-season=summer] { --paper:#faf6ec; --accent:#387779; }
   .header > nav .contact-link span { display:none; }
   .environment-menu { position:fixed; top:66px; right:20px; width:240px; max-height:calc(100dvh - 90px); overflow:auto; }
   .tool-dock { bottom:16px; padding-left:14px; }
-  body[data-season=summer] .tool-dock { bottom:56px; }
+  body[data-season=summer] .tool-dock { bottom:90px; }
 }
 body[data-season=summer] main,body[data-season=summer] footer { position:relative; z-index:13; }
+
+/* In summer the document itself is the beach; the sea lives at its end. */
+.beach-end,.sand-hint { display:none; }
+body[data-season=summer] { --paper:#f3e7cd; --ink:#3e382e; --muted:#716650; --line:#d9c9aa; background-color:var(--paper); background-image:radial-gradient(#9a784018 .65px,transparent .9px),radial-gradient(#fff9e680 .8px,transparent 1px); background-size:7px 9px,11px 13px; background-position:0 0,3px 5px; }
+body[data-season=summer] .about,body[data-season=summer] .contact { background:transparent; color:var(--ink); }
+body[data-season=summer] .contact .eyebrow,body[data-season=summer] .contact-bottom p,body[data-season=summer] .about-copy p { color:var(--muted); }
+body[data-season=summer] .beach-end { display:block; height:240px; }
+body[data-season=summer] footer { padding-bottom:0; }
+body[data-season=summer] .tool-dock { bottom:24px; }
+body[data-season=summer] .sand-hint { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin:20px 0 0; color:var(--muted); font-size:11px; line-height:1.7; }
+.sand-hint button { border:0; background:transparent; padding:6px 0; font-size:11px; text-decoration:underline; text-underline-offset:3px; }
+body[data-season=summer] .sand-hint,body[data-season=summer] .header { position:relative; z-index:14; }
+@media(max-width:700px) { body[data-season=summer] .beach-end { height:190px; } }
+@media(pointer:coarse) { .sand-hint span { display:none; } }
+
+body[data-season=summer] { background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22240%22%20height%3D%22240%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%22.8%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22/%3E%3CfeColorMatrix%20type%3D%22saturate%22%20values%3D%220%22/%3E%3C/filter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url%28%23n%29%22%20opacity%3D%22.12%22/%3E%3C/svg%3E"); background-size:240px 240px; background-position:0 0; }
