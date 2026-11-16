@@ -36,7 +36,14 @@
 body[data-tool=hammer] main,body[data-tool=blower] main { cursor:crosshair; }
 body[data-tool=magnet] main { cursor:grab; }
 body { transition:background-color 1s; }
-body[data-season=autumn] { --paper:#f7f5ef; }
+body[data-season=autumn] { --paper:#faf1e5; --ink:#352c26; --muted:#74604f; --accent:#9c552d; --line:#e3cfb9; }
+body[data-season=autumn] .about { background:#f0e2cf; }
+body[data-season=autumn] .about-copy p,body[data-season=autumn] .approach-list p { color:#705a47; }
+body[data-season=autumn] .skill-tags span,body[data-season=autumn] .approach-list article { border-color:#d8c2a8; }
+body[data-season=autumn] .portrait { background:#e8ddcb; }
+body[data-season=autumn] .portrait canvas { filter:sepia(.2) saturate(.85); }
+body[data-season=autumn] .contact { background:#49372c; }
+body[data-season=autumn] .contact .eyebrow,body[data-season=autumn] .contact-bottom p { color:#d6c1ac; }
 body[data-season=winter] { --paper:#f3f6f7; }
 body[data-season=spring] { --paper:#f5f7f1; }
 body[data-season=summer] { --paper:#faf7ef; }
@@ -61,29 +68,15 @@ body[data-season=summer] .portrait { box-shadow:10px 12px 35px #d9b97820; }
 @media(max-width:700px) { .header { height:auto; min-height:108px; flex-wrap:wrap; padding:16px 0 12px; row-gap:13px; } .header > nav { order:3; width:100%; justify-content:space-between; gap:10px; } .header-actions { margin-left:auto; } .header .contact-link { display:inline; } .header > nav .contact-link span { display:none; } .environment-menu { position:fixed; top:66px; right:20px; width:240px; max-height:calc(100dvh - 90px); overflow:auto; } .recovery { left:16px; bottom:86px; } .tool-dock { bottom:16px; padding-left:14px; } }
 @media(prefers-reduced-motion:reduce) { .environment-controls *,body { animation:none!important; transition:none!important; } }
 .no-play .environment-controls * { animation:none!important; }
-/* The top border is GeoPieno’s road; Keepify animates its own copy. */
-.project-heading h3 { white-space:nowrap; }
-.project { position:relative; }
-.project-story { position:absolute; top:-35px; left:0; width:100%; height:38px; overflow:hidden; pointer-events:none; }
-.road { display:none; }
-.story-car { position:absolute; bottom:4px; left:-60px; width:48px; height:24px; }
-.story-pump { position:absolute; bottom:4px; left:72%; width:21px; height:30px; }
-.story-car svg,.story-pump svg { display:block; width:100%; height:100%; }
-.story-visible .story-car { animation:drive-to-pump 5s ease-in-out forwards; }
-.story-visible .story-pump { animation:pump-refill 5s ease-in-out forwards; }
-@keyframes drive-to-pump { 0% {left:-60px} 35%,65% {left:calc(72% - 50px)} 100% {left:calc(100% + 10px)} }
-@keyframes pump-refill { 35%,65% { filter:drop-shadow(0 0 4px #75b18880); } }
-.no-play .story-car { animation:none; left:calc(72% - 50px); }
-.no-play .story-pump { animation:none; }
 .composing-word { display:inline-block; }
 .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
 .coming { cursor:default; }
 .environment-controls .icon { width:27px; height:27px; }
 .environment-menu .icon { width:28px; height:28px; }
 .environment-button { height:40px; }
-.icon-level:hover .level-bubble { animation:bubble-settle 1.2s ease-in-out; }
-@keyframes bubble-settle { 30% {transform:translateX(2px)} 65% {transform:translateX(-1px)} }
-@media(prefers-reduced-motion:reduce) { .project-story * { animation:none!important; } .story-car { left:calc(72% - 50px); } }
+
+
+
 
 body.tool-pointer-active main,body.tool-pointer-active main * { cursor:none!important; }
 
