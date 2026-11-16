@@ -4,6 +4,12 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
     flights = [],
     fragments = [];
   const fallen = new Map();
+  const targets = [
+    ...document.querySelectorAll(
+      "main h1,main h2,main h3,main .portrait,main .button,main .text-link,main .project-link,main .skill-tags span,main .company-logos img",
+    ),
+  ];
+  let frameTargets = null;
   const restoreButton = document.createElement("button");
   restoreButton.type = "button";
   restoreButton.className = "restore-page";
@@ -31,20 +37,18 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
   restoreButton.onclick = () => restore();
   function impact(ball, previous, u) {
     if (u < 0.15) return false;
-    const candidates = [
-      ...document.querySelectorAll(
-        "main h1,main h2,main h3,main .portrait,main .button,main .text-link,main .project-link,main .skill-tags span,main .company-logos img",
-      ),
-    ]
-      .filter((el) => !fallen.has(el))
-      .map((el) => ({ el, rect: el.getBoundingClientRect() }))
-      .filter(
-        ({ rect: r }) =>
-          r.width && r.height && r.bottom > 0 && r.top < size().height,
-      )
-      .sort(
-        (a, b) => a.rect.width * a.rect.height - b.rect.width * b.rect.height,
-      );
+    const candidates =
+      frameTargets ||
+      (frameTargets = targets
+        .filter((el) => !fallen.has(el))
+        .map((el) => ({ el, rect: el.getBoundingClientRect() }))
+        .filter(
+          ({ rect: r }) =>
+            r.width && r.height && r.bottom > 0 && r.top < size().height,
+        )
+        .sort(
+          (a, b) => a.rect.width * a.rect.height - b.rect.width * b.rect.height,
+        ));
     const steps = Math.max(
       1,
       Math.ceil(Math.hypot(ball.x - previous.x, ball.y - previous.y) / 8),
@@ -53,6 +57,7 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
       const x = previous.x + ((ball.x - previous.x) * i) / steps,
         y = previous.y + ((ball.y - previous.y) * i) / steps - scrollY;
       for (const { el, rect: r } of candidates) {
+        if (fallen.has(el)) continue;
         const startInside =
           ball.startX >= r.left - ball.radius &&
           ball.startX <= r.right + ball.radius &&
@@ -246,7 +251,10 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
     ctx.restore();
   }
   function draw(dt, animate) {
-    restoreButton.hidden = !active() || fallen.size === 0;
+    frameTargets = null;
+    const hideRestore = !active() || fallen.size === 0;
+    if (restoreButton.hidden !== hideRestore)
+      restoreButton.hidden = hideRestore;
     if (!active() && held) cancel();
     if (held) {
       if (animate) {

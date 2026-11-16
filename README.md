@@ -2,7 +2,7 @@
 
 Bilingual personal portfolio: software development, consulting, AI agents and selected projects.
 
-**Website:** https://abertoletti.github.io/alessandrobertoletti/
+**Website:** https://alessandrobertoletti.it/
 
 ## Run locally
 
@@ -32,7 +32,7 @@ Original generated images and retouch comparisons are retained in the repository
 
 ## Publishing
 
-`.github/workflows/pages.yml` checks and builds each push to `main`, then deploys `dist/` to GitHub Pages. It can also be run manually from Actions. Relative asset paths support the repository subdirectory and a future custom domain. Configure the purchased domain in GitHub Pages settings and at the DNS provider when available.
+`.github/workflows/pages.yml` checks and builds each push to `main`, then deploys `dist/` to GitHub Pages. It can also be run manually from Actions. Relative asset paths support the repository subdirectory and a future custom domain. The custom domain alessandrobertoletti.it is configured with HTTPS enforced; www redirects to the apex domain.
 
 ## Content and interactions
 
@@ -50,3 +50,7 @@ Seasonal portraits appear with a two-thirds probability for professional version
 - Interaction references: https://www.bruno-simon.com/, https://whimsy.joshwcomeau.com/ and Apple's Liquid Glass motion guidance. No source code was copied from these portfolios.
 
 Company marks belong to their respective owners. Personal photographs are included as portfolio assets.
+
+## Animation performance
+
+The weather canvas is idle while atmospheres are off, pauses in hidden tabs and renders on demand with reduced motion. Snow shading is rasterized once and reused. Snowball collision bounds are shared by projectiles within a frame. The initial portrait is present in HTML with high fetch priority, including when JavaScript is unavailable.

@@ -29,6 +29,8 @@ async function showPortrait(season = "none") {
   function loadPhoto(name) {
     if (!photoCache.has(name)) {
       const photo = new Image();
+      photo.decoding = "async";
+      photo.fetchPriority = name === "neutral-v2" ? "high" : "auto";
       photo.src = new URL(
         `${english ? "../" : "./"}public/portraits/optimized/${name}.webp`,
         document.baseURI,
@@ -67,7 +69,7 @@ async function showPortrait(season = "none") {
   const previous = portrait.lastElementChild;
   portrait.replaceChildren(...(previous ? [previous] : []), image);
   portrait.dataset.portrait = name;
-  if (previous && !reducedMotion.matches) {
+  if (previous && previous.src !== image.src && !reducedMotion.matches) {
     const fade = image.animate([{ opacity: 0 }, { opacity: 1 }], {
       duration: 650,
       easing: "ease-out",

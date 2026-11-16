@@ -188,6 +188,21 @@
   canvas.ariaHidden = "true";
   document.body.append(canvas);
   const ctx = canvas.getContext("2d");
+  // Rasterize snow shading once instead of blurring every flake every frame.
+  const snowSprite = document.createElement("canvas");
+  snowSprite.width = snowSprite.height = 32;
+  const snowPaint = snowSprite.getContext("2d");
+  snowPaint.fillStyle = "#fff";
+  snowPaint.shadowColor = "#526f8c99";
+  snowPaint.shadowBlur = 4;
+  snowPaint.shadowOffsetY = 2;
+  snowPaint.strokeStyle = "#8ba1b45c";
+  snowPaint.lineWidth = 1;
+  snowPaint.beginPath();
+  snowPaint.arc(16, 16, 8, 0, Math.PI * 2);
+  snowPaint.fill();
+  snowPaint.stroke();
+
   let W = innerWidth,
     H = innerHeight,
     particles = [],
@@ -197,6 +212,11 @@
     last = 0,
     spawn = 0,
     dirty = true;
+  let weatherFrame = 0;
+  function requestSceneFrame() {
+    if (!weatherFrame && season !== "none" && !document.hidden)
+      weatherFrame = requestAnimationFrame(loop);
+  }
   const pointer = { x: -1000, y: -1000, inside: false };
   const rand = (a, b) => a + Math.random() * (b - a);
   const enabled = () => !document.body.classList.contains("no-play");
@@ -233,13 +253,12 @@
             range.setEnd(text, i + 1);
             const box = range.getBoundingClientRect(),
               ink = ctx.measureText(char);
+            const ascent =
+              ink.fontBoundingBoxAscent ?? parseFloat(style.fontSize) * 0.8;
+            const descent =
+              ink.fontBoundingBoxDescent ?? parseFloat(style.fontSize) * 0.2;
             const baseline =
-              box.top +
-              (box.height -
-                ink.fontBoundingBoxAscent -
-                ink.fontBoundingBoxDescent) /
-                2 +
-              ink.fontBoundingBoxAscent;
+              box.top + (box.height - ascent - descent) / 2 + ascent;
             surfaces.push({
               x: box.left - b.x + 2,
               y: baseline - ink.actualBoundingBoxAscent + scrollY - b.y + 1,
@@ -279,6 +298,7 @@
     canvas.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     dirty = true;
+    requestSceneFrame();
   }
   addEventListener("resize", resize);
   addEventListener(
@@ -286,12 +306,14 @@
     () => {
       const under = document.elementFromPoint(pointer.x, pointer.y);
       pointer.inside = !!under && !under.closest("header,footer,.tool-dock");
+      if (reduced.matches) requestSceneFrame();
     },
     { passive: true },
   );
   resize();
   document.fonts.ready.then(() => {
     dirty = true;
+    requestSceneFrame();
   });
   function closeMenus() {
     ui.querySelectorAll(".environment-menu").forEach((e) => (e.hidden = true));
@@ -385,7 +407,7 @@
     ui.querySelectorAll("[data-season-choice]").forEach((el) =>
       el.setAttribute("aria-pressed", String(el.dataset.seasonChoice === next)),
     );
-    if (dirty) measure();
+    if (dirty && next !== "none") measure();
     if (next !== "none" && enabled()) {
       surfaces.forEach((s) => {
         if (next === "winter" && (s.y < scrollY - 60 || s.y > scrollY + H + 60))
@@ -423,6 +445,11 @@
         particle(rand(0, W), scrollY + rand(0, H));
     }
     closeMenus();
+    if (next === "none") {
+      cancelAnimationFrame(weatherFrame);
+      weatherFrame = 0;
+      ctx.clearRect(0, 0, W, H);
+    } else requestSceneFrame();
   }
   ui.querySelectorAll("[data-season-choice]").forEach((b) =>
     b.addEventListener("click", () => {
@@ -598,6 +625,7 @@
     flowers.push(flower);
     if (flowers.length > 24) flowers.shift();
     flowerStatus.textContent = t("Fiore piantato.", "Flower planted.");
+    requestSceneFrame();
   });
   // The very same front is used for rendering and for erasing each sand point.
   const washTiming = { advance: 2.6, retreatStart: 3, retreatDuration: 5.5 };
@@ -967,29 +995,14 @@
       ctx.scale(1, 0.6 + Math.abs(Math.sin(p.phase + time * 0.001)) * 0.4);
       leaf(p);
     } else if (p.kind === "winter") {
-      ctx.fillStyle = "#fff";
-      ctx.shadowColor = "#526f8c99";
-      ctx.shadowBlur = p.rest ? 2.5 : 1.5;
-      ctx.shadowOffsetY = 1;
-      ctx.strokeStyle = "#8ba1b45c";
-      ctx.lineWidth = 0.55;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, p.size * (p.rest ? 1.8 : 1), p.size, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-      if (p.brushed) {
-        for (let i = 0; i < 3; i++) {
-          ctx.beginPath();
-          ctx.arc(
-            Math.cos(p.phase + i * 2.1) * p.size,
-            Math.sin(p.phase + i * 2.1) * p.size,
-            p.size * 0.55,
-            0,
-            Math.PI * 2,
-          );
-          ctx.fill();
-        }
-      }
+      const stretch = p.rest ? 1.8 : 1;
+      ctx.drawImage(
+        snowSprite,
+        -p.size * 2 * stretch,
+        -p.size * 2,
+        p.size * 4 * stretch,
+        p.size * 4,
+      );
     } else if (p.kind === "spring") {
       if (p.species === "bee") {
         ctx.rotate(p.rest ? -0.4 : 0.15);
@@ -1174,6 +1187,8 @@
     }
   }
   function loop(time) {
+    weatherFrame = 0;
+    if (document.hidden || season === "none") return;
     const dt = Math.min((time - last) / 1000 || 0.016, 0.035);
     last = time;
     if (dirty) measure();
@@ -1241,11 +1256,7 @@
           p.a += Math.sin(time * 0.001 + p.phase) * dt * 0.08;
         } else {
           p.vx *= Math.exp(-0.65 * dt);
-          if (p.brushed) {
-            p.detachAge += dt;
-            p.vy += 640 * dt;
-            p.vx *= Math.exp(-1.1 * dt);
-          } else p.vy += ((p.kind === "winter" ? 12 : 22) - p.vy * 0.45) * dt;
+          p.vy += ((p.kind === "winter" ? 12 : 22) - p.vy * 0.45) * dt;
           p.x +=
             (p.vx +
               Math.sin(time * 0.0012 + p.phase) *
@@ -1253,7 +1264,7 @@
             dt;
           p.y += p.vy * dt;
           p.a += p.spin * dt;
-          if (p.vy > 0 && p.age > 0.8 && (!p.brushed || p.detachAge > 0.18)) {
+          if (p.vy > 0 && p.age > 0.8) {
             const surface = live.find(
               (s) =>
                 p.x > s.x &&
@@ -1263,7 +1274,6 @@
             );
             if (surface) {
               p.rest = surface;
-              p.brushed = false;
               p.restAge = 0;
               p.offset = p.x - surface.x;
               p.y = surface.y;
@@ -1315,7 +1325,7 @@
         ctx.stroke();
       }
     }
-    requestAnimationFrame(loop);
+    if (animate) requestSceneFrame();
   }
   let wasEnabled = enabled();
   new MutationObserver(() => {
@@ -1328,7 +1338,17 @@
     }
   }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
   setSeason("none");
-  requestAnimationFrame(loop);
+  document.addEventListener("visibilitychange", () => {
+    cancelAnimationFrame(weatherFrame);
+    weatherFrame = 0;
+    last = 0;
+    if (!document.hidden) requestSceneFrame();
+  });
+  reduced.addEventListener("change", () => {
+    selectTool("");
+    updateAction();
+    requestSceneFrame();
+  });
   // Animate the actual Keepify description, preserving its accessible text.
   const projects = [...document.querySelectorAll(".project")];
   const activeWords = new Set();
@@ -1390,8 +1410,12 @@
       .catch(() => {});
   }
   new MutationObserver(() => {
-    if (!enabled()) for (const finish of [...activeWords]) finish();
+    if (!enabled() || reduced.matches)
+      for (const finish of [...activeWords]) finish();
   }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  reduced.addEventListener("change", () => {
+    if (reduced.matches) for (const finish of [...activeWords]) finish();
+  });
   const started = new Set();
   function startProject(project) {
     if (started.has(project)) return;
