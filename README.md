@@ -1,6 +1,10 @@
 # Alessandro Bertoletti — sito personale
 
-Portfolio in italiano: sviluppo full stack, consulenza e agenti AI. HTML, CSS e JavaScript senza dipendenze di build. Node.js 20+ per i comandi locali.
+Portfolio in italiano e inglese: sviluppo full stack, consulenza e agenti AI. HTML, CSS e JavaScript senza dipendenze di build. Node.js 20+ per i comandi locali.
+
+## Lingue
+
+La pagina italiana è `index.html`, quella inglese `en/index.html`. Il selettore IT / EN funziona anche senza JavaScript. Entrambe hanno metadata, lingua del documento e riferimenti hreflang; i messaggi delle interazioni seguono la lingua della pagina. Per aggiornare i contenuti, modificare entrambe le pagine. Stili, logica e immagini sono condivisi.
 
 ## Avvio
 
@@ -13,17 +17,17 @@ Aprire http://127.0.0.1:4173. `npm run check` verifica la sintassi; `npm run bui
 ## Contenuti da completare
 
 - Foto: aggiungere `public/portrait.webp` e impostare `portraitImage` in `src/main.js`. Il placeholder resta intenzionalmente separato dalla foto nel CV.
-- Geopieno e Kipify: aggiungere descrizioni approvate, contributo, screenshot e URL in `index.html`. Le grafiche attuali sono composizioni illustrative, non screenshot o identità ufficiali dei prodotti.
+- GeoPieno e Keepify: schede, funzionalità, link e marchi ricavati dai repository. Eventuali screenshot e approfondimenti sul contributo personale si possono aggiungere in entrambe le lingue.
 - Altri progetti: sostituire o ampliare l’area Coming Soon.
 - Contatto: solo email, senza social, telefono o indirizzo.
 
 ## Interazioni
 
-Ritratto deformabile tramite una mesh canvas: trascinamento con mouse/touch e impulso con Invio o Spazio. Il rilascio ritorna a riposo con una molla. L’effetto funziona anche sulla futura foto. Tre clic sul riquadro Coming Soon rivelano una sorpresa. Il comando nel footer disattiva il gioco; la preferenza di sistema reduced-motion viene rispettata. I contenuti principali rimangono disponibili senza JavaScript.
+Ritratto deformabile tramite una mesh canvas: trascinamento con mouse/touch e impulso con Invio o Spazio. Il placeholder è un monogramma neutro. Il rilascio ritorna a riposo con una molla e l’effetto funziona anche sulla futura foto. Tre clic sul riquadro Coming Soon rivelano un messaggio discreto, senza coriandoli. Il comando nel footer disattiva le animazioni; la preferenza di sistema reduced-motion viene rispettata. I contenuti principali rimangono disponibili senza JavaScript.
 
 ## Direzione visiva e fonti
 
-Fondo caldo, accenti arancio, titoli editoriali e grafiche originali dei progetti. DM Sans e DM Serif Display sono caricati da Google Fonts con fallback di sistema.
+Fondo neutro, accenti verde/grigio, tipografia pulita e nome del professionista in primo piano. Tono diretto e concreto, incentrato su prodotto, sviluppo e semplificazione. Le interazioni restano secondarie rispetto ai contenuti. DM Sans è caricato da Google Fonts con fallback di sistema.
 
 Riferimenti per le interazioni, senza riutilizzare codice o asset:
 
@@ -31,3 +35,9 @@ Riferimenti per le interazioni, senza riutilizzare codice o asset:
 - https://whimsy.joshwcomeau.com/ — microinterazioni e animazioni legate alle azioni.
 
 Timeline ricavata dal curriculum e corretta secondo le indicazioni del proprietario: FrameTECH maggio 2015–agosto 2018, Logol dipendente settembre 2018–2023, consulente dal 2023 con Logol e collaborazione con Dynabit SRLS. Il CV originale non è incluso nel repository.
+
+## Fonti delle schede progetto
+
+- GeoPieno: README, frontend/README.md e descrizione store 0.9.4 in frontend/marketing/releases/0.9.4/apple-review/metadata/store-listing-it.json del repository GeoPieno. Marchio da frontend/public/geopieno-mark-bare.svg.
+- Keepify: README, apps/website/README.md e docs/product/status.md del repository Keepify. Logo approvato da output/branding/keepify-brand-kit/brand/logo-color.svg. Le app mobile sono descritte come test privato, senza promettere disponibilità pubblica negli store.
+- Solo informazioni di prodotto e asset di branding: nessun dato di utenti, credenziale o registrazione importati.

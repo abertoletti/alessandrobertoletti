@@ -1,5 +1,6 @@
 // Add a local image path here when the portrait is ready, e.g. 'public/portrait.webp'.
 const portraitImage = null;
+const english = document.documentElement.lang === 'en';
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let play = !reducedMotion.matches;
 const button = document.querySelector('#portrait');
@@ -9,14 +10,14 @@ const texture = document.createElement('canvas');
 texture.width = texture.height = 600;
 const paint = texture.getContext('2d');
 function placeholder() {
-  paint.fillStyle = '#ed603b'; paint.fillRect(0, 0, 600, 600);
-  paint.strokeStyle = '#d14f2d'; paint.lineWidth = 1;
-  for (let i = 0; i <= 600; i += 50) { paint.beginPath(); paint.moveTo(i, 0); paint.lineTo(i, 600); paint.moveTo(0, i); paint.lineTo(600, i); paint.stroke(); }
-  paint.fillStyle = '#f6dbaa'; paint.beginPath(); paint.roundRect(135, 115, 330, 365, [160, 160, 145, 145]); paint.fill();
-  paint.strokeStyle = '#292d25'; paint.lineWidth = 9; paint.lineCap = 'round';
-  for (const x of [240, 360]) { paint.beginPath(); paint.ellipse(x, 265, 29, 41, 0, 0, Math.PI * 2); paint.stroke(); paint.fillStyle = '#292d25'; paint.beginPath(); paint.ellipse(x + 5, 271, 9, 15, 0, 0, Math.PI * 2); paint.fill(); }
-  paint.beginPath(); paint.arc(300, 325, 65, .15, Math.PI - .15); paint.stroke();
-  paint.fillStyle = '#f18963'; for (const x of [197, 403]) { paint.beginPath(); paint.ellipse(x, 331, 20, 12, 0, 0, Math.PI * 2); paint.fill(); }
+  paint.fillStyle = '#e7e9e5'; paint.fillRect(0, 0, 600, 600);
+  paint.strokeStyle = '#cdd3cd'; paint.lineWidth = 1;
+  paint.strokeRect(42, 42, 516, 516);
+  paint.beginPath(); paint.arc(300, 300, 184, 0, Math.PI * 2); paint.stroke();
+  paint.fillStyle = '#53655c'; paint.font = '400 158px Arial, sans-serif';
+  paint.textAlign = 'center'; paint.fillText('AB', 300, 351);
+  paint.fillStyle = '#768279'; paint.font = '14px Arial, sans-serif';
+  paint.fillText(english ? 'SOFTWARE DEVELOPER / CONSULTANT' : 'SOFTWARE DEVELOPER / CONSULENTE', 300, 416);
 }
 placeholder();
 let dx = 0, dy = 0, vx = 0, vy = 0, frame = 0, active = null;
@@ -39,7 +40,7 @@ function triangle(a, b, c) {
   ctx.drawImage(texture, 0, 0); ctx.restore();
 }
 function render() {
-  ctx.fillStyle = '#ed603b'; ctx.fillRect(0, 0, 600, 600);
+  ctx.fillStyle = '#e7e9e5'; ctx.fillRect(0, 0, 600, 600);
   if (Math.abs(dx) + Math.abs(dy) < .1) { ctx.drawImage(texture, 0, 0); return; }
   for (let y = 0; y < 600; y += 40) for (let x = 0; x < 600; x += 40) {
     triangle({ x, y }, { x: x + 40, y }, { x, y: y + 40 });
@@ -49,8 +50,8 @@ function render() {
 render();
 if (portraitImage) {
   const photo = new Image();
-  photo.onload = () => { const scale = Math.max(600 / photo.width, 600 / photo.height); paint.drawImage(photo, (600 - photo.width * scale) / 2, (600 - photo.height * scale) / 2, photo.width * scale, photo.height * scale); render(); document.querySelector('.portrait-tag').textContent = 'IL LATO UMANO'; };
-  photo.src = portraitImage;
+  photo.onload = () => { const scale = Math.max(600 / photo.width, 600 / photo.height); paint.drawImage(photo, (600 - photo.width * scale) / 2, (600 - photo.height * scale) / 2, photo.width * scale, photo.height * scale); render(); document.querySelector('.portrait-tag').textContent = 'ALESSANDRO BERTOLETTI'; };
+  photo.src = new URL((english ? '../' : './') + portraitImage, document.baseURI).href;
 }
 function spring() {
   vx = (vx - dx * .14) * .76; vy = (vy - dy * .14) * .76; dx += vx; dy += vy; render();
@@ -65,20 +66,19 @@ button.addEventListener('pointerdown', event => {
 button.addEventListener('pointermove', event => { if (event.pointerId !== active) return; const p = point(event); dx = Math.max(-145, Math.min(145, p.x - anchor.x)); dy = Math.max(-145, Math.min(145, p.y - anchor.y)); render(); });
 function release(event) { if (event.pointerId !== active) return; active = null; cancelAnimationFrame(frame); frame = requestAnimationFrame(spring); }
 for (const event of ['pointerup', 'pointercancel', 'lostpointercapture']) button.addEventListener(event, release);
-button.addEventListener('click', event => { if (event.detail !== 0) return; if (!play) { toast('Il gioco è in pausa. Puoi riattivarlo a fondo pagina.'); return; } cancelAnimationFrame(frame); anchor = { x: 300, y: 300 }; dx = 90; dy = -45; frame = requestAnimationFrame(spring); });
+button.addEventListener('click', event => { if (event.detail !== 0) return; if (!play) { toast(english ? 'Interactions are off. You can enable them in the footer.' : 'Le interazioni sono disattivate. Puoi riattivarle a fondo pagina.'); return; } cancelAnimationFrame(frame); anchor = { x: 300, y: 300 }; dx = 90; dy = -45; frame = requestAnimationFrame(spring); });
 let toastTimer;
 function toast(message) { const el = document.querySelector('#toast'); el.textContent = message; el.classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('visible'), 3200); }
-function syncPlay() { const toggle = document.querySelector('#play-toggle'); toggle.setAttribute('aria-pressed', String(play)); toggle.innerHTML = `Un po’ di gioco: ${play ? 'ON' : 'OFF'} <span aria-hidden="true">✳</span>`; document.body.classList.toggle('no-play', !play); button.style.touchAction = play ? 'none' : 'auto'; if (!play) { active = null; cancelAnimationFrame(frame); dx = dy = vx = vy = 0; render(); document.querySelectorAll('.confetti').forEach(el => el.remove()); } }
+function syncPlay() { const toggle = document.querySelector('#play-toggle'); toggle.setAttribute('aria-pressed', String(play)); toggle.textContent = `${english ? 'Interactions' : 'Interazioni'}: ${play ? 'ON' : 'OFF'}`; document.body.classList.toggle('no-play', !play); button.style.touchAction = play ? 'none' : 'auto'; if (!play) { active = null; cancelAnimationFrame(frame); dx = dy = vx = vy = 0; render(); } }
 document.querySelector('#play-toggle').addEventListener('click', () => { play = !play; syncPlay(); });
 reducedMotion.addEventListener('change', event => { play = !event.matches; syncPlay(); });
 syncPlay();
 let discoveries = 0;
-document.querySelector('#coming').addEventListener('click', event => {
+document.querySelector('#coming').addEventListener('click', () => {
   discoveries++;
-  const messages = ['Qui le idee stanno compilando. Ripassa tra qualche commit.', 'Sì, c’è ancora qualcosa in lavorazione. La curiosità è un buon segno.', 'Hai trovato l’easter egg. Il prossimo progetto resta una sorpresa!'];
+  const messages = english
+    ? ['I’m working on the next projects. You’ll find them here.', 'Still in progress. Good ideas need a few tests, too.', 'You found the hidden detail. Looks like we share a curious streak.']
+    : ['Sto lavorando ai prossimi progetti. Li troverai qui.', 'Ancora in lavorazione. Le buone idee hanno bisogno anche di qualche test.', 'Hai trovato il dettaglio nascosto. La curiosità, a quanto pare, è condivisa.'];
   document.querySelector('#secret-message').textContent = messages[Math.min(discoveries - 1, 2)];
-  if (!play || reducedMotion.matches || discoveries % 3 !== 0) return;
-  const rect = event.currentTarget.getBoundingClientRect();
-  for (let i = 0; i < 22; i++) { const dot = document.createElement('span'); dot.className = 'confetti'; dot.style.cssText = `left:${rect.left + rect.width / 2}px;top:${rect.top + rect.height / 2}px;background:${['#de4825', '#7a8462', '#595589'][i % 3]};--x:${(Math.random() - .5) * 500}px;--y:${(Math.random() - .7) * 350}px`; document.body.append(dot); setTimeout(() => dot.remove(), 1100); }
 });
 document.querySelector('#year').textContent = new Date().getFullYear();
