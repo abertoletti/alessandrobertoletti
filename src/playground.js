@@ -310,6 +310,20 @@
   document.addEventListener("click", (e) => {
     if (!ui.contains(e.target)) closeMenus();
   });
+  const snowballs = createSnowballScene({
+    ctx,
+    particles: () => particles,
+    active: () =>
+      tool === "snowball" &&
+      season === "winter" &&
+      enabled() &&
+      !reduced.matches,
+    size: () => ({ width: W, height: H }),
+    announce: (message) => {
+      flowerStatus.textContent = message;
+    },
+    en,
+  });
   function particle(x, y, rest = null) {
     const p = {
       x,
@@ -339,6 +353,7 @@
   function setSeason(next) {
     morphControls(next !== "none");
     season = next;
+    snowballs.reset();
     washWave = null;
     selectTool("");
     flowers = [];
@@ -423,7 +438,7 @@
         : season === "spring"
           ? "plant"
           : season === "winter"
-            ? "brush"
+            ? "snowball"
             : "breeze";
     const label =
       season === "summer"
@@ -431,7 +446,7 @@
         : season === "spring"
           ? t("Fai sbocciare", "Make it bloom")
           : season === "winter"
-            ? t("Spazzola da neve", "Snow brush")
+            ? t("Palla di neve", "Snowball")
             : t("Soffio", "Blow");
     action.inert = season === "none";
     action.setAttribute("aria-hidden", String(season === "none"));
@@ -447,9 +462,10 @@
     else action.setAttribute("aria-pressed", String(!!tool));
   }
   function selectTool(next) {
+    snowballs.cancel();
     tool =
       (((next === "breeze" && season === "autumn") ||
-        (next === "brush" && season === "winter")) &&
+        (next === "snowball" && season === "winter")) &&
         enabled() &&
         !reduced.matches) ||
       (next === "plant" && season === "spring") ||
@@ -475,10 +491,10 @@
             "Paletta · Tieni premuto e trascina per scavare. Esc per finire.",
             "Shovel · Hold and drag to dig. Esc to finish.",
           )
-        : tool === "brush"
+        : tool === "snowball"
           ? t(
-              "Spazzola · Passa sugli accumuli per spazzare la neve. Esc per finire.",
-              "Snow brush · Sweep over settled snow to brush it off. Esc to finish.",
+              "Palla di neve · Tieni premuto sulla neve, trascina e rilascia per lanciarla. Esc per finire.",
+              "Snowball · Hold on settled snow, drag and release to throw. Esc to finish.",
             )
           : tool === "plant"
             ? t(
@@ -504,7 +520,7 @@
         : season === "spring"
           ? "plant"
           : season === "winter"
-            ? "brush"
+            ? "snowball"
             : "breeze",
     );
   };
@@ -1162,6 +1178,7 @@
     if (dirty) measure();
     ctx.clearRect(0, 0, W, H);
     const animate = enabled() && !reduced.matches && !document.hidden;
+    if (season === "winter") snowballs.draw(dt, animate);
     if (season === "summer" && animate) updateSun(dt);
     if (animate) {
       spawn += dt;
@@ -1207,36 +1224,6 @@
           p.vx += (dx / Math.max(dist, 15) + 0.7) * force * dt;
           p.vy += (dy / Math.max(dist, 15) - 0.65) * force * dt;
           p.spin += dt * 3;
-        }
-        if (
-          tool === "brush" &&
-          p.kind === "winter" &&
-          p.rest &&
-          pointer.inside &&
-          time - (pointer.movedAt || 0) < 90
-        ) {
-          const ax = pointer.previousX,
-            ay = pointer.previousY + scrollY;
-          const sx = pointer.x - ax,
-            sy = pointer.y + scrollY - ay;
-          const length = sx * sx + sy * sy;
-          const u = length
-            ? Math.max(
-                0,
-                Math.min(1, ((p.x - ax) * sx + (p.y - ay) * sy) / length),
-              )
-            : 1;
-          if (Math.hypot(p.x - ax - u * sx, p.y - ay - u * sy) < 24) {
-            p.rest = null;
-            p.restAge = 0;
-            p.brushed = true;
-            p.detachAge = 0;
-            const direction = Math.sign(sx) || 1;
-            const impulse = 45 + Math.min(150, Math.sqrt(length) * 4);
-            p.vx = direction * impulse + Math.sin(p.phase) * 25;
-            p.vy = -25 - Math.abs(Math.sin(p.phase)) * 40;
-            p.spin = direction * (2 + Math.abs(Math.sin(p.phase)) * 4);
-          }
         }
         if (p.kind === "spring") {
           if (tool === "breeze" && pointer.inside && dist < 170) {

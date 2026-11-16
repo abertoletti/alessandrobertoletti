@@ -15,8 +15,8 @@ const SeasonIcons = {
     '<path d="M12 21v-7m0 5c-3 0-5-2-5-4 3 0 5 2 5 4" stroke="#729474"/><g fill="#e6b5bf" stroke="#bb7e90" stroke-width="1"><path d="M12 11C7 8 8 3 11 3c2 0 3 4 1 8Z"/><path d="M12 11c1-6 6-8 7-5 1 2-2 5-7 5Z"/><path d="M12 11c6-1 9 3 6 5-2 2-5-1-6-5Z"/><path d="M12 11c3 5 0 9-3 7-2-1-1-5 3-7Z"/><path d="M12 11c-4 4-9 2-8-1 0-3 5-3 8 1Z"/></g><circle cx="12" cy="11" r="2.3" fill="#efd18a" stroke="#c09e55" stroke-width="1"/>',
   shovel:
     '<path d="M9 2h6v4a3 3 0 0 1-6 0Z" fill="#d2ac72" stroke="#866240"/><path d="M12 9v6" stroke="#866240" stroke-width="2.5"/><path d="M7 14h10v4c0 3-5 5-5 5s-5-2-5-5Z" fill="#9cbcc0" stroke="#547e88"/>',
-  brush:
-    '<path d="M14 3h5v4l-7 7-4-4Z" fill="#b69a73" stroke="#7c684e"/><path d="m8 10 6 6-6 6-6-6Z" fill="#d2dce4" stroke="#63798d"/><path d="m4 16 5 5m-2-8 5 5m-2-8 5 5" stroke="#758da2"/>',
+  snowball:
+    '<path d="M20 12c0 5-3.8 8.3-8.5 8-4.7.2-8-3.4-7.8-8.2C3.4 7 7 3.4 12 3.6c4.6-.3 8.3 3.5 8 8.4Z" fill="#f9fcff" stroke="#829bad"/><path d="M7 10c0-2 2-4 4-4m3 11 2-2" stroke="#c2d2df"/><circle cx="9" cy="14" r=".7" fill="#c2d2df"/>',
   breeze:
     '<path d="M2 7h14a3 3 0 1 0-3-3M2 12h20M2 17h14a3 3 0 1 1-3 3" stroke="#718b91" stroke-width="1.8"/>',
 };

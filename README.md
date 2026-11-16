@@ -21,11 +21,11 @@ The local server uses http://127.0.0.1:4173. Stop the development server before 
 
 - `index.html`, `en/index.html`: Italian and English content, navigation and metadata.
 - `src/style.css`: page layout and responsive styles.
-- `src/main.js`, `src/portrait-framing.js`: portrait selection, framing, crossfade and elastic interaction.
+- `src/main.js`, `src/portrait-framing.js`: portrait selection, framing, crossfade and direct high-resolution image rendering.
 - `src/playground.js`: optional atmospheres, input, scene state and animation loop.
 - `src/season-icons.js`, `src/season-renderers.js`: shared icons and canvas renderers.
 - `src/playground.css`: seasonal appearance, controls and tools.
-- `public/portraits/optimized/`: nine production WebP portraits, about 0.83 MB in total.
+- `public/portraits/optimized/`: nine high-quality production WebP portraits, encoded at 98% quality.
 - `scripts/build.mjs`: creates a clean `dist/` with only production assets.
 
 Original generated images and retouch comparisons are retained in the repository for editing. They are excluded from the production build. The supplied original corporate photograph and CV are not included.
@@ -38,7 +38,7 @@ Original generated images and retouch comparisons are retained in the repository
 
 Update both HTML pages when editing copy. The page order is introduction, approach, projects, experience, companies and contact. Contact uses email only.
 
-Atmospheres start off. Autumn has leaves and a wind tool; winter has snow and a brush that dislodges settled clumps under gravity; spring has growing flowers, butterflies and bees; summer has sand, a shovel and a wave that clears grooves. Escape exits a tool. Reduced-motion preferences and the footer interaction toggle are respected. Text and navigation remain available without JavaScript.
+Atmospheres start off. Autumn has leaves and a wind tool; winter has snowballs gathered from settled snow and thrown with a drag gesture; spring has growing flowers, butterflies and bees; summer has sand, a shovel and a wave that clears grooves. Escape exits a tool. Reduced-motion preferences and the footer interaction toggle are respected. Text and navigation remain available without JavaScript.
 
 Seasonal portraits appear with a two-thirds probability for professional versions and one-third for playful versions. Neutral mode always uses the main portrait. Portraits were edited from the supplied reference through ElevenLabs, with a subsequent local under-eye correction that preserves pixels outside feathered masks.
 
