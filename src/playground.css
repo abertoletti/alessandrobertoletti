@@ -695,3 +695,26 @@ body.snowball-mode:not(.no-play) main * {
   user-select: none;
   -webkit-user-select: none;
 }
+
+.tool-dock .restore-page {
+  width: auto;
+  height: 32px;
+  border-radius: 18px;
+  padding: 0 12px;
+  white-space: nowrap;
+  font: inherit;
+  cursor: pointer;
+}
+.tool-dock .restore-page[hidden] {
+  display: none;
+}
+@media (max-width: 600px) {
+  .tool-dock {
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: 18px;
+  }
+  .tool-dock > span {
+    flex: 1 1 200px;
+  }
+}

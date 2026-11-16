@@ -70,10 +70,8 @@
   dock.hidden = true;
   dock.innerHTML = '<span></span><button type="button">×</button>';
   document.body.append(dock);
-  dock.querySelector("button:not(.clean-sand)").ariaLabel = t(
-    "Disattiva brezza",
-    "Turn breeze off",
-  );
+  dock.querySelector("button:not(.clean-sand):not(.restore-page)").ariaLabel =
+    t("Disattiva brezza", "Turn breeze off");
   const cursor = document.createElement("div");
   cursor.className = "physical-cursor";
   cursor.hidden = true;
@@ -96,7 +94,10 @@
   waveButton.type = "button";
   waveButton.textContent = t("Pulisci 🌊", "Clean 🌊");
   waveButton.hidden = true;
-  dock.insertBefore(waveButton, dock.querySelector("button:not(.clean-sand)"));
+  dock.insertBefore(
+    waveButton,
+    dock.querySelector("button:not(.clean-sand):not(.restore-page)"),
+  );
   waveButton.onclick = () => {
     if (washWave) return;
     sandDrawing = null;
@@ -482,10 +483,8 @@
     document.body.classList.remove("tool-pointer-active");
     dock.hidden = !tool;
     waveButton.hidden = tool !== "shovel";
-    dock.querySelector("button:not(.clean-sand)").ariaLabel = t(
-      "Disattiva strumento",
-      "Turn tool off",
-    );
+    dock.querySelector("button:not(.clean-sand):not(.restore-page)").ariaLabel =
+      t("Disattiva strumento", "Turn tool off");
     dock.querySelector("span").textContent =
       tool === "shovel"
         ? t(
@@ -525,7 +524,8 @@
             : "breeze",
     );
   };
-  dock.querySelector("button:not(.clean-sand)").onclick = () => selectTool("");
+  dock.querySelector("button:not(.clean-sand):not(.restore-page)").onclick =
+    () => selectTool("");
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       const openButton = ui.querySelector('[aria-expanded="true"]');

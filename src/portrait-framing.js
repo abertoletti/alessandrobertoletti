@@ -20,17 +20,37 @@ function portraitFrame(name, width, height, size = 600) {
   // Keep its face centered, with a slightly higher eye line and a wider crop.
   const motorcycle = name === "fun-spring-moto";
   const snorkeling = name === "fun-summer-v2";
-  const targetX = size / 2,
-    targetY = (size * (motorcycle ? 200 : snorkeling ? 240 : 220)) / 600;
-  const targetSpacing = motorcycle ? 68 : snorkeling ? 78 : 86;
-  // Increase the crop only when needed to keep every edge covered.
+  const professional = [
+    "neutral-v2",
+    "spring",
+    "summer",
+    "autumn",
+    "winter",
+  ].includes(name);
+  // Balance the torso as well as the eyes: three-quarter poses need a small offset.
+  const centerX =
+    { "neutral-v2": 650, spring: 665, summer: 650, autumn: 665, winter: 650 }[
+      name
+    ] || eyeX;
+  const center = (centerX / 1280) * width;
+  const targetY =
+    (size * (motorcycle ? 200 : snorkeling ? 240 : professional ? 200 : 220)) /
+    600;
+  const targetSpacing = motorcycle
+    ? 68
+    : snorkeling
+      ? 78
+      : professional
+        ? 78
+        : 86;
   const scale = Math.max(
     (size * targetSpacing) / 600 / ((spacing / 1280) * width),
-    targetX / x,
-    (size - targetX) / (width - x),
+    size / 2 / center,
+    size / 2 / (width - center),
     targetY / y,
     (size - targetY) / (height - y),
   );
+  const targetX = size / 2 + (x - center) * scale;
   return {
     x: targetX - x * scale,
     y: targetY - y * scale,

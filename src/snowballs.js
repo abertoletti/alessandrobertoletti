@@ -3,6 +3,117 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
   let held = null,
     flights = [],
     fragments = [];
+  const fallen = new Map();
+  const restoreButton = document.createElement("button");
+  restoreButton.type = "button";
+  restoreButton.className = "restore-page";
+  restoreButton.textContent = en ? "Put things back" : "Rimetti a posto";
+  restoreButton.hidden = true;
+  const dock = document.querySelector(".tool-dock");
+  dock.insertBefore(restoreButton, dock.lastElementChild);
+  function restore(animate = true) {
+    for (const [el, entry] of fallen) {
+      const transform = getComputedStyle(el).transform;
+      entry.animation.cancel();
+      el.style.pointerEvents = entry.pointerEvents;
+      if (animate)
+        el.animate(
+          [
+            { transform, opacity: 0.3 },
+            { transform: "none", opacity: 1 },
+          ],
+          { duration: 650, easing: "cubic-bezier(.2,.8,.2,1)" },
+        );
+    }
+    fallen.clear();
+    restoreButton.hidden = true;
+  }
+  restoreButton.onclick = () => restore();
+  function impact(ball, previous, u) {
+    if (u < 0.15) return false;
+    const candidates = [
+      ...document.querySelectorAll(
+        "main h1,main h2,main h3,main .portrait,main .button,main .text-link,main .project-link,main .skill-tags span,main .company-logos img",
+      ),
+    ]
+      .filter((el) => !fallen.has(el))
+      .map((el) => ({ el, rect: el.getBoundingClientRect() }))
+      .filter(
+        ({ rect: r }) =>
+          r.width && r.height && r.bottom > 0 && r.top < size().height,
+      )
+      .sort(
+        (a, b) => a.rect.width * a.rect.height - b.rect.width * b.rect.height,
+      );
+    const steps = Math.max(
+      1,
+      Math.ceil(Math.hypot(ball.x - previous.x, ball.y - previous.y) / 8),
+    );
+    for (let i = 1; i <= steps; i++) {
+      const x = previous.x + ((ball.x - previous.x) * i) / steps,
+        y = previous.y + ((ball.y - previous.y) * i) / steps - scrollY;
+      for (const { el, rect: r } of candidates) {
+        const startInside =
+          ball.startX >= r.left - ball.radius &&
+          ball.startX <= r.right + ball.radius &&
+          ball.startY - scrollY >= r.top - ball.radius &&
+          ball.startY - scrollY <= r.bottom + ball.radius;
+        if (startInside && u < 0.8) continue;
+        if (
+          x + ball.radius < r.left ||
+          x - ball.radius > r.right ||
+          y + ball.radius < r.top ||
+          y - ball.radius > r.bottom
+        )
+          continue;
+        const direction = Math.sign(ball.endX - ball.startX) || 1,
+          drop = Math.max(120, size().height - r.top + 60);
+        const animation = el.animate(
+          [
+            { transform: "translate(0,0) rotate(0deg)", opacity: 1 },
+            {
+              transform:
+                "translate(" +
+                direction * 8 +
+                "px,-8px) rotate(" +
+                direction * 5 +
+                "deg)",
+              opacity: 1,
+              offset: 0.12,
+            },
+            {
+              transform:
+                "translate(" +
+                direction * 65 +
+                "px," +
+                drop +
+                "px) rotate(" +
+                direction * 28 +
+                "deg)",
+              opacity: 0.15,
+            },
+          ],
+          {
+            duration: 850,
+            easing: "cubic-bezier(.4,0,.9,.6)",
+            fill: "forwards",
+          },
+        );
+        fallen.set(el, { animation, pointerEvents: el.style.pointerEvents });
+        el.style.pointerEvents = "none";
+        restoreButton.hidden = false;
+        ball.x = x;
+        ball.y = y + scrollY;
+        announce(
+          en
+            ? "Hit! Use Put things back to restore the page."
+            : "Colpito! Usa Rimetti a posto per riordinare la pagina.",
+        );
+        return true;
+      }
+    }
+    return false;
+  }
   const excluded = "a,button,input,textarea,select,header,footer,.tool-dock";
   const point = (e) => ({ x: e.clientX, y: e.clientY + scrollY });
   function cancel() {
@@ -135,6 +246,7 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
     ctx.restore();
   }
   function draw(dt, animate) {
+    restoreButton.hidden = !active() || fallen.size === 0;
     if (!active() && held) cancel();
     if (held) {
       if (animate) {
@@ -184,12 +296,17 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
     const { height } = size();
     for (const ball of flights) {
       if (animate) {
+        const previous = { x: ball.x, y: ball.y };
         ball.age += dt;
         const u = Math.min(1, ball.age / ball.duration),
           p = path(ball, u);
         ball.x = p.x;
         ball.y = p.y;
-        if (u === 1 || ball.y - scrollY > height + 30) {
+        if (
+          impact(ball, previous, u) ||
+          u === 1 ||
+          ball.y - scrollY > height + 30
+        ) {
           burst(ball);
           ball.done = true;
         }
@@ -219,6 +336,7 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
     draw,
     cancel,
     reset() {
+      restore();
       cancel();
       flights = [];
       fragments = [];
