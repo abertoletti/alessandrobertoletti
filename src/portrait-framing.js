@@ -21,8 +21,8 @@ function portraitFrame(name, width, height, size = 600) {
   const motorcycle = name === "fun-spring-moto";
   const snorkeling = name === "fun-summer-v2";
   const targetX = size / 2,
-    targetY = (size * (motorcycle ? 200 : snorkeling ? 260 : 220)) / 600;
-  const targetSpacing = motorcycle ? 68 : snorkeling ? 125 : 86;
+    targetY = (size * (motorcycle ? 200 : snorkeling ? 240 : 220)) / 600;
+  const targetSpacing = motorcycle ? 68 : snorkeling ? 78 : 86;
   // Increase the crop only when needed to keep every edge covered.
   const scale = Math.max(
     (size * targetSpacing) / 600 / ((spacing / 1280) * width),

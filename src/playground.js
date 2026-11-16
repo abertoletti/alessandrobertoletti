@@ -108,8 +108,7 @@
     sandDrawing = null;
   let flowers = [],
     flowerSerial = 0,
-    washWave = null,
-    droplets = [];
+    washWave = null;
   const flowerStatus = document.createElement("span");
   flowerStatus.className = "sr-only";
   flowerStatus.setAttribute("role", "status");
@@ -339,7 +338,6 @@
   }
   function setSeason(next) {
     morphControls(next !== "none");
-    droplets = [];
     season = next;
     washWave = null;
     selectTool("");
@@ -425,7 +423,7 @@
         : season === "spring"
           ? "plant"
           : season === "winter"
-            ? "thaw"
+            ? "brush"
             : "breeze";
     const label =
       season === "summer"
@@ -433,7 +431,7 @@
         : season === "spring"
           ? t("Fai sbocciare", "Make it bloom")
           : season === "winter"
-            ? t("Disgelo", "Thaw")
+            ? t("Spazzola da neve", "Snow brush")
             : t("Soffio", "Blow");
     action.inert = season === "none";
     action.setAttribute("aria-hidden", String(season === "none"));
@@ -451,7 +449,7 @@
   function selectTool(next) {
     tool =
       (((next === "breeze" && season === "autumn") ||
-        (next === "thaw" && season === "winter")) &&
+        (next === "brush" && season === "winter")) &&
         enabled() &&
         !reduced.matches) ||
       (next === "plant" && season === "spring") ||
@@ -477,10 +475,10 @@
             "Paletta · Tieni premuto e trascina per scavare. Esc per finire.",
             "Shovel · Hold and drag to dig. Esc to finish.",
           )
-        : tool === "thaw"
+        : tool === "brush"
           ? t(
-              "Disgelo · Soffermati sulla neve per scioglierla. Esc per finire.",
-              "Thaw · Hold your pointer near snow to melt it. Esc to finish.",
+              "Spazzola · Passa sugli accumuli per spazzare la neve. Esc per finire.",
+              "Snow brush · Sweep over settled snow to brush it off. Esc to finish.",
             )
           : tool === "plant"
             ? t(
@@ -506,7 +504,7 @@
         : season === "spring"
           ? "plant"
           : season === "winter"
-            ? "thaw"
+            ? "brush"
             : "breeze",
     );
   };
@@ -522,6 +520,9 @@
   function moveWind(e) {
     const oldX = pointer.x,
       oldY = pointer.y;
+    pointer.previousX = pointer.inside ? oldX : e.clientX;
+    pointer.previousY = pointer.inside ? oldY : e.clientY;
+    pointer.movedAt = performance.now();
     pointer.x = e.clientX;
     pointer.y = e.clientY;
     pointer.inside = !e.target.closest("header,footer,.tool-dock");
@@ -950,11 +951,28 @@
       leaf(p);
     } else if (p.kind === "winter") {
       ctx.fillStyle = "#fff";
-      ctx.shadowColor = "#839ba944";
-      ctx.shadowBlur = p.rest ? 2 : 0;
+      ctx.shadowColor = "#526f8c99";
+      ctx.shadowBlur = p.rest ? 2.5 : 1.5;
+      ctx.shadowOffsetY = 1;
+      ctx.strokeStyle = "#8ba1b45c";
+      ctx.lineWidth = 0.55;
       ctx.beginPath();
       ctx.ellipse(0, 0, p.size * (p.rest ? 1.8 : 1), p.size, 0, 0, Math.PI * 2);
       ctx.fill();
+      ctx.stroke();
+      if (p.brushed) {
+        for (let i = 0; i < 3; i++) {
+          ctx.beginPath();
+          ctx.arc(
+            Math.cos(p.phase + i * 2.1) * p.size,
+            Math.sin(p.phase + i * 2.1) * p.size,
+            p.size * 0.55,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fill();
+        }
+      }
     } else if (p.kind === "spring") {
       if (p.species === "bee") {
         ctx.rotate(p.rest ? -0.4 : 0.15);
@@ -1138,61 +1156,6 @@
       p.flight = null;
     }
   }
-  function drawThaw(dt, animate) {
-    for (const d of droplets) {
-      if (animate) {
-        d.age += dt;
-        if (d.age > d.hold) {
-          d.vy += 80 * dt;
-          d.y += d.vy * dt;
-          d.x += d.vx * dt;
-        }
-      }
-      ctx.save();
-      ctx.translate(d.x, d.y - scrollY);
-      ctx.globalAlpha =
-        Math.min(1, d.age * 5) * Math.max(0, 1 - (d.age - 1.2) / 1.3);
-      const shine = ctx.createRadialGradient(
-        -0.5,
-        -0.5,
-        0.1,
-        0,
-        0,
-        d.size * 1.8,
-      );
-      shine.addColorStop(0, "#f8ffff");
-      shine.addColorStop(0.4, "#b7dce7bb");
-      shine.addColorStop(1, "#638eaa66");
-      ctx.fillStyle = shine;
-      ctx.beginPath();
-      ctx.ellipse(
-        0,
-        0,
-        d.size,
-        d.size * (d.age > d.hold ? 1.65 : 0.75),
-        0,
-        0,
-        Math.PI * 2,
-      );
-      ctx.fill();
-      ctx.restore();
-    }
-    droplets = droplets.filter((d) => d.age < 2.5 && d.y < scrollY + H + 30);
-    if (tool === "thaw" && pointer.inside && animate) {
-      const heat = ctx.createRadialGradient(
-        pointer.x,
-        pointer.y,
-        8,
-        pointer.x,
-        pointer.y,
-        105,
-      );
-      heat.addColorStop(0, "#f4cf8522");
-      heat.addColorStop(1, "#f4cf8500");
-      ctx.fillStyle = heat;
-      ctx.fillRect(pointer.x - 105, pointer.y - 105, 210, 210);
-    }
-  }
   function loop(time) {
     const dt = Math.min((time - last) / 1000 || 0.016, 0.035);
     last = time;
@@ -1246,25 +1209,33 @@
           p.spin += dt * 3;
         }
         if (
+          tool === "brush" &&
           p.kind === "winter" &&
-          tool === "thaw" &&
+          p.rest &&
           pointer.inside &&
-          dist < 105
+          time - (pointer.movedAt || 0) < 90
         ) {
-          const loss = dt * (1 - dist / 105) * 1.9;
-          p.size = Math.max(0, p.size - loss);
-          p.melt = (p.melt || 0) + loss;
-          if (p.melt > 0.55 && droplets.length < 180) {
-            p.melt = 0;
-            droplets.push({
-              x: p.x,
-              y: p.y,
-              age: 0,
-              hold: rand(0.25, 0.8),
-              size: rand(1, 2.2),
-              vx: rand(-4, 4),
-              vy: 0,
-            });
+          const ax = pointer.previousX,
+            ay = pointer.previousY + scrollY;
+          const sx = pointer.x - ax,
+            sy = pointer.y + scrollY - ay;
+          const length = sx * sx + sy * sy;
+          const u = length
+            ? Math.max(
+                0,
+                Math.min(1, ((p.x - ax) * sx + (p.y - ay) * sy) / length),
+              )
+            : 1;
+          if (Math.hypot(p.x - ax - u * sx, p.y - ay - u * sy) < 24) {
+            p.rest = null;
+            p.restAge = 0;
+            p.brushed = true;
+            p.detachAge = 0;
+            const direction = Math.sign(sx) || 1;
+            const impulse = 45 + Math.min(150, Math.sqrt(length) * 4);
+            p.vx = direction * impulse + Math.sin(p.phase) * 25;
+            p.vy = -25 - Math.abs(Math.sin(p.phase)) * 40;
+            p.spin = direction * (2 + Math.abs(Math.sin(p.phase)) * 4);
           }
         }
         if (p.kind === "spring") {
@@ -1282,7 +1253,11 @@
           p.a += Math.sin(time * 0.001 + p.phase) * dt * 0.08;
         } else {
           p.vx *= Math.exp(-0.65 * dt);
-          p.vy += ((p.kind === "winter" ? 12 : 22) - p.vy * 0.45) * dt;
+          if (p.brushed) {
+            p.detachAge += dt;
+            p.vy += 640 * dt;
+            p.vx *= Math.exp(-1.1 * dt);
+          } else p.vy += ((p.kind === "winter" ? 12 : 22) - p.vy * 0.45) * dt;
           p.x +=
             (p.vx +
               Math.sin(time * 0.0012 + p.phase) *
@@ -1290,7 +1265,7 @@
             dt;
           p.y += p.vy * dt;
           p.a += p.spin * dt;
-          if (p.vy > 0 && p.age > 0.8) {
+          if (p.vy > 0 && p.age > 0.8 && (!p.brushed || p.detachAge > 0.18)) {
             const surface = live.find(
               (s) =>
                 p.x > s.x &&
@@ -1300,6 +1275,7 @@
             );
             if (surface) {
               p.rest = surface;
+              p.brushed = false;
               p.restAge = 0;
               p.offset = p.x - surface.x;
               p.y = surface.y;
@@ -1320,7 +1296,7 @@
           p.rest ||
           (p.y < scrollY + H + 150 && p.x > -350 && p.x < W + 350)),
     );
-    if (season === "winter") drawThaw(dt, animate);
+
     if (season === "summer") {
       updateWashWave(dt, animate);
       SeasonalRenderers.drawSand(ctx, sandStrokes, H, scrollY, grain);

@@ -15,7 +15,8 @@ const SeasonIcons = {
     '<path d="M12 21v-7m0 5c-3 0-5-2-5-4 3 0 5 2 5 4" stroke="#729474"/><g fill="#e6b5bf" stroke="#bb7e90" stroke-width="1"><path d="M12 11C7 8 8 3 11 3c2 0 3 4 1 8Z"/><path d="M12 11c1-6 6-8 7-5 1 2-2 5-7 5Z"/><path d="M12 11c6-1 9 3 6 5-2 2-5-1-6-5Z"/><path d="M12 11c3 5 0 9-3 7-2-1-1-5 3-7Z"/><path d="M12 11c-4 4-9 2-8-1 0-3 5-3 8 1Z"/></g><circle cx="12" cy="11" r="2.3" fill="#efd18a" stroke="#c09e55" stroke-width="1"/>',
   shovel:
     '<path d="M9 2h6v4a3 3 0 0 1-6 0Z" fill="#d2ac72" stroke="#866240"/><path d="M12 9v6" stroke="#866240" stroke-width="2.5"/><path d="M7 14h10v4c0 3-5 5-5 5s-5-2-5-5Z" fill="#9cbcc0" stroke="#547e88"/>',
-  thaw: '<path d="M12 2C11 7 5 10 5 15a7 7 0 0 0 14 0c0-3-2-6-4-8 0 3-1 4-2 5 1-4-1-7-1-10Z" fill="#e9aa61" stroke="#b6773e"/><path d="M12 13c-1 2-3 4-3 5a3 3 0 0 0 6 0c0-1-2-3-3-5Z" fill="#b7dfe8" stroke="#608fa5"/>',
+  brush:
+    '<path d="M14 3h5v4l-7 7-4-4Z" fill="#b69a73" stroke="#7c684e"/><path d="m8 10 6 6-6 6-6-6Z" fill="#d2dce4" stroke="#63798d"/><path d="m4 16 5 5m-2-8 5 5m-2-8 5 5" stroke="#758da2"/>',
   breeze:
     '<path d="M2 7h14a3 3 0 1 0-3-3M2 12h20M2 17h14a3 3 0 1 1-3 3" stroke="#718b91" stroke-width="1.8"/>',
 };

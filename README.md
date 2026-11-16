@@ -38,7 +38,7 @@ Original generated images and retouch comparisons are retained in the repository
 
 Update both HTML pages when editing copy. The page order is introduction, approach, projects, experience, companies and contact. Contact uses email only.
 
-Atmospheres start off. Autumn has leaves and a wind tool; winter has snow and thaw; spring has growing flowers, butterflies and bees; summer has sand, a shovel and a wave that clears grooves. Escape exits a tool. Reduced-motion preferences and the footer interaction toggle are respected. Text and navigation remain available without JavaScript.
+Atmospheres start off. Autumn has leaves and a wind tool; winter has snow and a brush that dislodges settled clumps under gravity; spring has growing flowers, butterflies and bees; summer has sand, a shovel and a wave that clears grooves. Escape exits a tool. Reduced-motion preferences and the footer interaction toggle are respected. Text and navigation remain available without JavaScript.
 
 Seasonal portraits appear with a two-thirds probability for professional versions and one-third for playful versions. Neutral mode always uses the main portrait. Portraits were edited from the supplied reference through ElevenLabs, with a subsequent local under-eye correction that preserves pixels outside feathered masks.
 

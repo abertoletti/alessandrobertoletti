@@ -221,7 +221,8 @@ body[data-season="autumn"] .contact-bottom p {
   color: #d6c1ac;
 }
 body[data-season="winter"] {
-  --paper: #f3f6f7;
+  --paper: #dee6ed;
+  --line: #b5c4d0;
 }
 body[data-season="spring"] {
   --paper: #f5f7f1;
@@ -675,4 +676,12 @@ body[data-season="summer"] .tool-dock {
   .tool-dock .clean-sand {
     padding: 0 9px;
   }
+}
+
+body[data-season="winter"] .about {
+  background: #d1dce5;
+}
+body[data-season="winter"] .skill-tags span,
+body[data-season="winter"] .approach-list article {
+  border-color: #b0c1cf;
 }
