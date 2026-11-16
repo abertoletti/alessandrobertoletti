@@ -63,7 +63,7 @@ body[data-season=summer] .portrait { box-shadow:10px 12px 35px #d9b97820; }
 .no-play .environment-controls * { animation:none!important; }
 /* The car lives beside the project name; Keepify animates its own copy. */
 .project-heading h3 { white-space:nowrap; }
-.project-story { position:relative; height:42px; flex:1; min-width:65px; max-width:180px; margin-left:auto; overflow:hidden; pointer-events:none; }
+.project-story { position:relative; height:42px; flex:1; min-width:65px; max-width:180px; margin-left:4px; overflow:hidden; pointer-events:none; }
 .road { position:absolute; bottom:3px; width:100%; border-bottom:1px solid var(--line); }
 .story-car { position:absolute; bottom:4px; left:-60px; width:48px; height:24px; }
 .story-pump { position:absolute; bottom:4px; left:72%; width:21px; height:30px; }
@@ -83,3 +83,5 @@ body[data-season=summer] .portrait { box-shadow:10px 12px 35px #d9b97820; }
 .icon-level:hover .level-bubble { animation:bubble-settle 1.2s ease-in-out; }
 @keyframes bubble-settle { 30% {transform:translateX(2px)} 65% {transform:translateX(-1px)} }
 @media(prefers-reduced-motion:reduce) { .project-story * { animation:none!important; } .story-car { left:calc(72% - 50px); } }
+
+body.tool-pointer-active main,body.tool-pointer-active main * { cursor:none!important; }
