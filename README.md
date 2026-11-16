@@ -49,3 +49,13 @@ The “Ho lavorato con / I’ve worked with” section reflects the employment a
 - FrameTECH: https://www.longwave.it/chi-siamo/la-nostra-storia/ (historical company logo).
 - Logol: https://www.logol.com/.
 - Dynabit: https://www.dynabit.it/.
+
+## Optional seasons and tools
+
+The bilingual “Esplora / Explore” panel starts closed with the original atmosphere. It offers calendar-based or manual seasons, snow caps on components, leaves, clickable spring buds and summer sun accents. No geolocation or network request is used. Seasonal decorations are rebuilt on selection; no preference is persisted.
+
+Tools operate on selected headings, the portrait, project headings and skill tags: three hammer clicks loosen an element, the magnet attracts skill tags, the blower disperses decorations and the spirit level tilts the elements. Escape puts the tool away. Links outside hammer targets keep their usual behaviour. Restore resets tools, damage, transforms and the atmosphere; rebuilding follows understanding, prioritisation and construction, with small numbered repair agents. These are visual effects only.
+
+The car/refuelling and word-organisation stories start once when each project enters view. The footer interaction toggle and system reduced-motion preference disable animation; static content remains readable without JavaScript. Source: `src/playground.js` and `src/playground.css`.
+
+Validation: syntax/build checks and a Chromium walkthrough covered all seasons, bud activation, hammer/rebuild, blower, level, magnet, Escape, OFF, English controls, 390px layout overflow and reduced motion with no JavaScript errors. Screenshots were reviewed on desktop and mobile. The tools are a first visual implementation for owner review.
