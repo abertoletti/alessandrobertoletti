@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "build": "node scripts/build.mjs",
-    "check": "node --check src/playground.js && node --check src/main.js && node --check scripts/serve.mjs && node --check scripts/build.mjs",
+    "check": "node scripts/check.mjs",
     "preview": "node scripts/serve.mjs dist"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

@@ -1,76 +1,365 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6f6f3">
-  <title>Alessandro Bertoletti — Software developer & consultant</title>
-  <meta name="description" content="Alessandro Bertoletti, full-stack developer and software consultant. Projects, experience and a practical approach to building with AI agents.">
-  <meta property="og:title" content="Alessandro Bertoletti — Software developer & consultant">
-  <meta property="og:description" content="Software development, consulting and AI agents. Explore my projects and professional experience.">
-  <meta property="og:type" content="website">
-  <meta property="og:locale" content="en_GB">
-  <meta property="og:locale:alternate" content="it_IT">
-  <link rel="alternate" hreflang="it" href="../">
-  <link rel="alternate" hreflang="en" href="./">
-  <link rel="icon" href="../public/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../src/style.css">
-  <script src="../src/portrait-framing.js" defer></script>
-  <script src="../src/main.js" defer></script>
-  <link rel="stylesheet" href="../src/playground.css">
-  <script src="../src/playground.js" defer></script>
-</head>
-<body>
-  <a class="skip" href="#main">Skip to content</a>
-  <header class="header wrap">
-    <a class="brand" href="#" aria-label="Alessandro Bertoletti, home">ab<span>.</span></a>
-    <nav aria-label="Main navigation"><a href="#approccio">Approach</a><a href="#progetti">Projects</a><a href="#percorso">Experience</a><a class="contact-link" href="#contatti">Contact</a></nav>
-    <div class="header-actions">
-      <nav class="languages" aria-label="Language"><a href="../" lang="it" hreflang="it" aria-label="Italiano">IT</a><a href="./" lang="en" hreflang="en" aria-current="page" aria-label="English">EN</a></nav>
-    </div>
-  </header>
-  <main id="main">
-    <section class="hero wrap" aria-labelledby="hero-title">
-      <div class="eyebrow"><span class="dot"></span> SOFTWARE DEVELOPER & CONSULTANT</div>
-      <div class="hero-grid">
-        <div class="hero-copy"><h1 id="hero-title">Alessandro<br>Bertoletti<span class="name-dot">.</span></h1>
-        <p class="intro">I design and build web and mobile products around real needs. I bring together full-stack development, software consulting and AI agents to turn ideas into useful, thoughtfully designed tools that are easy to use.</p>
-        <div class="hero-actions"><a class="button" href="#approccio">How I work <span>↓</span></a><a class="text-link" href="#progetti">My projects ↗</a></div></div>
-        <div class="portrait-area"><div class="portrait-top"><span>ALESSANDRO BERTOLETTI</span><span class="small-cross">/ AB</span></div>
-          <button class="portrait" id="portrait" aria-label="Interactive portrait: drag or press Enter for a small surprise"><canvas id="portrait-canvas" width="600" height="600" aria-hidden="true"></canvas><span class="portrait-tag">ALESSANDRO BERTOLETTI</span></button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f6f3" />
+    <title>Alessandro Bertoletti — Software developer & consultant</title>
+    <meta
+      name="description"
+      content="Alessandro Bertoletti, full-stack developer and software consultant. Projects, experience and a practical approach to building with AI agents."
+    />
+    <meta
+      property="og:title"
+      content="Alessandro Bertoletti — Software developer & consultant"
+    />
+    <meta
+      property="og:description"
+      content="Software development, consulting and AI agents. Explore my projects and professional experience."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:locale:alternate" content="it_IT" />
+    <link rel="alternate" hreflang="it" href="../" />
+    <link rel="alternate" hreflang="en" href="./" />
+    <link rel="icon" href="../public/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../src/style.css" />
+    <script src="../src/portrait-framing.js" defer></script>
+    <script src="../src/main.js" defer></script>
+    <link rel="stylesheet" href="../src/playground.css" />
+    <script src="../src/season-icons.js" defer></script>
+    <script src="../src/season-renderers.js" defer></script>
+    <script src="../src/playground.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="header wrap">
+      <a class="brand" href="#" aria-label="Alessandro Bertoletti, home"
+        >ab<span>.</span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="#approccio">Approach</a><a href="#progetti">Projects</a
+        ><a href="#percorso">Experience</a
+        ><a class="contact-link" href="#contatti">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <nav class="languages" aria-label="Language">
+          <a href="../" lang="it" hreflang="it" aria-label="Italiano">IT</a
+          ><a
+            href="./"
+            lang="en"
+            hreflang="en"
+            aria-current="page"
+            aria-label="English"
+            >EN</a
+          >
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <section class="hero wrap" aria-labelledby="hero-title">
+        <div class="eyebrow">
+          <span class="dot"></span> SOFTWARE DEVELOPER & CONSULTANT
         </div>
-      </div>
-      <div class="hero-bottom"><span>DEVELOPER SINCE 2015 · CONSULTANT SINCE 2023</span><span>A practical approach, from idea to release. <span aria-hidden="true">↓</span></span></div>
-    </section>
-    <section class="about section" id="approccio" aria-labelledby="about-title"><div class="wrap about-grid"><div><p class="eyebrow">01 / HOW I WORK</p><h2 id="about-title">Understand the problem.<br>Set priorities.<br>Build the solution.</h2><div class="about-copy"><p>Many of my ideas start with a need I encounter myself: one step too many, information that’s hard to find, or a task that could be automated. Those observations are where I start thinking about the product.</p><p>I work on projects from initial analysis through release and ongoing improvements. I set priorities based on goals, impact and available resources, coordinating the work so everyone understands what matters and what comes first.</p><p>I integrate AI agents into development to explore solutions, write code and automate repetitive tasks. I pay close attention to the process and testing, checking that the result meets the original needs.</p></div><div class="skill-tags"><span>AI Models</span><span>AI agents</span><span>MCP</span><span>Fullstack development</span><span>Cloud infrastructure</span><span>Web & mobile</span><span>Blockchain</span></div></div><div class="approach-list"><article><span class="orange">01 ↗</span><h3>Understand the problem</h3><p>Clarify needs, goals and constraints.</p></article><article><span class="orange">02 ↗</span><h3>Set priorities</h3><p>Assess impact and effort, coordinating people, tools and AI agents.</p></article><article><span class="orange">03 ↗</span><h3>Build the solution</h3><p>Develop, test and improve the product.</p></article></div></div></section>
-    <section class="projects wrap section" id="progetti" aria-labelledby="projects-title">
-      <div class="section-head"><h2 id="projects-title">Projects</h2></div>
-      <div class="project-grid">
-        <article class="project">
-          <div class="project-heading"><img src="../public/projects/geopieno-mark.svg" alt="" width="42" height="42"><h3>GeoPieno</h3></div>
-          <p>A web and mobile app that compares fuel prices in Italy using public data from Italy’s Ministry of Enterprises and Made in Italy (MIMIT). It helps drivers find lower-priced stations nearby and plan refuelling stops along their route.</p>
-          <a class="project-link" href="https://www.geopieno.it/" target="_blank" rel="noopener noreferrer">Visit GeoPieno <span aria-hidden="true">↗</span></a>
-        </article>
-        <article class="project">
-          <div class="project-heading"><img src="../public/projects/keepify-symbol.svg" alt="" width="42" height="42"><h3>Keepify</h3></div>
-          <p>An app that turns spoken or typed thoughts into organised notes and checklists. AI transcribes voice input and adds new content to the appropriate note or list, so ideas can be captured without manually organising them.</p>
-          <a class="project-link" href="https://www.keepify.me/" target="_blank" rel="noopener noreferrer">Explore Keepify <span aria-hidden="true">↗</span></a>
-        </article>
-      </div>
-      <div class="coming" id="coming"><span class="coming-symbol" aria-hidden="true">+</span><span><span class="meta">IN DEVELOPMENT</span><strong>More projects in the works.</strong><span>New ideas to put to the test, one step at a time.</span></span><span class="coming-label">COMING SOON</span></div>
-    </section>
-    <section class="section wrap career" id="percorso" aria-labelledby="career-title"><div class="section-head"><div><p class="eyebrow">03 / EXPERIENCE</p><h2 id="career-title">My experience.</h2></div><p>From in-house development<br>to consulting and my own projects.</p></div><ol class="timeline"><li><span class="date">2023 — PRESENT <span class="current-dot"></span></span><div><h3>Independent software developer & consultant</h3><p>Since 2023, I’ve combined software development and consulting for businesses with building my own products.</p></div><span class="timeline-type">CONSULTING</span></li><li><span class="date">SEP 2018 — 2023</span><div><h3>Research &amp; Development Manager</h3><p class="company">Logol AG</p><p>I worked on a business management platform for the legal sector, later becoming Research &amp; Development Manager for the same product. Alongside hands-on development, I took on team leadership, strengthening my coordination and management skills.</p></div><span class="timeline-type">EMPLOYEE</span></li><li><span class="date">MAY 2015 — AUG 2018</span><div><h3>Software developer</h3><p class="company">FrameTECH S.r.l.</p><p>I developed contact centre management software and provided on-site consulting for traditional and web-based call centres. This experience taught me to translate clients’ operational needs into software solutions.</p></div><span class="timeline-type">EXPERIENCE</span></li><li><span class="date">2010 — 2015</span><div><h3>Computer Science and Technology</h3><p class="company">University of Parma</p><p>My university studies provided the theoretical and methodological foundations for my approach to programming, problem analysis and software development.</p></div><span class="timeline-type">EDUCATION</span></li></ol></section>
-    <section class="companies wrap" aria-labelledby="companies-title">
-      <h2 id="companies-title">I’ve worked with</h2>
-      <ul class="company-logos" aria-label="Companies I have worked with">
-        <li><img src="../public/companies/frametech.png" alt="FrameTECH" width="180" height="70" loading="lazy"></li>
-        <li><img src="../public/companies/logol.svg" alt="Logol AG" width="150" height="60" loading="lazy"></li>
-        <li><img class="dynabit-logo" src="../public/companies/dynabit.jpg" alt="Dynabit SRLS" width="110" height="110" loading="lazy"></li>
-      </ul>
-    </section>
-    <section class="contact section" id="contatti"><div class="wrap"><p class="eyebrow">04 / CONTACT</p><h2>Let’s talk about<br>your project<span class="name-dot">.</span></h2><div class="contact-bottom"><p>Get in touch to discuss a project,<br>consulting support or an idea.</p><a href="mailto:alessandro.bertoletti@live.it">alessandro.bertoletti@live.it <span>↗</span></a></div></div></section>
-  </main>
-  <footer class="wrap"><span>© <span id="year">2026</span> Alessandro Bertoletti</span><button id="play-toggle" aria-pressed="true">Interactions: ON</button><a href="#">Back to top ↑</a></footer>
-  <div class="toast" id="toast" role="status"></div>
-</body>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1 id="hero-title">
+              Alessandro<br />Bertoletti<span class="name-dot">.</span>
+            </h1>
+            <p class="intro">
+              I design and build web and mobile products around real needs. I
+              bring together full-stack development, software consulting and AI
+              agents to turn ideas into useful, thoughtfully designed tools that
+              are easy to use.
+            </p>
+            <div class="hero-actions">
+              <a class="button" href="#approccio">How I work <span>↓</span></a
+              ><a class="text-link" href="#progetti">My projects ↗</a>
+            </div>
+          </div>
+          <div class="portrait-area">
+            <div class="portrait-top">
+              <span>ALESSANDRO BERTOLETTI</span
+              ><span class="small-cross">/ AB</span>
+            </div>
+            <button
+              class="portrait"
+              id="portrait"
+              aria-label="Interactive portrait: drag or press Enter for a small surprise"
+            >
+              <canvas
+                id="portrait-canvas"
+                width="600"
+                height="600"
+                aria-hidden="true"
+              ></canvas
+              ><span class="portrait-tag">ALESSANDRO BERTOLETTI</span>
+            </button>
+          </div>
+        </div>
+        <div class="hero-bottom">
+          <span>DEVELOPER SINCE 2015 · CONSULTANT SINCE 2023</span
+          ><span
+            >A practical approach, from idea to release.
+            <span aria-hidden="true">↓</span></span
+          >
+        </div>
+      </section>
+      <section
+        class="about section"
+        id="approccio"
+        aria-labelledby="about-title"
+      >
+        <div class="wrap about-grid">
+          <div>
+            <p class="eyebrow">01 / HOW I WORK</p>
+            <h2 id="about-title">
+              Understand the problem.<br />Set priorities.<br />Build the
+              solution.
+            </h2>
+            <div class="about-copy">
+              <p>
+                Many of my ideas start with a need I encounter myself: one step
+                too many, information that’s hard to find, or a task that could
+                be automated. Those observations are where I start thinking
+                about the product.
+              </p>
+              <p>
+                I work on projects from initial analysis through release and
+                ongoing improvements. I set priorities based on goals, impact
+                and available resources, coordinating the work so everyone
+                understands what matters and what comes first.
+              </p>
+              <p>
+                I integrate AI agents into development to explore solutions,
+                write code and automate repetitive tasks. I pay close attention
+                to the process and testing, checking that the result meets the
+                original needs.
+              </p>
+            </div>
+            <div class="skill-tags">
+              <span>AI Models</span><span>AI agents</span><span>MCP</span
+              ><span>Fullstack development</span
+              ><span>Cloud infrastructure</span><span>Web & mobile</span
+              ><span>Blockchain</span>
+            </div>
+          </div>
+          <div class="approach-list">
+            <article>
+              <span class="orange">01 ↗</span>
+              <h3>Understand the problem</h3>
+              <p>Clarify needs, goals and constraints.</p>
+            </article>
+            <article>
+              <span class="orange">02 ↗</span>
+              <h3>Set priorities</h3>
+              <p>
+                Assess impact and effort, coordinating people, tools and AI
+                agents.
+              </p>
+            </article>
+            <article>
+              <span class="orange">03 ↗</span>
+              <h3>Build the solution</h3>
+              <p>Develop, test and improve the product.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section
+        class="projects wrap section"
+        id="progetti"
+        aria-labelledby="projects-title"
+      >
+        <div class="section-head"><h2 id="projects-title">Projects</h2></div>
+        <div class="project-grid">
+          <article class="project">
+            <div class="project-heading">
+              <img
+                src="../public/projects/geopieno-mark.svg"
+                alt=""
+                width="42"
+                height="42"
+              />
+              <h3>GeoPieno</h3>
+            </div>
+            <p>
+              A web and mobile app that compares fuel prices in Italy using
+              public data from Italy’s Ministry of Enterprises and Made in Italy
+              (MIMIT). It helps drivers find lower-priced stations nearby and
+              plan refuelling stops along their route.
+            </p>
+            <a
+              class="project-link"
+              href="https://www.geopieno.it/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Visit GeoPieno <span aria-hidden="true">↗</span></a
+            >
+          </article>
+          <article class="project">
+            <div class="project-heading">
+              <img
+                src="../public/projects/keepify-symbol.svg"
+                alt=""
+                width="42"
+                height="42"
+              />
+              <h3>Keepify</h3>
+            </div>
+            <p>
+              An app that turns spoken or typed thoughts into organised notes
+              and checklists. AI transcribes voice input and adds new content to
+              the appropriate note or list, so ideas can be captured without
+              manually organising them.
+            </p>
+            <a
+              class="project-link"
+              href="https://www.keepify.me/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Explore Keepify <span aria-hidden="true">↗</span></a
+            >
+          </article>
+        </div>
+        <div class="coming" id="coming">
+          <span class="coming-symbol" aria-hidden="true">+</span
+          ><span
+            ><span class="meta">IN DEVELOPMENT</span
+            ><strong>More projects in the works.</strong
+            ><span
+              >New ideas to put to the test, one step at a time.</span
+            ></span
+          ><span class="coming-label">COMING SOON</span>
+        </div>
+      </section>
+      <section
+        class="section wrap career"
+        id="percorso"
+        aria-labelledby="career-title"
+      >
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">03 / EXPERIENCE</p>
+            <h2 id="career-title">My experience.</h2>
+          </div>
+          <p>
+            From in-house development<br />to consulting and my own projects.
+          </p>
+        </div>
+        <ol class="timeline">
+          <li>
+            <span class="date"
+              >2023 — PRESENT <span class="current-dot"></span
+            ></span>
+            <div>
+              <h3>Independent software developer & consultant</h3>
+              <p>
+                Since 2023, I’ve combined software development and consulting
+                for businesses with building my own products.
+              </p>
+            </div>
+            <span class="timeline-type">CONSULTING</span>
+          </li>
+          <li>
+            <span class="date">SEP 2018 — 2023</span>
+            <div>
+              <h3>Research &amp; Development Manager</h3>
+              <p class="company">Logol AG</p>
+              <p>
+                I worked on a business management platform for the legal sector,
+                later becoming Research &amp; Development Manager for the same
+                product. Alongside hands-on development, I took on team
+                leadership, strengthening my coordination and management skills.
+              </p>
+            </div>
+            <span class="timeline-type">EMPLOYEE</span>
+          </li>
+          <li>
+            <span class="date">MAY 2015 — AUG 2018</span>
+            <div>
+              <h3>Software developer</h3>
+              <p class="company">FrameTECH S.r.l.</p>
+              <p>
+                I developed contact centre management software and provided
+                on-site consulting for traditional and web-based call centres.
+                This experience taught me to translate clients’ operational
+                needs into software solutions.
+              </p>
+            </div>
+            <span class="timeline-type">EXPERIENCE</span>
+          </li>
+          <li>
+            <span class="date">2010 — 2015</span>
+            <div>
+              <h3>Computer Science and Technology</h3>
+              <p class="company">University of Parma</p>
+              <p>
+                My university studies provided the theoretical and
+                methodological foundations for my approach to programming,
+                problem analysis and software development.
+              </p>
+            </div>
+            <span class="timeline-type">EDUCATION</span>
+          </li>
+        </ol>
+      </section>
+      <section class="companies wrap" aria-labelledby="companies-title">
+        <h2 id="companies-title">I’ve worked with</h2>
+        <ul class="company-logos" aria-label="Companies I have worked with">
+          <li>
+            <img
+              src="../public/companies/frametech.png"
+              alt="FrameTECH"
+              width="180"
+              height="70"
+              loading="lazy"
+            />
+          </li>
+          <li>
+            <img
+              src="../public/companies/logol.svg"
+              alt="Logol AG"
+              width="150"
+              height="60"
+              loading="lazy"
+            />
+          </li>
+          <li>
+            <img
+              class="dynabit-logo"
+              src="../public/companies/dynabit.jpg"
+              alt="Dynabit SRLS"
+              width="110"
+              height="110"
+              loading="lazy"
+            />
+          </li>
+        </ul>
+      </section>
+      <section class="contact section" id="contatti">
+        <div class="wrap">
+          <p class="eyebrow">04 / CONTACT</p>
+          <h2>
+            Let’s talk about<br />your project<span class="name-dot">.</span>
+          </h2>
+          <div class="contact-bottom">
+            <p>
+              Get in touch to discuss a project,<br />consulting support or an
+              idea.
+            </p>
+            <a href="mailto:alessandro.bertoletti@live.it"
+              >alessandro.bertoletti@live.it <span>↗</span></a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="wrap">
+      <span>© <span id="year">2026</span> Alessandro Bertoletti</span
+      ><button id="play-toggle" aria-pressed="true">Interactions: ON</button
+      ><a href="#">Back to top ↑</a>
+    </footer>
+    <div class="toast" id="toast" role="status"></div>
+  </body>
 </html>
