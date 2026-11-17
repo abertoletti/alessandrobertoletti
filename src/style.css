@@ -823,18 +823,33 @@ footer button {
 }
 
 /* A small circular opening reveals the playful photo; the professional stays visible. */
-.portrait-scene,
-.portrait-secret {
+.portrait-scene {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
 }
 .portrait-secret {
-  --reveal-radius: 0px;
-  clip-path: circle(
-    var(--reveal-radius) at var(--reveal-x, 50%) var(--reveal-y, 50%)
-  );
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 168px;
+  height: 168px;
+  overflow: hidden;
+  border-radius: 50%;
+  /* Static clip; only transforms change while the pointer moves. */
+  clip-path: circle(50%);
+  visibility: hidden;
+  pointer-events: none;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.portrait-secret-content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  will-change: transform;
 }
 .portrait.has-secret {
   touch-action: none;
@@ -858,6 +873,12 @@ footer button {
   opacity: 0;
   transform-origin: 0 0;
 }
+.portal-rim,
+.portal-trail {
+  width: 168px;
+  height: 168px;
+  will-change: transform, opacity;
+}
 .portal-rim {
   box-sizing: border-box;
   border: 1px solid #ffffff8c;
@@ -878,7 +899,7 @@ footer button {
   box-shadow:
     0 0 10px #ffffff50,
     inset 0 0 10px #ffffff20;
-  filter: blur(2px);
+
 }
 .portal-hint {
   position: absolute;

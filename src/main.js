@@ -44,45 +44,6 @@ function canReveal() {
     !document.querySelector('.season-action[aria-pressed="true"]')
   );
 }
-function aperturePath(x, y, rx, ry, angle) {
-  const c = Math.cos(angle),
-    s = Math.sin(angle),
-    k = 0.5522848;
-  const p = (a, b) =>
-    [
-      (x + a * rx * c - b * ry * s).toFixed(2),
-      (y + a * rx * s + b * ry * c).toFixed(2),
-    ].join(" ");
-  return (
-    "M" +
-    p(1, 0) +
-    " C" +
-    p(1, k) +
-    " " +
-    p(k, 1) +
-    " " +
-    p(0, 1) +
-    " C" +
-    p(-k, 1) +
-    " " +
-    p(-1, k) +
-    " " +
-    p(-1, 0) +
-    " C" +
-    p(-1, -k) +
-    " " +
-    p(-k, -1) +
-    " " +
-    p(0, -1) +
-    " C" +
-    p(k, -1) +
-    " " +
-    p(1, -k) +
-    " " +
-    p(1, 0) +
-    "Z"
-  );
-}
 function scheduleReveal() {
   if (!revealFrame && !document.hidden) {
     lens.last = 0;
@@ -97,7 +58,7 @@ function hideReveal(immediate = false) {
     revealFrame = 0;
     lens.radius = lens.vr = lens.stretch = 0;
     if (secretLayer) {
-      secretLayer.style.clipPath = "circle(0px at 50% 50%)";
+      secretLayer.style.visibility = "hidden";
       secretLayer.style.setProperty("--reveal-radius", "0px");
       secretLayer.rim.style.opacity = "0";
       secretLayer.trail.style.opacity = "0";
@@ -151,45 +112,30 @@ function animateReveal(time) {
   }
   const rx = lens.radius * (1 + lens.stretch),
     ry = lens.radius * (1 - lens.stretch * 0.35);
-  secretLayer.style.clipPath =
-    'path("' + aperturePath(lens.x, lens.y, rx, ry, lens.angle) + '")';
+  // A fixed circular viewport and its counter-transformed photo stay on compositor
+  // layers. Moving the aperture no longer rebuilds a clipping path or its layout.
+  const scaleX = Math.max(0.0001, rx / 84),
+    scaleY = Math.max(0.0001, ry / 84),
+    c = Math.cos(lens.angle),
+    s = Math.sin(lens.angle),
+    a = c * scaleX, b = s * scaleX,
+    d = c * scaleY, e = -s * scaleY,
+    x = lens.x - 84 * (a + e),
+    y = lens.y - 84 * (b + d),
+    determinant = scaleX * scaleY;
+  secretLayer.style.visibility = lens.radius > 0.1 ? "visible" : "hidden";
+  secretLayer.style.transform = `matrix(${a},${b},${e},${d},${x},${y})`;
+  secretLayer.content.style.transform =
+    `matrix(${d / determinant},${-b / determinant},${-e / determinant},${a / determinant},${(e * y - d * x) / determinant},${(b * x - a * y) / determinant})`;
   secretLayer.style.setProperty("--reveal-radius", lens.radius + "px");
-  const diameter = Math.max(0, lens.radius * 2),
-    transform =
-      "translate3d(" +
-      lens.x +
-      "px," +
-      lens.y +
-      "px,0) rotate(" +
-      lens.angle +
-      "rad) scale(" +
-      (1 + lens.stretch) +
-      "," +
-      (1 - lens.stretch * 0.35) +
-      ") translate(-50%,-50%)";
-  Object.assign(secretLayer.rim.style, {
-    width: diameter + "px",
-    height: diameter + "px",
-    transform,
-    opacity: String(Math.min(1, lens.radius / 30)),
-  });
-  Object.assign(secretLayer.trail.style, {
-    width: diameter + "px",
-    height: diameter + "px",
-    transform:
-      "translate3d(" +
-      lens.trailX +
-      "px," +
-      lens.trailY +
-      "px,0) translate(-50%,-50%)",
-    opacity: String(
-      Math.min(
-        0.32,
-        Math.hypot(lens.x - lens.trailX, lens.y - lens.trailY) / 120,
-      ) *
-        (lens.radius / 84),
-    ),
-  });
+  secretLayer.rim.style.transform = secretLayer.style.transform;
+  secretLayer.rim.style.opacity = String(Math.min(1, lens.radius / 30));
+  const trailScale = lens.radius / 84;
+  secretLayer.trail.style.transform =
+    `translate3d(${lens.trailX}px,${lens.trailY}px,0) scale(${trailScale}) translate(-50%,-50%)`;
+  secretLayer.trail.style.opacity = String(
+    Math.min(0.32, Math.hypot(lens.x - lens.trailX, lens.y - lens.trailY) / 120) * trailScale,
+  );
   const settled =
     Math.hypot(tx - lens.x, ty - lens.y) < 0.08 &&
     Math.abs(targetRadius - lens.radius) < 0.08 &&
@@ -218,6 +164,8 @@ function moveReveal(event) {
       0,
       Math.min(r.height, event.clientY - r.top),
     );
+    secretLayer.content.style.width = r.width + "px";
+    secretLayer.content.style.height = r.height + "px";
     lens.open = true;
   }
   portrait.classList.add("is-revealing");
@@ -383,7 +331,11 @@ async function showPortrait(season = "none") {
     const layer = document.createElement("div");
     layer.className = "portrait-secret";
     layer.setAttribute("aria-hidden", "true");
-    layer.append(framedPhoto(hidden, hiddenName, name));
+    const content = document.createElement("div");
+    content.className = "portrait-secret-content";
+    content.append(framedPhoto(hidden, hiddenName, name));
+    layer.content = content;
+    layer.append(content);
     const rim = document.createElement("div");
     rim.className = "portal-rim";
     rim.setAttribute("aria-hidden", "true");
