@@ -162,25 +162,15 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
       end = point(e);
     cancel();
     if (h.collected < 1) return;
-    let dx = end.x - h.x,
-      dy = end.y - h.y;
-    if (Math.hypot(dx, dy) < 40) {
-      dx = 120;
-      dy = -70;
-    }
-    const length = Math.hypot(dx, dy),
-      limit = Math.min(1, 650 / length);
+    const shot = chargedThrow(h, end);
+    // A click or a tiny accidental drag does not launch a ball.
+    if (!shot) return;
     flights.push({
-      x: h.x,
-      y: h.y,
-      startX: h.x,
-      startY: h.y,
-      endX: h.x + dx * limit,
-      endY: h.y + dy * limit,
+      ...shot,
+      x: shot.startX,
+      y: shot.startY,
       radius: h.radius,
       age: 0,
-      duration: 0.45 + Math.min(0.35, length / 1200),
-      arc: Math.min(110, 35 + length * 0.18),
     });
     flights = flights.slice(-4);
     announce(en ? "Snowball thrown." : "Palla di neve lanciata.");
@@ -189,6 +179,22 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
   document.addEventListener("lostpointercapture", (e) => {
     if (held?.id === e.pointerId) held = null;
   });
+  function chargedThrow(anchor, pull) {
+    const dx = anchor.x - pull.x,
+      dy = anchor.y - pull.y,
+      charge = Math.hypot(dx, dy);
+    if (charge < 12) return null;
+    const distance = Math.min(650, charge * 2.5),
+      gain = distance / charge;
+    return {
+      startX: pull.x,
+      startY: pull.y,
+      endX: pull.x + dx * gain,
+      endY: pull.y + dy * gain,
+      duration: 0.45 + Math.min(0.35, distance / 1200),
+      arc: Math.min(110, 35 + distance * 0.18),
+    };
+  }
   function burst(ball) {
     for (let i = 0; i < 28; i++) {
       const angle = Math.random() * Math.PI * 2,
@@ -268,7 +274,7 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
             p.kind === "winter" &&
             p.rest &&
             p.size > 0.15 &&
-            Math.hypot(p.x - held.x, p.y - held.y) < reach
+            Math.hypot(p.x - held.target.x, p.y - held.target.y) < reach
           ) {
             p.size = 0;
             held.collected++;
@@ -277,21 +283,19 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
         const target = 5 + Math.min(15, Math.sqrt(held.collected) * 1.6);
         held.radius += (target - held.radius) * Math.min(1, dt * 8);
       }
-      const dx = held.target.x - held.x,
-        dy = held.target.y - held.y;
-      if (Math.hypot(dx, dy) > 30) {
+      const preview = chargedThrow(held, held.target);
+      if (preview) {
         ctx.save();
-        ctx.strokeStyle = "#6c879a88";
-        ctx.setLineDash([2, 7]);
+        // The loading line joins the original click to the ball in the hand.
+        ctx.strokeStyle = "#6c879a55";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        const preview = {
-          startX: held.x,
-          startY: held.y,
-          endX: held.target.x,
-          endY: held.target.y,
-          arc: Math.min(110, 35 + Math.hypot(dx, dy) * 0.18),
-        };
+        ctx.moveTo(held.x, held.y - scrollY);
+        ctx.lineTo(held.target.x, held.target.y - scrollY);
+        ctx.stroke();
+        ctx.strokeStyle = "#6c879a88";
+        ctx.setLineDash([2, 7]);
+        ctx.beginPath();
         for (let i = 0; i <= 20; i++) {
           const p = path(preview, i / 20);
           i ? ctx.lineTo(p.x, p.y - scrollY) : ctx.moveTo(p.x, p.y - scrollY);
@@ -299,7 +303,7 @@ function createSnowballScene({ ctx, particles, active, size, announce, en }) {
         ctx.stroke();
         ctx.restore();
       }
-      paintBall(held.x, held.y, held.radius);
+      paintBall(held.target.x, held.target.y, held.radius);
     }
     const { height } = size();
     for (const ball of flights) {

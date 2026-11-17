@@ -520,8 +520,8 @@
           )
         : tool === "snowball"
           ? t(
-              "Palla di neve Â· Trascina da un punto qualsiasi e rilascia per lanciare. Esc per uscire.",
-              "Snowball Â· Drag from anywhere and release to throw. Esc to exit.",
+              "Palla di neve · Tieni premuto e tira indietro per caricare. Rilascia per lanciare nella direzione opposta. Esc per uscire.",
+              "Snowball · Hold and pull back to charge. Release to throw in the opposite direction. Esc to exit.",
             )
           : tool === "plant"
             ? t(
