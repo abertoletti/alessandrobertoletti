@@ -5,7 +5,7 @@ const output = path.resolve(root, "dist");
 if (path.dirname(output) !== root) throw new Error("Invalid build directory");
 await rm(output, { recursive: true, force: true });
 await mkdir(path.join(output, "public/portraits"), { recursive: true });
-for (const file of ["index.html", "robots.txt", "sitemap.xml"]) {
+for (const file of ["index.html", "robots.txt", "sitemap.xml", "favicon.ico"]) {
   await copyFile(file, path.join(output, file));
 }
 await cp("src", path.join(output, "src"), { recursive: true });
@@ -16,6 +16,8 @@ for (const directory of ["companies", "projects", "portraits/optimized"]) {
     recursive: true,
   });
 }
-await copyFile("public/favicon.svg", path.join(output, "public/favicon.svg"));
+for (const file of ["favicon.svg", "favicon-96.png", "apple-touch-icon.png"]) {
+  await copyFile(`public/${file}`, path.join(output, "public", file));
+}
 await writeFile(path.join(output, ".nojekyll"), "");
 console.log("Production site built in dist/ (optimized portraits only).");
