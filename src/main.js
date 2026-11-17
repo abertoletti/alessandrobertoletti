@@ -23,7 +23,8 @@ let secretLayer = null,
   revealFrame = 0,
   revealPoint = null,
   portraitBounds = null,
-  hintShown = false;
+  hintShown = false,
+  revealInput = "pointer";
 const lens = {
   x: 0,
   y: 0,
@@ -203,6 +204,7 @@ function animateReveal(time) {
 }
 function moveReveal(event) {
   if (!canReveal()) return;
+  revealInput = event.keyboard ? "keyboard" : "pointer";
   revealPoint = { x: event.clientX, y: event.clientY };
   if (!lens.open) {
     portrait.querySelector(".portal-hint")?.remove();
@@ -226,7 +228,9 @@ portrait.addEventListener("pointerenter", (e) => {
   moveReveal(e);
 });
 portrait.addEventListener("pointermove", moveReveal);
-portrait.addEventListener("pointerleave", () => hideReveal());
+portrait.addEventListener("pointerleave", () => {
+  if (revealInput !== "keyboard") hideReveal();
+});
 portrait.addEventListener("pointercancel", () => hideReveal(true));
 portrait.addEventListener("pointerdown", (e) => {
   if (e.pointerType === "touch" && canReveal()) {
@@ -258,6 +262,7 @@ portrait.addEventListener("keydown", (e) => {
   point.x += e.key === "ArrowRight" ? 24 : e.key === "ArrowLeft" ? -24 : 0;
   point.y += e.key === "ArrowDown" ? 24 : e.key === "ArrowUp" ? -24 : 0;
   moveReveal({
+    keyboard: true,
     clientX: Math.max(r.left, Math.min(r.right, point.x)),
     clientY: Math.max(r.top, Math.min(r.bottom, point.y)),
   });
@@ -267,7 +272,16 @@ addEventListener(
   "scroll",
   () => {
     portraitBounds = null;
-    hideReveal(true);
+    if (
+      revealInput === "keyboard" &&
+      document.activeElement === portrait &&
+      lens.open
+    ) {
+      const r = portrait.getBoundingClientRect();
+      portraitBounds = r;
+      revealPoint = { x: r.left + lens.x, y: r.top + lens.y };
+      scheduleReveal();
+    } else hideReveal(true);
   },
   { passive: true },
 );
