@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Postiz pages use noindex in HTML; crawling must remain allowed to read it.
+Sitemap: https://alessandrobertoletti.it/sitemap.xml

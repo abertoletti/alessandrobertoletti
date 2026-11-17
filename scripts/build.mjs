@@ -5,7 +5,9 @@ const output = path.resolve(root, "dist");
 if (path.dirname(output) !== root) throw new Error("Invalid build directory");
 await rm(output, { recursive: true, force: true });
 await mkdir(path.join(output, "public/portraits"), { recursive: true });
-await copyFile("index.html", path.join(output, "index.html"));
+for (const file of ["index.html", "robots.txt", "sitemap.xml"]) {
+  await copyFile(file, path.join(output, file));
+}
 await cp("src", path.join(output, "src"), { recursive: true });
 await cp("en", path.join(output, "en"), { recursive: true });
 await cp("postiz", path.join(output, "postiz"), { recursive: true });

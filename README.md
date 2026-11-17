@@ -54,3 +54,11 @@ Company marks belong to their respective owners. Personal photographs are includ
 ## Animation performance
 
 The weather canvas is idle while atmospheres are off, pauses in hidden tabs and renders on demand with reduced motion. Snow shading is rasterized once and reused. Snowball collision bounds are shared by projectiles within a frame. The initial portrait is present in HTML with high fetch priority, including when JavaScript is unavailable.
+
+## Search visibility
+
+The two portfolio pages use self-canonical HTTPS URLs, reciprocal absolute hreflang links, localized titles/descriptions, social previews and Person/WebSite/ProfilePage JSON-LD. Target topics are Alessandro Bertoletti, full-stack development, independent software consulting and AI agents; wording must remain factual and natural. No keyword stuffing or meta-keywords.
+
+`robots.txt` advertises `sitemap.xml`, which contains only the Italian and English portfolio pages. All `/postiz/*.html` pages carry `noindex, follow` and remain crawlable so search engines can read that directive. They are publicly accessible, not private behind authentication. Preserve this exclusion for new Postiz HTML pages; `npm run check` verifies it along with the portfolio metadata. `node scripts/check-seo.mjs dist` checks the built output.
+
+Google Search Console uses a Domain property for alessandrobertoletti.it. Keep its Google verification TXT record in the host.it DNS zone. Submit https://alessandrobertoletti.it/sitemap.xml after verification. Search discovery and ranking are decided by Google and are not guaranteed by this configuration.

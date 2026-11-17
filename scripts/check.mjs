@@ -12,3 +12,5 @@ for (const directory of ["src", "scripts"]) {
   }
 }
 console.log("JavaScript syntax checks passed.");
+
+await import("./check-seo.mjs");
