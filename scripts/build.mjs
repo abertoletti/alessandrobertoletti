@@ -8,6 +8,7 @@ await mkdir(path.join(output, "public/portraits"), { recursive: true });
 await copyFile("index.html", path.join(output, "index.html"));
 await cp("src", path.join(output, "src"), { recursive: true });
 await cp("en", path.join(output, "en"), { recursive: true });
+await cp("postiz", path.join(output, "postiz"), { recursive: true });
 for (const directory of ["companies", "projects", "portraits/optimized"]) {
   await cp(`public/${directory}`, path.join(output, "public", directory), {
     recursive: true,
