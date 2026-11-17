@@ -821,3 +821,28 @@ footer button {
     padding-top: 16px;
   }
 }
+
+/* A small circular opening reveals the playful photo; the professional stays visible. */
+.portrait-scene,
+.portrait-secret {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.portrait-secret {
+  --reveal-radius: 0px;
+  clip-path: circle(
+    var(--reveal-radius) at var(--reveal-x, 50%) var(--reveal-y, 50%)
+  );
+}
+.portrait.has-secret {
+  touch-action: none;
+}
+.no-play .portrait.has-secret {
+  touch-action: auto;
+}
+.portrait:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 5px;
+}

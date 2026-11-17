@@ -40,7 +40,7 @@ Update both HTML pages when editing copy. The page order is introduction, approa
 
 Atmospheres start off. Autumn has leaves and a wind tool; winter has snowballs formed automatically anywhere and thrown with a drag gesture. Snowballs can knock down photos, headings, buttons and tags; Put things back restores affected elements, and switching seasons resets the scene; spring has growing flowers, butterflies and bees; summer has sand, a shovel and a wave that clears grooves. Escape exits a tool. Reduced-motion preferences and the footer interaction toggle are respected. Text and navigation remain available without JavaScript.
 
-Seasonal portraits appear with a two-thirds probability for professional versions and one-third for playful versions. Neutral mode always uses the main portrait. Portraits were edited from the supplied reference through ElevenLabs, with a subsequent local under-eye correction that preserves pixels outside feathered masks.
+The professional portrait is always shown. In each season, a small circular window follows the pointer and reveals the playful photo underneath; dragging a finger or using arrow keys provides the same limited reveal. Neutral mode always uses the main portrait. Portraits were edited from the supplied reference through ElevenLabs, with a subsequent local under-eye correction that preserves pixels outside feathered masks.
 
 ## Sources and credits
 

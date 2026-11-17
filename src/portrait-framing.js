@@ -58,3 +58,28 @@ function portraitFrame(name, width, height, size = 600) {
     height: height * scale,
   };
 }
+
+// Match the hidden face to the professional face at the same screen position.
+function portraitRevealFrame(hiddenName, frontName, width, height, size = 600) {
+  const front = portraitLandmarks[frontName] || portraitLandmarks["neutral-v2"];
+  const hidden = portraitLandmarks[hiddenName];
+  const reference = portraitFrame(frontName, 1280, 720, size);
+  const eyeX = reference.x + (front[0] * reference.width) / 1280;
+  const eyeY = reference.y + (front[1] * reference.height) / 720;
+  const spacing = (front[2] * reference.width) / 1280;
+  const x = (hidden[0] * width) / 1280,
+    y = (hidden[1] * height) / 720;
+  const scale = Math.max(
+    spacing / ((hidden[2] * width) / 1280),
+    eyeX / x,
+    (size - eyeX) / (width - x),
+    eyeY / y,
+    (size - eyeY) / (height - y),
+  );
+  return {
+    x: eyeX - x * scale,
+    y: eyeY - y * scale,
+    width: width * scale,
+    height: height * scale,
+  };
+}
