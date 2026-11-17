@@ -38,7 +38,7 @@ Original generated images and retouch comparisons are retained in the repository
 
 Update both HTML pages when editing copy. The page order is introduction, approach, projects, experience, companies and contact. Contact uses email only.
 
-Atmospheres start off. Autumn has leaves and a wind tool; winter has snowballs formed automatically anywhere and thrown with a drag gesture. Snowballs can knock down photos, headings, buttons and tags; Put things back restores affected elements, and switching seasons resets the scene; spring has growing flowers, butterflies and bees; summer has sand, a shovel and a wave that clears grooves. Escape exits a tool. Reduced-motion preferences and the footer interaction toggle are respected. Text and navigation remain available without JavaScript.
+Atmospheres start off. Autumn has leaves and a wind tool; winter has snowballs formed automatically anywhere and thrown in the opposite direction by pulling back and releasing. Snowballs can knock down photos, headings, buttons and tags; Put things back restores affected elements, and switching seasons resets the scene; spring has growing flowers, butterflies and bees; summer has sand, a shovel that supports mouse and touch, and a wave that clears grooves. Escape exits a tool. Reduced-motion preferences and the footer interaction toggle are respected. Text and navigation remain available without JavaScript.
 
 The professional portrait is always shown. In each season, a circular opening follows the pointer with a soft spring and short decorative trail; it grows on entry and closes on exit. The opening reveals the playful photo underneath; dragging a finger or using arrow keys provides the same limited reveal. Neutral mode always uses the main portrait. Portraits were edited from the supplied reference through ElevenLabs, with a subsequent local under-eye correction that preserves pixels outside feathered masks.
 
@@ -53,12 +53,12 @@ Company marks belong to their respective owners. Personal photographs are includ
 
 ## Animation performance
 
-The weather canvas is idle while atmospheres are off, pauses in hidden tabs and renders on demand with reduced motion. Snow shading is rasterized once and reused. Snowball collision bounds are shared by projectiles within a frame. The initial portrait is present in HTML with high fetch priority, including when JavaScript is unavailable.
+The weather canvas is idle while atmospheres are off, pauses in hidden tabs and renders on demand with reduced motion. Snow shading is rasterized once and reused. Stationary winter accumulation has a separate canvas layer, refreshed for scene changes and fading instead of redrawing every resting flake on every frame. Snowball collision bounds are shared by projectiles within a frame. The initial portrait is present in HTML with high fetch priority, including when JavaScript is unavailable.
 
 ## Search visibility
 
 The two portfolio pages use self-canonical HTTPS URLs, reciprocal absolute hreflang links, localized titles/descriptions, social previews and Person/WebSite/ProfilePage JSON-LD. Target topics are Alessandro Bertoletti, full-stack development, independent software consulting and AI agents; wording must remain factual and natural. No keyword stuffing or meta-keywords.
 
-`robots.txt` advertises `sitemap.xml`, which contains only the Italian and English portfolio pages. All `/postiz/*.html` pages carry `noindex, follow` and remain crawlable so search engines can read that directive. They are publicly accessible, not private behind authentication. Preserve this exclusion for new Postiz HTML pages; `npm run check` verifies it along with the portfolio metadata. `node scripts/check-seo.mjs dist` checks the built output.
+`robots.txt` advertises `sitemap.xml`, which contains only the Italian and English portfolio pages. All `/postiz/*.html` pages carry `noindex, follow` and remain crawlable so search engines can read that directive. They are publicly accessible, not private behind authentication. Preserve this exclusion for new Postiz HTML pages; `npm run check` verifies it along with the portfolio metadata and rejects invalid UTF-8 in JavaScript files. `node scripts/check-seo.mjs dist` checks the built output.
 
 Google Search Console uses a Domain property for alessandrobertoletti.it. Keep its Google verification TXT record in the host.it DNS zone. Submit https://alessandrobertoletti.it/sitemap.xml after verification. Search discovery and ranking are decided by Google and are not guaranteed by this configuration.

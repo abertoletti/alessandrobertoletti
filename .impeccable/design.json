@@ -1,0 +1,669 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-17T17:29:49.379896+00:00",
+  "title": "Design System: Alessandro Bertoletti",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Carta chiara",
+        "tonalRamp": [
+          "oklch(0.150 0.0018 106.47)",
+          "oklch(0.260 0.0029 106.47)",
+          "oklch(0.380 0.0037 106.47)",
+          "oklch(0.490 0.0040 106.47)",
+          "oklch(0.610 0.0037 106.47)",
+          "oklch(0.720 0.0031 106.47)",
+          "oklch(0.840 0.0019 106.47)",
+          "oklch(0.950 0.0006 106.47)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Inchiostro verde",
+        "tonalRamp": [
+          "oklch(0.150 0.0056 170.75)",
+          "oklch(0.260 0.0091 170.75)",
+          "oklch(0.380 0.0116 170.75)",
+          "oklch(0.490 0.0124 170.75)",
+          "oklch(0.610 0.0117 170.75)",
+          "oklch(0.720 0.0096 170.75)",
+          "oklch(0.840 0.0060 170.75)",
+          "oklch(0.950 0.0019 170.75)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Inchiostro attenuato",
+        "tonalRamp": [
+          "oklch(0.150 0.0065 156.69)",
+          "oklch(0.260 0.0105 156.69)",
+          "oklch(0.380 0.0134 156.69)",
+          "oklch(0.490 0.0144 156.69)",
+          "oklch(0.610 0.0136 156.69)",
+          "oklch(0.720 0.0111 156.69)",
+          "oklch(0.840 0.0069 156.69)",
+          "oklch(0.950 0.0023 156.69)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Tratto leggero",
+        "tonalRamp": [
+          "oklch(0.150 0.0044 140.51)",
+          "oklch(0.260 0.0071 140.51)",
+          "oklch(0.380 0.0090 140.51)",
+          "oklch(0.490 0.0097 140.51)",
+          "oklch(0.610 0.0091 140.51)",
+          "oklch(0.720 0.0075 140.51)",
+          "oklch(0.840 0.0047 140.51)",
+          "oklch(0.950 0.0015 140.51)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Salvia",
+        "tonalRamp": [
+          "oklch(0.150 0.0235 160.56)",
+          "oklch(0.260 0.0377 160.56)",
+          "oklch(0.380 0.0481 160.56)",
+          "oklch(0.490 0.0517 160.56)",
+          "oklch(0.610 0.0487 160.56)",
+          "oklch(0.720 0.0399 160.56)",
+          "oklch(0.840 0.0249 160.56)",
+          "oklch(0.950 0.0081 160.56)"
+        ]
+      },
+      "about-surface": {
+        "role": "neutral",
+        "displayName": "Carta salvia",
+        "tonalRamp": [
+          "oklch(0.150 0.0039 128.56)",
+          "oklch(0.260 0.0063 128.56)",
+          "oklch(0.380 0.0080 128.56)",
+          "oklch(0.490 0.0086 128.56)",
+          "oklch(0.610 0.0081 128.56)",
+          "oklch(0.720 0.0066 128.56)",
+          "oklch(0.840 0.0041 128.56)",
+          "oklch(0.950 0.0013 128.56)"
+        ]
+      },
+      "contact-surface": {
+        "role": "neutral",
+        "displayName": "Studio scuro",
+        "tonalRamp": [
+          "oklch(0.150 0.0102 163.13)",
+          "oklch(0.260 0.0163 163.13)",
+          "oklch(0.380 0.0208 163.13)",
+          "oklch(0.490 0.0224 163.13)",
+          "oklch(0.610 0.0211 163.13)",
+          "oklch(0.720 0.0173 163.13)",
+          "oklch(0.840 0.0108 163.13)",
+          "oklch(0.950 0.0035 163.13)"
+        ]
+      },
+      "contact-text": {
+        "role": "neutral",
+        "displayName": "Contact text",
+        "tonalRamp": [
+          "oklch(0.150 0.0032 124.45)",
+          "oklch(0.260 0.0051 124.45)",
+          "oklch(0.380 0.0065 124.45)",
+          "oklch(0.490 0.0069 124.45)",
+          "oklch(0.610 0.0065 124.45)",
+          "oklch(0.720 0.0053 124.45)",
+          "oklch(0.840 0.0033 124.45)",
+          "oklch(0.950 0.0011 124.45)"
+        ]
+      },
+      "contact-muted": {
+        "role": "neutral",
+        "displayName": "Contact muted",
+        "tonalRamp": [
+          "oklch(0.150 0.0086 155.72)",
+          "oklch(0.260 0.0138 155.72)",
+          "oklch(0.380 0.0176 155.72)",
+          "oklch(0.490 0.0190 155.72)",
+          "oklch(0.610 0.0179 155.72)",
+          "oklch(0.720 0.0146 155.72)",
+          "oklch(0.840 0.0091 155.72)",
+          "oklch(0.950 0.0030 155.72)"
+        ]
+      },
+      "tag-border": {
+        "role": "neutral",
+        "displayName": "Tag border",
+        "tonalRamp": [
+          "oklch(0.150 0.0078 137.03)",
+          "oklch(0.260 0.0126 137.03)",
+          "oklch(0.380 0.0161 137.03)",
+          "oklch(0.490 0.0173 137.03)",
+          "oklch(0.610 0.0162 137.03)",
+          "oklch(0.720 0.0133 137.03)",
+          "oklch(0.840 0.0083 137.03)",
+          "oklch(0.950 0.0027 137.03)"
+        ]
+      },
+      "selected": {
+        "role": "neutral",
+        "displayName": "Selected",
+        "tonalRamp": [
+          "oklch(0.150 0.0047 131.36)",
+          "oklch(0.260 0.0075 131.36)",
+          "oklch(0.380 0.0095 131.36)",
+          "oklch(0.490 0.0102 131.36)",
+          "oklch(0.610 0.0096 131.36)",
+          "oklch(0.720 0.0079 131.36)",
+          "oklch(0.840 0.0049 131.36)",
+          "oklch(0.950 0.0016 131.36)"
+        ]
+      },
+      "menu-surface": {
+        "role": "neutral",
+        "displayName": "Menu surface",
+        "tonalRamp": [
+          "oklch(0.150 0.0019 121.56)",
+          "oklch(0.260 0.0030 121.56)",
+          "oklch(0.380 0.0038 121.56)",
+          "oklch(0.490 0.0041 121.56)",
+          "oklch(0.610 0.0038 121.56)",
+          "oklch(0.720 0.0031 121.56)",
+          "oklch(0.840 0.0020 121.56)",
+          "oklch(0.950 0.0006 121.56)"
+        ]
+      },
+      "autumn-paper": {
+        "role": "neutral",
+        "displayName": "Autumn paper",
+        "tonalRamp": [
+          "oklch(0.150 0.0085 75.32)",
+          "oklch(0.260 0.0136 75.32)",
+          "oklch(0.380 0.0173 75.32)",
+          "oklch(0.490 0.0186 75.32)",
+          "oklch(0.610 0.0175 75.32)",
+          "oklch(0.720 0.0144 75.32)",
+          "oklch(0.840 0.0090 75.32)",
+          "oklch(0.950 0.0029 75.32)"
+        ]
+      },
+      "autumn-ink": {
+        "role": "neutral",
+        "displayName": "Autumn ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0077 55.65)",
+          "oklch(0.260 0.0124 55.65)",
+          "oklch(0.380 0.0158 55.65)",
+          "oklch(0.490 0.0170 55.65)",
+          "oklch(0.610 0.0160 55.65)",
+          "oklch(0.720 0.0131 55.65)",
+          "oklch(0.840 0.0082 55.65)",
+          "oklch(0.950 0.0027 55.65)"
+        ]
+      },
+      "autumn-muted": {
+        "role": "neutral",
+        "displayName": "Autumn muted",
+        "tonalRamp": [
+          "oklch(0.150 0.0167 62.21)",
+          "oklch(0.260 0.0267 62.21)",
+          "oklch(0.380 0.0341 62.21)",
+          "oklch(0.490 0.0367 62.21)",
+          "oklch(0.610 0.0345 62.21)",
+          "oklch(0.720 0.0283 62.21)",
+          "oklch(0.840 0.0177 62.21)",
+          "oklch(0.950 0.0057 62.21)"
+        ]
+      },
+      "autumn-line": {
+        "role": "neutral",
+        "displayName": "Autumn line",
+        "tonalRamp": [
+          "oklch(0.150 0.0169 69.96)",
+          "oklch(0.260 0.0271 69.96)",
+          "oklch(0.380 0.0345 69.96)",
+          "oklch(0.490 0.0371 69.96)",
+          "oklch(0.610 0.0350 69.96)",
+          "oklch(0.720 0.0286 69.96)",
+          "oklch(0.840 0.0179 69.96)",
+          "oklch(0.950 0.0058 69.96)"
+        ]
+      },
+      "autumn-accent": {
+        "role": "primary",
+        "displayName": "Autumn accent",
+        "tonalRamp": [
+          "oklch(0.150 0.0491 46.22)",
+          "oklch(0.260 0.0788 46.22)",
+          "oklch(0.380 0.1005 46.22)",
+          "oklch(0.490 0.1081 46.22)",
+          "oklch(0.610 0.1017 46.22)",
+          "oklch(0.720 0.0833 46.22)",
+          "oklch(0.840 0.0521 46.22)",
+          "oklch(0.950 0.0169 46.22)"
+        ]
+      },
+      "autumn-about": {
+        "role": "neutral",
+        "displayName": "Autumn about",
+        "tonalRamp": [
+          "oklch(0.150 0.0134 75.68)",
+          "oklch(0.260 0.0216 75.68)",
+          "oklch(0.380 0.0275 75.68)",
+          "oklch(0.490 0.0296 75.68)",
+          "oklch(0.610 0.0279 75.68)",
+          "oklch(0.720 0.0228 75.68)",
+          "oklch(0.840 0.0143 75.68)",
+          "oklch(0.950 0.0046 75.68)"
+        ]
+      },
+      "autumn-contact": {
+        "role": "neutral",
+        "displayName": "Autumn contact",
+        "tonalRamp": [
+          "oklch(0.150 0.0144 52.83)",
+          "oklch(0.260 0.0231 52.83)",
+          "oklch(0.380 0.0295 52.83)",
+          "oklch(0.490 0.0317 52.83)",
+          "oklch(0.610 0.0298 52.83)",
+          "oklch(0.720 0.0244 52.83)",
+          "oklch(0.840 0.0153 52.83)",
+          "oklch(0.950 0.0050 52.83)"
+        ]
+      },
+      "winter-paper": {
+        "role": "neutral",
+        "displayName": "Winter paper",
+        "tonalRamp": [
+          "oklch(0.150 0.0058 244.26)",
+          "oklch(0.260 0.0094 244.26)",
+          "oklch(0.380 0.0119 244.26)",
+          "oklch(0.490 0.0128 244.26)",
+          "oklch(0.610 0.0121 244.26)",
+          "oklch(0.720 0.0099 244.26)",
+          "oklch(0.840 0.0062 244.26)",
+          "oklch(0.950 0.0020 244.26)"
+        ]
+      },
+      "winter-line": {
+        "role": "neutral",
+        "displayName": "Winter line",
+        "tonalRamp": [
+          "oklch(0.150 0.0107 241.95)",
+          "oklch(0.260 0.0172 241.95)",
+          "oklch(0.380 0.0220 241.95)",
+          "oklch(0.490 0.0236 241.95)",
+          "oklch(0.610 0.0222 241.95)",
+          "oklch(0.720 0.0182 241.95)",
+          "oklch(0.840 0.0114 241.95)",
+          "oklch(0.950 0.0037 241.95)"
+        ]
+      },
+      "winter-about": {
+        "role": "neutral",
+        "displayName": "Winter about",
+        "tonalRamp": [
+          "oklch(0.150 0.0078 242.45)",
+          "oklch(0.260 0.0125 242.45)",
+          "oklch(0.380 0.0160 242.45)",
+          "oklch(0.490 0.0172 242.45)",
+          "oklch(0.610 0.0162 242.45)",
+          "oklch(0.720 0.0132 242.45)",
+          "oklch(0.840 0.0083 242.45)",
+          "oklch(0.950 0.0027 242.45)"
+        ]
+      },
+      "spring-paper": {
+        "role": "neutral",
+        "displayName": "Spring paper",
+        "tonalRamp": [
+          "oklch(0.150 0.0037 121.63)",
+          "oklch(0.260 0.0060 121.63)",
+          "oklch(0.380 0.0076 121.63)",
+          "oklch(0.490 0.0082 121.63)",
+          "oklch(0.610 0.0077 121.63)",
+          "oklch(0.720 0.0063 121.63)",
+          "oklch(0.840 0.0039 121.63)",
+          "oklch(0.950 0.0013 121.63)"
+        ]
+      },
+      "summer-paper": {
+        "role": "neutral",
+        "displayName": "Summer paper",
+        "tonalRamp": [
+          "oklch(0.150 0.0167 86.17)",
+          "oklch(0.260 0.0268 86.17)",
+          "oklch(0.380 0.0341 86.17)",
+          "oklch(0.490 0.0367 86.17)",
+          "oklch(0.610 0.0345 86.17)",
+          "oklch(0.720 0.0283 86.17)",
+          "oklch(0.840 0.0177 86.17)",
+          "oklch(0.950 0.0057 86.17)"
+        ]
+      },
+      "summer-ink": {
+        "role": "neutral",
+        "displayName": "Summer ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0085 80.53)",
+          "oklch(0.260 0.0137 80.53)",
+          "oklch(0.380 0.0175 80.53)",
+          "oklch(0.490 0.0188 80.53)",
+          "oklch(0.610 0.0177 80.53)",
+          "oklch(0.720 0.0145 80.53)",
+          "oklch(0.840 0.0090 80.53)",
+          "oklch(0.950 0.0029 80.53)"
+        ]
+      },
+      "summer-muted": {
+        "role": "neutral",
+        "displayName": "Summer muted",
+        "tonalRamp": [
+          "oklch(0.150 0.0158 85.45)",
+          "oklch(0.260 0.0253 85.45)",
+          "oklch(0.380 0.0323 85.45)",
+          "oklch(0.490 0.0347 85.45)",
+          "oklch(0.610 0.0327 85.45)",
+          "oklch(0.720 0.0267 85.45)",
+          "oklch(0.840 0.0167 85.45)",
+          "oklch(0.950 0.0054 85.45)"
+        ]
+      },
+      "summer-line": {
+        "role": "neutral",
+        "displayName": "Summer line",
+        "tonalRamp": [
+          "oklch(0.150 0.0206 83.88)",
+          "oklch(0.260 0.0330 83.88)",
+          "oklch(0.380 0.0421 83.88)",
+          "oklch(0.490 0.0453 83.88)",
+          "oklch(0.610 0.0426 83.88)",
+          "oklch(0.720 0.0349 83.88)",
+          "oklch(0.840 0.0218 83.88)",
+          "oklch(0.950 0.0071 83.88)"
+        ]
+      },
+      "summer-accent": {
+        "role": "primary",
+        "displayName": "Summer accent",
+        "tonalRamp": [
+          "oklch(0.150 0.0267 198.50)",
+          "oklch(0.260 0.0428 198.50)",
+          "oklch(0.380 0.0546 198.50)",
+          "oklch(0.490 0.0587 198.50)",
+          "oklch(0.610 0.0553 198.50)",
+          "oklch(0.720 0.0453 198.50)",
+          "oklch(0.840 0.0283 198.50)",
+          "oklch(0.950 0.0092 198.50)"
+        ]
+      },
+      "winter-muted": {
+        "role": "neutral",
+        "displayName": "Winter muted",
+        "tonalRamp": [
+          "oklch(0.150 0.0086 171.93)",
+          "oklch(0.260 0.0139 171.93)",
+          "oklch(0.380 0.0177 171.93)",
+          "oklch(0.490 0.0190 171.93)",
+          "oklch(0.610 0.0179 171.93)",
+          "oklch(0.720 0.0146 171.93)",
+          "oklch(0.840 0.0092 171.93)",
+          "oklch(0.950 0.0030 171.93)"
+        ]
+      },
+      "action-text": {
+        "role": "neutral",
+        "displayName": "Action text",
+        "tonalRamp": [
+          "oklch(0.150 0.0000 89.88)",
+          "oklch(0.260 0.0000 89.88)",
+          "oklch(0.380 0.0000 89.88)",
+          "oklch(0.490 0.0000 89.88)",
+          "oklch(0.610 0.0000 89.88)",
+          "oklch(0.720 0.0000 89.88)",
+          "oklch(0.840 0.0000 89.88)",
+          "oklch(0.950 0.0000 89.88)"
+        ]
+      },
+      "contact-accent": {
+        "role": "primary",
+        "displayName": "Contact accent",
+        "tonalRamp": [
+          "oklch(0.150 0.0149 146.70)",
+          "oklch(0.260 0.0240 146.70)",
+          "oklch(0.380 0.0306 146.70)",
+          "oklch(0.490 0.0329 146.70)",
+          "oklch(0.610 0.0310 146.70)",
+          "oklch(0.720 0.0254 146.70)",
+          "oklch(0.840 0.0159 146.70)",
+          "oklch(0.950 0.0051 146.70)"
+        ]
+      },
+      "contact-link-border": {
+        "role": "neutral",
+        "displayName": "Contact link border",
+        "tonalRamp": [
+          "oklch(0.150 0.0107 158.26)",
+          "oklch(0.260 0.0172 158.26)",
+          "oklch(0.380 0.0219 158.26)",
+          "oklch(0.490 0.0236 158.26)",
+          "oklch(0.610 0.0222 158.26)",
+          "oklch(0.720 0.0182 158.26)",
+          "oklch(0.840 0.0114 158.26)",
+          "oklch(0.950 0.0037 158.26)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Massimo desktop del titolo principale; il clamp e le varianti mobili sono descritti in DESIGN.md."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Ruolo osservato nel portfolio; vedere la gerarchia in DESIGN.md."
+      },
+      "approach-headline": {
+        "displayName": "Approach headline",
+        "purpose": "Ruolo osservato nel portfolio; vedere la gerarchia in DESIGN.md."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Ruolo osservato nel portfolio; vedere la gerarchia in DESIGN.md."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Ruolo osservato nel portfolio; vedere la gerarchia in DESIGN.md."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Ruolo osservato nel portfolio; vedere la gerarchia in DESIGN.md."
+      },
+      "body-compact": {
+        "displayName": "Body compact",
+        "purpose": "Ruolo osservato nel portfolio; vedere la gerarchia in DESIGN.md."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Controlli ed etichette funzionali a 12 px, anche sui viewport mobili."
+      },
+      "action": {
+        "displayName": "Action",
+        "purpose": "Ruolo osservato nel portfolio; vedere la gerarchia in DESIGN.md."
+      }
+    },
+    "shadows": [
+      {
+        "name": "menu",
+        "value": "0 16px 45px #28382c20, 0 2px 6px #28382c08",
+        "purpose": "Profondità del menu atmosfera."
+      },
+      {
+        "name": "tool-dock",
+        "value": "0 6px 25px #25372d15",
+        "purpose": "Distacco della barra di istruzioni."
+      },
+      {
+        "name": "portal-rim",
+        "value": "inset 0 2px 8px #142c3c48, 0 0 1px 1px #ffffff22, 0 5px 16px #12253520",
+        "purpose": "Bordo incassato del ritratto."
+      }
+    ],
+    "motion": [
+      {
+        "name": "button-hover",
+        "value": "200ms ease",
+        "purpose": "Cambio di fondo del pulsante."
+      },
+      {
+        "name": "menu-enter",
+        "value": "220ms cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "purpose": "Ingresso del menu."
+      },
+      {
+        "name": "control-split",
+        "value": "1050ms cubic-bezier(0.22, 1.2, 0.36, 1)",
+        "purpose": "Separazione dei controlli; raccordo SVG con smoothstep e rimbalzo separato."
+      },
+      {
+        "name": "portrait-crossfade",
+        "value": "500ms ease-out",
+        "purpose": "Passaggio tra i ritratti professionali."
+      },
+      {
+        "name": "portrait-spring",
+        "value": "stiffness=576; damping=34; position-follow=24; trail-follow=12",
+        "purpose": "Molla del portale con arresto a riposo e movimento ridotto."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "control-compact",
+        "value": "1050px"
+      },
+      {
+        "name": "layout-compact",
+        "value": "1000px"
+      },
+      {
+        "name": "mobile",
+        "value": "700px"
+      },
+      {
+        "name": "dock-wrap",
+        "value": "600px"
+      },
+      {
+        "name": "dock-tight",
+        "value": "500px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Pulsante primario",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Azione piena; hover salvia e focus visibile.",
+      "html": "<a class=\"ds-primary\" href=\"#approccio\">Come lavoro <svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M12 4v16m-6-6 6 6 6-6\"/></svg></a>",
+      "css": ".ds-primary{font-family:var(--sans,\"DM Sans\",Arial,sans-serif);display:inline-flex;align-items:center;gap:40px;background:var(--ink,#242c29);color:#fff;padding:16px 21px;border-radius:3px;font-size:13px;text-decoration:none;transition:background .2s}.ds-primary:hover{background:var(--accent,#426653)}.ds-primary:focus-visible{outline:2px solid var(--accent,#426653);outline-offset:6px;}"
+    },
+    {
+      "name": "Link secondario",
+      "kind": "button",
+      "refersTo": "text-link",
+      "description": "Azione leggera a fianco del pulsante pieno.",
+      "html": "<a class=\"ds-text-link\" href=\"#progetti\">I miei progetti ↗</a>",
+      "css": ".ds-text-link{font-family:var(--sans,\"DM Sans\",Arial,sans-serif);color:var(--ink,#242c29);font-size:13px;text-decoration:none}.ds-text-link:hover{color:var(--accent,#426653)}.ds-text-link:focus-visible{outline:2px solid var(--accent,#426653);outline-offset:6px;}"
+    },
+    {
+      "name": "Navigazione",
+      "kind": "nav",
+      "refersTo": "text-link",
+      "description": "Quattro link sulla stessa linea di base, senza freccia aggiuntiva nei contatti.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Navigazione principale\"><a href=\"#approccio\">Approccio</a><a href=\"#progetti\">Progetti</a><a href=\"#percorso\">Percorso</a><a href=\"#contatti\">Contatti</a></nav>",
+      "css": ".ds-nav{font-family:var(--sans,\"DM Sans\",Arial,sans-serif);display:flex;flex-wrap:wrap;gap:24px;font-size:13px}.ds-nav a{color:var(--ink,#242c29);line-height:1.5;text-decoration:none}.ds-nav a:hover{color:var(--accent,#426653)}.ds-nav a:focus-visible{outline:2px solid var(--accent,#426653);outline-offset:6px;}"
+    },
+    {
+      "name": "Lingua selezionata",
+      "kind": "nav",
+      "refersTo": "language-selected",
+      "description": "Selezione compatta e distinta dai controlli stagionali.",
+      "html": "<nav class=\"ds-languages\" aria-label=\"Lingua\"><a href=\"/\" aria-current=\"page\" lang=\"it\">IT</a><a href=\"/en/\" lang=\"en\">EN</a></nav>",
+      "css": ".ds-languages{font-family:var(--sans,\"DM Sans\",Arial,sans-serif);display:flex;gap:3px;font-size:12px}.ds-languages a{padding:8px;min-width:32px;min-height:32px;display:inline-flex;align-items:center;justify-content:center;border-radius:3px;color:var(--muted,#626b65);text-decoration:none}.ds-languages a[aria-current]{background:#e7ebe4;color:var(--ink,#242c29);font-weight:600}.ds-languages a:hover{color:var(--accent,#426653)}.ds-languages a:focus-visible{outline:2px solid var(--accent,#426653);outline-offset:6px;}"
+    },
+    {
+      "name": "Tag competenze",
+      "kind": "chip",
+      "refersTo": "skill-tag",
+      "description": "Etichetta statica con testo funzionale a 12 px.",
+      "html": "<span class=\"ds-tag\">Cloud infrastructure</span>",
+      "css": ".ds-tag{font-family:var(--sans,\"DM Sans\",Arial,sans-serif);display:inline-block;padding:7px 11px;border:1px solid #cdd5ca;border-radius:3px;font-size:12px;color:var(--ink,#242c29)}"
+    },
+    {
+      "name": "Voce progetto",
+      "kind": "card",
+      "refersTo": "text-link",
+      "description": "Blocco aperto con separatore; il marchio approvato va inserito nella pagina reale.",
+      "html": "<article class=\"ds-project\"><h3>GeoPieno</h3><p>Confronta i prezzi dei carburanti e pianifica le soste lungo il viaggio.</p><a href=\"https://www.geopieno.it/\">Visita GeoPieno <span aria-hidden=\"true\">↗</span></a></article>",
+      "css": ".ds-project{font-family:var(--sans,\"DM Sans\",Arial,sans-serif);max-width:490px;padding:28px 0 0;border-top:1px solid var(--line,#d8ddd7);color:var(--ink,#242c29)}.ds-project h3{font-size:23px;font-weight:500;letter-spacing:-.5px;margin:0}.ds-project p{font-size:15px;line-height:1.8;color:var(--muted,#626b65);margin:20px 0 0}.ds-project a{display:inline-flex;align-items:center;gap:22px;margin-top:20px;color:var(--accent,#426653);font-size:12px;text-decoration:none}.ds-project a:hover{text-decoration:underline;text-underline-offset:4px}.ds-project a:focus-visible{outline:2px solid var(--accent,#426653);outline-offset:6px;}"
+    },
+    {
+      "name": "Controllo atmosfera neutro",
+      "kind": "custom",
+      "refersTo": "atmosphere-control",
+      "description": "Forma unica prima della divisione; anteprima statica, non replica la macchina di stato.",
+      "html": "<button class=\"ds-atmosphere\" type=\"button\" aria-expanded=\"false\">Atmosfera</button>",
+      "css": ".ds-atmosphere{font-family:var(--sans,\"DM Sans\",Arial,sans-serif);width:96px;height:44px;border:1px solid var(--line,#d8ddd7);border-radius:24px;background:color-mix(in srgb,var(--paper,#f6f6f3) 88%,white);font-size:12px;color:var(--ink,#242c29);cursor:pointer}.ds-atmosphere:hover{background:#ffffff35}.ds-atmosphere:focus-visible{outline:2px solid var(--accent,#426653);outline-offset:2px}"
+    },
+    {
+      "name": "Menu atmosfera",
+      "kind": "custom",
+      "refersTo": "atmosphere-menu",
+      "description": "Superficie sollevata chiara con stato selezionato; una voce rappresentativa.",
+      "html": "<div class=\"ds-menu\"><p>Atmosfera</p><button type=\"button\" aria-pressed=\"true\"><svg viewBox=\"0 0 24 24\" width=\"25\" height=\"25\" fill=\"none\" stroke=\"currentColor\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"5.5\" fill=\"#edc778\" stroke=\"#bc924a\"/><path d=\"M12 1v1.5m0 19V23M1 12h1.5m19 0H23M4.2 4.2l1.1 1.1m13.4 13.4 1.1 1.1M4.2 19.8l1.1-1.1M18.7 5.3l1.1-1.1\" stroke=\"#bc924a\"/></svg>Estate <span aria-hidden=\"true\">✓</span></button></div>",
+      "css": ".ds-menu{font-family:var(--sans,\"DM Sans\",Arial,sans-serif);width:238px;padding:10px;border:1px solid #d7ded4;border-radius:16px;background:#fafbf8f5;backdrop-filter:blur(20px);box-shadow:0 16px 45px #28382c20,0 2px 6px #28382c08;color:var(--ink,#242c29)}.ds-menu p{margin:8px 10px 12px;font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted,#626b65)}.ds-menu button{font-family:var(--sans,\"DM Sans\",Arial,sans-serif);border:0;width:100%;padding:11px 10px;display:flex;gap:13px;align-items:center;border-radius:9px;background:#e6ece2;color:inherit;font-size:12px;text-align:left;cursor:pointer;transition:background .18s,transform .18s}.ds-menu button span{margin-left:auto;color:var(--accent,#426653)}.ds-menu button:hover{background:#edf0e9;transform:translateX(2px)}.ds-menu button:focus-visible{outline:2px solid var(--accent,#426653);outline-offset:6px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Lo studio aperto",
+    "overview": "Lo studio aperto è un luogo professionale ma personale: il lavoro si presenta con chiarezza, mentre la curiosità trova dettagli da scoprire. Il linguaggio visivo rimane essenziale, con testo ampio nei titoli, contenuti direttamente sulla pagina e pochi elementi di separazione.\n\nLa profondità è contenuta: pagina prevalentemente piatta; ombre e trasparenze riservate ai controlli, al ritratto e alle interazioni stagionali. Pulsanti, navigazione e schede progetto sono essenziali e discreti, con dettagli curati. Le stagioni costituiscono variazioni facoltative dello stesso sistema, non identità alternative.",
+    "keyCharacteristics": [
+      "Carta chiara, inchiostro verde e salvia come base riconoscibile.",
+      "Una sola famiglia sans-serif, con gerarchia affidata a dimensione, peso e spazio.",
+      "Contenuti aperti e separatori sottili invece di un sistema di card rialzate.",
+      "Ritratto fotografico quadrato; curiosità e movimento rivelati su richiesta.",
+      "Profondità mirata ai controlli e agli effetti; lettura calma nello stato iniziale."
+    ],
+    "rules": [
+      {
+        "name": "The Quiet Base Rule",
+        "body": "Mantieni neutra la presentazione iniziale. Le atmosfere si attivano su scelta del visitatore e non devono nascondere il contenuto.",
+        "section": "colors"
+      },
+      {
+        "name": "The Evidence Before Prescription Rule",
+        "body": "I valori descrivono il codice verificato. Non abbassare la leggibilità dei testi funzionali per recuperare spazio: consentire il reflow e verificare entrambe le lingue.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat By Default Rule",
+        "body": "Non aggiungere ombre alle schede progetto o alla timeline per uniformarle ai controlli flottanti. La distinzione tra lettura piatta e interazione rialzata è intenzionale.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do mantenere carta chiara, inchiostro verde e salvia come identità di base, adattando le variabili semantiche per le stagioni.",
+      "Do conservare una gerarchia tipografica chiara e spazio attorno ai contenuti, verificando entrambe le lingue a dimensioni reali.",
+      "Do usare i marchi di progetto approvati e fotografie nitide con inquadrature coerenti.",
+      "Do mantenere separati lingua e atmosfera, vicini i due controlli stagionali e visibili gli stati di focus.",
+      "Do rendere effetti, strumenti e rivelazione del ritratto facoltativi, reversibili e compatibili con touch, tastiera e movimento ridotto."
+    ],
+    "donts": [
+      "Don't trasformare le sezioni aperte in una griglia generica di card con ombre.",
+      "Don't introdurre font, colori di accento o forme estranee solo per decorare una nuova sezione.",
+      "Don't rendere effetti o animazioni necessari per leggere la pagina o trovare il contatto.",
+      "Don't cambiare le fotografie in modo casuale, mostrare tutta la foto giocosa al passaggio o reintrodurre la deformazione dell'intero ritratto.",
+      "Don't scambiare l'estrazione dei valori o un controllo automatico senza errori per una certificazione completa di accessibilità."
+    ]
+  }
+}

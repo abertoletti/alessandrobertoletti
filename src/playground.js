@@ -27,6 +27,7 @@
   document.querySelector(".header-actions").append(ui);
   const shell = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   shell.setAttribute("viewBox", "0 0 96 44");
+  shell.setAttribute("preserveAspectRatio", "none");
   shell.classList.add("liquid-shell");
   shell.setAttribute("aria-hidden", "true");
   shell.innerHTML = "<path/>";
@@ -98,13 +99,22 @@
     waveButton,
     dock.querySelector("button:not(.clean-sand):not(.restore-page)"),
   );
-  waveButton.onclick = () => {
+  function summonWave() {
     if (washWave) return;
     sandDrawing = null;
     if (reduced.matches || !enabled()) sandStrokes = [];
     else washWave = { elapsed: 0 };
     flowerStatus.textContent = t("Arriva unâ€™onda.", "A wave is coming.");
-  };
+  }
+  waveButton.onclick = summonWave;
+  // Some touch browsers suppress the compatibility click after a drawing gesture.
+  // The in-flight guard keeps a later native click from starting a second wave.
+  waveButton.addEventListener("pointerup", (event) => {
+    if (event.pointerType !== "touch") return;
+    const rect = waveButton.getBoundingClientRect();
+    if (event.clientX >= rect.left && event.clientX <= rect.right &&
+        event.clientY >= rect.top && event.clientY <= rect.bottom) summonWave();
+  });
   let sandStrokes = [],
     sandDrawing = null;
   let flowers = [],
@@ -123,7 +133,6 @@
         washWave ||
         !enabled() ||
         e.button !== 0 ||
-        e.pointerType === "touch" ||
         e.target.closest("a,button,input,select,textarea,header,.tool-dock")
       )
         return;
@@ -158,6 +167,11 @@
   }
   document.addEventListener("pointerup", endDrawing);
   document.addEventListener("pointercancel", endDrawing);
+  document.addEventListener("lostpointercapture", endDrawing);
+  addEventListener("blur", () => {
+    if (sandDrawing) endDrawing({ pointerId: sandDrawing.id });
+    snowballs.cancel();
+  });
   let solarTime = 0,
     solarFrame = 0;
   function updateSun(dt) {
@@ -188,6 +202,15 @@
   canvas.ariaHidden = "true";
   document.body.append(canvas);
   const ctx = canvas.getContext("2d");
+  // Stationary accumulation is repainted only when it changes, not per flake/frame.
+  const snowRestCanvas = document.createElement("canvas");
+  snowRestCanvas.className = "snow-rest-canvas";
+  snowRestCanvas.ariaHidden = "true";
+  snowRestCanvas.hidden = true;
+  document.body.insertBefore(snowRestCanvas, canvas);
+  const snowRestPaint = snowRestCanvas.getContext("2d");
+  let snowRestDirty = true,
+    snowRestPaintTime = 0;
   // Rasterize snow shading once instead of blurring every flake every frame.
   const snowSprite = document.createElement("canvas");
   snowSprite.width = snowSprite.height = 32;
@@ -228,6 +251,7 @@
   const bodies = nodes.map((el) => ({ el, x: 0, y: 0 }));
   bodies.forEach((b) => b.el.classList.add("physics-item"));
   function measure() {
+    snowRestDirty = true;
     surfaces = [];
     bodies.forEach((b) => {
       const r = b.el.getBoundingClientRect();
@@ -294,6 +318,12 @@
     const dpr = Math.min(devicePixelRatio || 1, 2);
     canvas.width = W * dpr;
     canvas.height = H * dpr;
+    snowRestCanvas.width = canvas.width;
+    snowRestCanvas.height = canvas.height;
+    snowRestCanvas.style.width = W + "px";
+    snowRestCanvas.style.height = H + "px";
+    snowRestPaint.setTransform(dpr, 0, 0, dpr, 0, 0);
+    snowRestDirty = true;
     canvas.style.width = W + "px";
     canvas.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -306,6 +336,7 @@
     () => {
       const under = document.elementFromPoint(pointer.x, pointer.y);
       pointer.inside = !!under && !under.closest("header,footer,.tool-dock");
+      snowRestDirty = true;
       if (reduced.matches) requestSceneFrame();
     },
     { passive: true },
@@ -376,6 +407,9 @@
   function setSeason(next) {
     morphControls(next !== "none");
     season = next;
+    snowRestDirty = true;
+    snowRestPaintTime = 0;
+    snowRestCanvas.hidden = next !== "winter";
     snowballs.reset();
     washWave = null;
     selectTool("");
@@ -456,6 +490,7 @@
       if (!enabled() && b.dataset.seasonChoice !== "none" && !reduced.matches)
         document.querySelector("#play-toggle").click();
       setSeason(b.dataset.seasonChoice);
+      ui.querySelector(".season-toggle").focus({ preventScroll: true });
     }),
   );
   function updateAction() {
@@ -490,6 +525,7 @@
     else action.setAttribute("aria-pressed", String(!!tool));
   }
   function selectTool(next) {
+    if (sandDrawing) endDrawing({ pointerId: sandDrawing.id });
     snowballs.cancel();
     tool =
       (((next === "breeze" && season === "autumn") ||
@@ -505,6 +541,7 @@
       String(!!tool),
     );
     document.body.classList.toggle("snowball-mode", tool === "snowball");
+    document.body.classList.toggle("shovel-mode", tool === "shovel");
     cursor.innerHTML = tool ? svg(tool) : "";
     cursor.hidden = true;
     document.body.classList.remove("tool-pointer-active");
@@ -520,8 +557,8 @@
           )
         : tool === "snowball"
           ? t(
-              "Palla di neve · Tieni premuto e tira indietro per caricare. Rilascia per lanciare nella direzione opposta. Esc per uscire.",
-              "Snowball · Hold and pull back to charge. Release to throw in the opposite direction. Esc to exit.",
+              "Palla di neve Â· Tieni premuto e tira indietro per caricare. Rilascia per lanciare nella direzione opposta. Esc per uscire.",
+              "Snowball Â· Hold and pull back to charge. Release to throw in the opposite direction. Esc to exit.",
             )
           : tool === "plant"
             ? t(
@@ -980,7 +1017,27 @@
     }
     ctx.stroke();
   }
+  function drawSnow(p, paint) {
+    const sy = p.y - scrollY;
+    if (sy < -35 || sy > H + 35 || p.size <= 0.15) return;
+    paint.save();
+    paint.globalAlpha = Math.max(
+      0, Math.min(1, (p.restLife - p.restAge) / 4, (90 - p.age) / 4),
+    );
+    paint.translate(p.x, sy);
+    paint.rotate(p.a);
+    const stretch = p.rest ? 1.8 : 1;
+    paint.drawImage(
+      snowSprite, -p.size * 2 * stretch, -p.size * 2,
+      p.size * 4 * stretch, p.size * 4,
+    );
+    paint.restore();
+  }
   function drawParticle(p, time) {
+    if (p.kind === "winter") {
+      if (!p.rest) drawSnow(p, ctx);
+      return;
+    }
     const sy = p.y - scrollY;
     if (sy < -35 || sy > H + 35) return;
     ctx.save();
@@ -994,15 +1051,6 @@
     if (p.kind === "autumn") {
       ctx.scale(1, 0.6 + Math.abs(Math.sin(p.phase + time * 0.001)) * 0.4);
       leaf(p);
-    } else if (p.kind === "winter") {
-      const stretch = p.rest ? 1.8 : 1;
-      ctx.drawImage(
-        snowSprite,
-        -p.size * 2 * stretch,
-        -p.size * 2,
-        p.size * 4 * stretch,
-        p.size * 4,
-      );
     } else if (p.kind === "spring") {
       if (p.species === "bee") {
         ctx.rotate(p.rest ? -0.4 : 0.15);
@@ -1274,6 +1322,7 @@
             );
             if (surface) {
               p.rest = surface;
+              if (p.kind === "winter") snowRestDirty = true;
               p.restAge = 0;
               p.offset = p.x - surface.x;
               p.y = surface.y;
@@ -1294,6 +1343,15 @@
           p.rest ||
           (p.y < scrollY + H + 150 && p.x > -350 && p.x < W + 350)),
     );
+
+    if (season === "winter") {
+      if (snowRestDirty || tool === "snowball" || time - snowRestPaintTime >= 125) {
+        snowRestPaint.clearRect(0, 0, W, H);
+        for (const p of particles) if (p.rest) drawSnow(p, snowRestPaint);
+        snowRestDirty = false;
+        snowRestPaintTime = time;
+      }
+    }
 
     if (season === "summer") {
       updateWashWave(dt, animate);

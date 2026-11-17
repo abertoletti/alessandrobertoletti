@@ -26,7 +26,7 @@
   background: transparent;
   border-radius: 24px;
   padding: 6px 10px;
-  font-size: 11px;
+  font-size: 12px;
 }
 .environment-button:hover,
 .environment-button[aria-expanded="true"] {
@@ -77,7 +77,7 @@
 
 .environment-menu > p {
   margin: 8px 10px 12px;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.8px;
   text-transform: uppercase;
   color: var(--muted);
@@ -114,7 +114,7 @@
 }
 .environment-menu small {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   padding: 12px 10px 5px;
 }
@@ -196,7 +196,7 @@ body[data-season="autumn"] {
   --paper: #faf1e5;
   --ink: #352c26;
   --muted: #74604f;
-  --accent: #9c552d;
+  --accent: #914a25;
   --line: #e3cfb9;
 }
 body[data-season="autumn"] .about {
@@ -221,6 +221,7 @@ body[data-season="autumn"] .contact-bottom p {
   color: #d6c1ac;
 }
 body[data-season="winter"] {
+  --muted: #52605b;
   --paper: #dee6ed;
   --line: #b5c4d0;
 }
@@ -245,7 +246,7 @@ body[data-season="spring"] {
   box-shadow: 0 6px 25px #25372d15;
   max-width: calc(100vw - 28px);
   width: max-content;
-  font-size: 11px;
+  font-size: 12px;
   animation: menu-in 0.2s;
 }
 .tool-dock button {
@@ -423,9 +424,9 @@ body[data-season="summer"] footer {
 body[data-season="summer"] {
   --paper: #f3e7cd;
   --ink: #3e382e;
-  --muted: #716650;
+  --muted: #625843;
   --line: #d9c9aa;
-  --accent: #387779;
+  --accent: #2e6668;
   background-color: var(--paper);
   background-image:
     radial-gradient(#9a784018 0.65px, transparent 0.9px),
@@ -464,14 +465,14 @@ body[data-season="summer"] .sand-hint {
   flex-wrap: wrap;
   margin: 20px 0 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
 }
 .sand-hint button {
   border: 0;
   background: transparent;
   padding: 6px 0;
-  font-size: 11px;
+  font-size: 12px;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -485,11 +486,6 @@ body[data-season="summer"] .header {
     height: 190px;
   }
 }
-@media (pointer: coarse) {
-  .sand-hint span {
-    display: none;
-  }
-}
 
 body[data-season="summer"] {
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22240%22%20height%3D%22240%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%22.8%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22/%3E%3CfeColorMatrix%20type%3D%22saturate%22%20values%3D%220%22/%3E%3C/filter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url%28%23n%29%22%20opacity%3D%22.12%22/%3E%3C/svg%3E");
@@ -499,7 +495,7 @@ body[data-season="summer"] {
 
 @media (max-width: 700px) {
   .season-action {
-    font-size: 10px;
+    font-size: 12px;
     padding: 6px 8px;
     gap: 4px;
   }
@@ -547,7 +543,7 @@ body[data-season="summer"] {
 }
 .environment-controls .season-toggle > span:not(.chevron) {
   display: inline;
-  font-size: 11px;
+  font-size: 12px;
 }
 .environment-controls.is-split .season-toggle {
   width: 44px;
@@ -717,4 +713,52 @@ body.snowball-mode:not(.no-play) main * {
   .tool-dock > span {
     flex: 1 1 200px;
   }
+}
+
+/* Touch drawing is intentional only while the shovel is explicitly selected. */
+body.shovel-mode:not(.no-play) main {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* Scale the complete paired control with text, keeping the same neutral geometry. */
+.environment-controls {
+  font-size: 12px;
+  width: 8em;
+  height: 3.666667em;
+  flex-basis: 8em;
+}
+.environment-controls .environment-button {
+  font-size: inherit;
+}
+.environment-controls .season-toggle {
+  width: 8em;
+  height: 3.666667em;
+}
+.environment-controls.is-split .season-toggle,
+.environment-controls .season-action {
+  width: 3.666667em;
+  height: 3.666667em;
+}
+.liquid-shell {
+  width: 8em;
+  height: 3.666667em;
+}
+.environment-controls .icon {
+  width: 2.083333em;
+  height: 2.083333em;
+}
+.environment-controls .season-toggle > span:not(.chevron) {
+  font-size: inherit;
+}
+.tool-dock > span {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.snow-rest-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
 }

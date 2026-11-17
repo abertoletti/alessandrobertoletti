@@ -1,0 +1,45 @@
+{
+  "buildPath": "comp",
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-17T17:06:32.149Z",
+        "reason": "Agent review: about and contact intentionally use full-width section backgrounds; their inner .wrap provides responsive horizontal gutters (56px desktop, 20px mobile)."
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "en/index.html"
+        ],
+        "createdAt": "2026-11-17T17:06:32.532Z",
+        "reason": "Agent review: about and contact intentionally use full-width section backgrounds; their inner .wrap provides responsive horizontal gutters (56px desktop, 20px mobile)."
+      },
+      {
+        "rule": "undersized-ui-text",
+        "value": "*",
+        "files": [
+          "tmp/design-component-preview.html"
+        ],
+        "createdAt": "2026-11-17T17:32:49.231Z",
+        "reason": "Agent: temporary documentation fixture reproduces the existing 10px skill tag verbatim; DESIGN.md records this as unresolved legibility debt, not an approved new text size. Production files remain checked."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgb(0, 0, 0)",
+        "files": [
+          "tmp/design-component-preview.html"
+        ],
+        "createdAt": "2026-11-17T17:33:25.806Z",
+        "reason": "Agent: generated documentation fixture headings label component examples and are not production component tokens; this exception does not apply to the website or the documented snippets."
+      }
+    ]
+  }
+}
