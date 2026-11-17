@@ -22,14 +22,20 @@ let portraitRequest = 0;
 let secretLayer = null,
   revealFrame = 0,
   revealPoint = null,
-  portraitBounds = null;
-function hideReveal() {
-  cancelAnimationFrame(revealFrame);
-  revealFrame = 0;
-  revealPoint = null;
-  secretLayer?.style.setProperty("--reveal-radius", "0px");
-  portrait.classList.remove("is-revealing");
-}
+  portraitBounds = null,
+  hintShown = false;
+const lens = {
+  x: 0,
+  y: 0,
+  radius: 0,
+  vr: 0,
+  trailX: 0,
+  trailY: 0,
+  stretch: 0,
+  angle: 0,
+  open: false,
+  last: 0,
+};
 function canReveal() {
   return (
     play &&
@@ -37,33 +43,191 @@ function canReveal() {
     !document.querySelector('.season-action[aria-pressed="true"]')
   );
 }
+function aperturePath(x, y, rx, ry, angle) {
+  const c = Math.cos(angle),
+    s = Math.sin(angle),
+    k = 0.5522848;
+  const p = (a, b) =>
+    [
+      (x + a * rx * c - b * ry * s).toFixed(2),
+      (y + a * rx * s + b * ry * c).toFixed(2),
+    ].join(" ");
+  return (
+    "M" +
+    p(1, 0) +
+    " C" +
+    p(1, k) +
+    " " +
+    p(k, 1) +
+    " " +
+    p(0, 1) +
+    " C" +
+    p(-k, 1) +
+    " " +
+    p(-1, k) +
+    " " +
+    p(-1, 0) +
+    " C" +
+    p(-1, -k) +
+    " " +
+    p(-k, -1) +
+    " " +
+    p(0, -1) +
+    " C" +
+    p(k, -1) +
+    " " +
+    p(1, -k) +
+    " " +
+    p(1, 0) +
+    "Z"
+  );
+}
+function scheduleReveal() {
+  if (!revealFrame && !document.hidden) {
+    lens.last = 0;
+    revealFrame = requestAnimationFrame(animateReveal);
+  }
+}
+function hideReveal(immediate = false) {
+  revealPoint = null;
+  lens.open = false;
+  if (immediate || reducedMotion.matches || !secretLayer) {
+    cancelAnimationFrame(revealFrame);
+    revealFrame = 0;
+    lens.radius = lens.vr = lens.stretch = 0;
+    if (secretLayer) {
+      secretLayer.style.clipPath = "circle(0px at 50% 50%)";
+      secretLayer.style.setProperty("--reveal-radius", "0px");
+      secretLayer.rim.style.opacity = "0";
+      secretLayer.trail.style.opacity = "0";
+    }
+    portrait.classList.remove("is-revealing");
+    return;
+  }
+  scheduleReveal();
+}
+function animateReveal(time) {
+  revealFrame = 0;
+  if (!secretLayer || document.hidden) return;
+  if (lens.open && !canReveal()) {
+    hideReveal(true);
+    return;
+  }
+  const dt = Math.min((time - lens.last) / 1000 || 1 / 60, 0.032);
+  lens.last = time;
+  const rect =
+    portraitBounds || (portraitBounds = portrait.getBoundingClientRect());
+  const targetRadius = lens.open
+    ? Math.max(60, Math.min(84, rect.width * 0.22))
+    : 0;
+  const tx = revealPoint
+    ? Math.max(0, Math.min(rect.width, revealPoint.x - rect.left))
+    : lens.x;
+  const ty = revealPoint
+    ? Math.max(0, Math.min(rect.height, revealPoint.y - rect.top))
+    : lens.y;
+  const oldX = lens.x,
+    oldY = lens.y,
+    follow = 1 - Math.exp(-dt * 24);
+  lens.x += (tx - lens.x) * follow;
+  lens.y += (ty - lens.y) * follow;
+  const speed = Math.hypot(lens.x - oldX, lens.y - oldY) / dt;
+  if (speed > 10) lens.angle = Math.atan2(lens.y - oldY, lens.x - oldX);
+  lens.stretch +=
+    (Math.min(0.2, speed / 5000) - lens.stretch) * (1 - Math.exp(-dt * 16));
+  lens.vr += ((targetRadius - lens.radius) * 576 - lens.vr * 34) * dt;
+  lens.radius = Math.max(0, lens.radius + lens.vr * dt);
+  lens.trailX += (lens.x - lens.trailX) * (1 - Math.exp(-dt * 12));
+  lens.trailY += (lens.y - lens.trailY) * (1 - Math.exp(-dt * 12));
+  if (reducedMotion.matches) {
+    lens.x = tx;
+    lens.y = ty;
+    lens.radius = targetRadius;
+    lens.vr = 0;
+    lens.stretch = 0;
+    lens.trailX = tx;
+    lens.trailY = ty;
+  }
+  const rx = lens.radius * (1 + lens.stretch),
+    ry = lens.radius * (1 - lens.stretch * 0.35);
+  secretLayer.style.clipPath =
+    'path("' + aperturePath(lens.x, lens.y, rx, ry, lens.angle) + '")';
+  secretLayer.style.setProperty("--reveal-radius", lens.radius + "px");
+  const diameter = Math.max(0, lens.radius * 2),
+    transform =
+      "translate3d(" +
+      lens.x +
+      "px," +
+      lens.y +
+      "px,0) rotate(" +
+      lens.angle +
+      "rad) scale(" +
+      (1 + lens.stretch) +
+      "," +
+      (1 - lens.stretch * 0.35) +
+      ") translate(-50%,-50%)";
+  Object.assign(secretLayer.rim.style, {
+    width: diameter + "px",
+    height: diameter + "px",
+    transform,
+    opacity: String(Math.min(1, lens.radius / 30)),
+  });
+  Object.assign(secretLayer.trail.style, {
+    width: diameter + "px",
+    height: diameter + "px",
+    transform:
+      "translate3d(" +
+      lens.trailX +
+      "px," +
+      lens.trailY +
+      "px,0) translate(-50%,-50%)",
+    opacity: String(
+      Math.min(
+        0.32,
+        Math.hypot(lens.x - lens.trailX, lens.y - lens.trailY) / 120,
+      ) *
+        (lens.radius / 84),
+    ),
+  });
+  const settled =
+    Math.hypot(tx - lens.x, ty - lens.y) < 0.08 &&
+    Math.abs(targetRadius - lens.radius) < 0.08 &&
+    Math.abs(lens.vr) < 0.4 &&
+    Math.hypot(lens.x - lens.trailX, lens.y - lens.trailY) < 0.1 &&
+    lens.stretch < 0.001;
+  if (settled) {
+    if (!lens.open) hideReveal(true);
+    return;
+  }
+  revealFrame = requestAnimationFrame(animateReveal);
+}
 function moveReveal(event) {
   if (!canReveal()) return;
   revealPoint = { x: event.clientX, y: event.clientY };
-  if (revealFrame) return;
-  revealFrame = requestAnimationFrame(() => {
-    revealFrame = 0;
-    if (!canReveal() || !revealPoint) return;
+  if (!lens.open) {
+    portrait.querySelector(".portal-hint")?.remove();
     const r =
       portraitBounds || (portraitBounds = portrait.getBoundingClientRect());
-    const x = Math.max(0, Math.min(r.width, revealPoint.x - r.left)),
-      y = Math.max(0, Math.min(r.height, revealPoint.y - r.top));
-    secretLayer.style.setProperty("--reveal-x", x + "px");
-    secretLayer.style.setProperty("--reveal-y", y + "px");
-    secretLayer.style.setProperty(
-      "--reveal-radius",
-      Math.max(42, Math.min(64, r.width * 0.16)) + "px",
+    lens.x = lens.trailX = Math.max(
+      0,
+      Math.min(r.width, event.clientX - r.left),
     );
-    portrait.classList.add("is-revealing");
-  });
+    lens.y = lens.trailY = Math.max(
+      0,
+      Math.min(r.height, event.clientY - r.top),
+    );
+    lens.open = true;
+  }
+  portrait.classList.add("is-revealing");
+  scheduleReveal();
 }
 portrait.addEventListener("pointerenter", (e) => {
   portraitBounds = null;
   moveReveal(e);
 });
 portrait.addEventListener("pointermove", moveReveal);
-portrait.addEventListener("pointerleave", hideReveal);
-portrait.addEventListener("pointercancel", hideReveal);
+portrait.addEventListener("pointerleave", () => hideReveal());
+portrait.addEventListener("pointercancel", () => hideReveal(true));
 portrait.addEventListener("pointerdown", (e) => {
   if (e.pointerType === "touch" && canReveal()) {
     portrait.setPointerCapture(e.pointerId);
@@ -98,11 +262,12 @@ portrait.addEventListener("keydown", (e) => {
     clientY: Math.max(r.top, Math.min(r.bottom, point.y)),
   });
 });
-portrait.addEventListener("blur", hideReveal);
+portrait.addEventListener("blur", () => hideReveal());
 addEventListener(
   "scroll",
   () => {
     portraitBounds = null;
+    hideReveal(true);
   },
   { passive: true },
 );
@@ -158,7 +323,7 @@ function loadPhoto(name, priority = "auto") {
 }
 async function showPortrait(season = "none") {
   const request = ++portraitRequest;
-  hideReveal();
+  hideReveal(true);
   secretLayer = null;
   delete portrait.dataset.secret;
   portrait.classList.remove("has-secret");
@@ -205,8 +370,26 @@ async function showPortrait(season = "none") {
     layer.className = "portrait-secret";
     layer.setAttribute("aria-hidden", "true");
     layer.append(framedPhoto(hidden, hiddenName, name));
-    scene.append(layer);
+    const rim = document.createElement("div");
+    rim.className = "portal-rim";
+    rim.setAttribute("aria-hidden", "true");
+    const trail = document.createElement("div");
+    trail.className = "portal-trail";
+    trail.setAttribute("aria-hidden", "true");
+    layer.rim = rim;
+    layer.trail = trail;
+    scene.append(layer, trail, rim);
     secretLayer = layer;
+    if (!hintShown && !reducedMotion.matches && play) {
+      hintShown = true;
+      const hint = document.createElement("div");
+      hint.className = "portal-hint";
+      hint.setAttribute("aria-hidden", "true");
+      scene.append(hint);
+      hint.addEventListener("animationend", () => hint.remove(), {
+        once: true,
+      });
+    }
     portrait.classList.add("has-secret");
     portrait.tabIndex = 0;
     portrait.dataset.secret = hiddenName;
@@ -226,7 +409,7 @@ new MutationObserver(() => showPortrait(document.body.dataset.season)).observe(
 );
 showPortrait(document.body.dataset.season);
 function syncPlay() {
-  if (!play) hideReveal();
+  if (!play) hideReveal(true);
   const toggle = document.querySelector("#play-toggle");
   toggle.setAttribute("aria-pressed", String(play));
   toggle.textContent = `${english ? "Interactions" : "Interazioni"}: ${play ? "ON" : "OFF"}`;
@@ -242,3 +425,7 @@ reducedMotion.addEventListener("change", (event) => {
 });
 syncPlay();
 document.querySelector("#year").textContent = new Date().getFullYear();
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) hideReveal(true);
+});
