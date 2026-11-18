@@ -19,6 +19,16 @@
     summer: t("Estate", "Summer"),
     none: t("Disattiva", "Off"),
   };
+  const seasonStorageKey = "portfolio-season";
+  function savedSeason() {
+    try {
+      const saved = sessionStorage.getItem(seasonStorageKey);
+      if (Object.hasOwn(names, saved)) return saved;
+    } catch {
+      // The theme still works when this browser blocks storage.
+    }
+    return "none";
+  }
   const ui = document.createElement("div");
   ui.className = "environment-controls";
   ui.innerHTML = `<div class="control-group"><button class="environment-button season-toggle" aria-label="${t("Scegli stagione", "Choose season")}" aria-expanded="false" aria-controls="season-menu"></button><div class="environment-menu" id="season-menu" hidden><p>${t("Un cambio di atmosfera", "A change of atmosphere")}</p>${Object.keys(
@@ -84,9 +94,9 @@
     ui.style.setProperty("--season-icon-opacity", smooth(Math.max(0, (q - 0.24) / 0.76)));
   }
 
-  function morphControls(active) {
+  function morphControls(active, skipMotion = false) {
     const to = active ? 1 : 0;
-    const instant = reduced.matches || document.body.classList.contains("no-play");
+    const instant = skipMotion || reduced.matches || document.body.classList.contains("no-play");
     if (to === morphTarget && !instant) return;
     cancelAnimationFrame(morphFrame);
     morphTarget = to;
@@ -452,9 +462,14 @@
     particles.push(p);
     return p;
   }
-  function setSeason(next) {
-    morphControls(next !== "none");
+  function setSeason(next, skipMotion = false) {
+    morphControls(next !== "none", skipMotion);
     season = next;
+    try {
+      sessionStorage.setItem(seasonStorageKey, next);
+    } catch {
+      // Storage is optional for the current page.
+    }
     snowRestDirty = true;
     snowRestPaintTime = 0;
     snowRestCanvas.hidden = next !== "winter";
@@ -1450,7 +1465,12 @@
       setSeason("none");
     }
   }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
-  setSeason("none");
+  setSeason(savedSeason(), true);
+  addEventListener("pageshow", (event) => {
+    if (!event.persisted) return;
+    const next = savedSeason();
+    if (season !== next) setSeason(next, true);
+  });
   document.addEventListener("visibilitychange", () => {
     cancelAnimationFrame(weatherFrame);
     weatherFrame = 0;
@@ -1463,7 +1483,8 @@
     requestSceneFrame();
   });
   // Animate the actual Keepify description, preserving its accessible text.
-  const projects = [...document.querySelectorAll(".project")];
+  const geopieno = document.querySelector('[data-project="geopieno"]');
+  const keepify = document.querySelector('[data-project="keepify"]');
   const activeWords = new Set();
   function composeDescription(project) {
     if (!enabled() || reduced.matches) return;
@@ -1529,25 +1550,39 @@
   reduced.addEventListener("change", () => {
     if (reduced.matches) for (const finish of [...activeWords]) finish();
   });
+  const projectTitle = document.querySelector("#projects-title");
+  const keepifyHeading = keepify.querySelector(".project-heading");
   const started = new Set();
   function startProject(project) {
     if (started.has(project)) return;
     started.add(project);
-    project.classList.add("story-visible");
-    if (project === projects[1]) composeDescription(project);
+    if (!enabled() || reduced.matches) return;
+    if (project === keepify) composeDescription(project);
+    else project.classList.add("story-visible");
   }
-  const observer = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        if (entry.target.id === "projects-title") {
-          startProject(projects[0]);
-          if (innerWidth > 700) startProject(projects[1]);
-        } else startProject(projects[1]);
+  let projectObserver;
+  function observeProjects() {
+    projectObserver?.disconnect();
+    if (started.size === 2) return;
+    // IntersectionObserver percentages use viewport width, even on the vertical axis.
+    const inset = Math.round(innerHeight * 0.38);
+    projectObserver = new IntersectionObserver((entries, observer) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        if (entry.target === projectTitle) {
+          startProject(geopieno);
+          if (innerWidth > 700) startProject(keepify);
+        } else startProject(keepify);
         observer.unobserve(entry.target);
-      }),
-    { rootMargin: "-40% 0px -40% 0px", threshold: 0 },
-  );
-  observer.observe(document.querySelector("#projects-title"));
-  observer.observe(projects[1].querySelector(".project-heading"));
+      }
+      if (started.size === 2) {
+        observer.disconnect();
+        removeEventListener("resize", observeProjects);
+      }
+    }, { rootMargin: `-${inset}px 0px` });
+    if (!started.has(geopieno)) projectObserver.observe(projectTitle);
+    if (!started.has(keepify)) projectObserver.observe(keepifyHeading);
+  }
+  observeProjects();
+  addEventListener("resize", observeProjects);
 })();

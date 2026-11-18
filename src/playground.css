@@ -744,3 +744,69 @@ body.shovel-mode:not(.no-play) main {
   z-index: 12;
   pointer-events: none;
 }
+
+/* The route is decorative and plays once when the projects enter the reading area. */
+.project-route {
+  flex: 0 1 120px;
+  min-width: 0;
+  height: 40px;
+  margin-inline-start: auto;
+  color: var(--accent);
+  visibility: hidden;
+  pointer-events: none;
+}
+.project.story-visible .project-route {
+  visibility: visible;
+  animation: route-appear 2.6s both;
+}
+.project-route-guide,
+.project-route-trace {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.project-route-guide {
+  opacity: 0.24;
+  stroke-dasharray: 2 4;
+}
+.project-route-trace {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.story-visible .project-route-trace {
+  animation: route-draw 950ms 120ms cubic-bezier(.25,.65,.35,1) forwards;
+}
+.project-route-origin {
+  fill: currentColor;
+  opacity: 0.55;
+}
+.project-route-pin {
+  fill: currentColor;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: bottom;
+}
+.project-route-pin circle {
+  fill: var(--paper);
+}
+.story-visible .project-route-pin {
+  animation: route-pin 320ms 920ms cubic-bezier(.2,.8,.3,1) forwards;
+}
+@keyframes route-appear {
+  0%, 100% { opacity: 0; }
+  12%, 77% { opacity: 1; }
+}
+@keyframes route-draw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes route-pin {
+  from { opacity: 0; transform: translateY(-4px) scale(.86); }
+  to { opacity: 1; transform: none; }
+}
+.no-play .project.story-visible .project-route {
+  visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .project.story-visible .project-route { visibility: hidden; }
+}

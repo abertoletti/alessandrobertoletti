@@ -237,7 +237,7 @@
       >
         <div class="section-head"><h2 id="projects-title">Progetti</h2></div>
         <div class="project-grid">
-          <article class="project">
+          <article class="project" data-project="geopieno">
             <div class="project-heading">
               <img
                 src="public/projects/geopieno-mark.svg"
@@ -246,6 +246,15 @@
                 height="42"
               />
               <h3>GeoPieno</h3>
+              <svg class="project-route" viewBox="0 0 120 40" aria-hidden="true" focusable="false">
+                <path class="project-route-guide" d="M6 31h19c13 0 13-18 26-18h16c13 0 12 18 25 18h16" />
+                <path class="project-route-trace" pathLength="1" d="M6 31h19c13 0 13-18 26-18h16c13 0 12 18 25 18h16" />
+                <circle class="project-route-origin" cx="6" cy="31" r="3" />
+                <g class="project-route-pin">
+                  <path d="M108 31s-7-7-7-13a7 7 0 0 1 14 0c0 6-7 13-7 13Z" />
+                  <circle cx="108" cy="18" r="2.4" />
+                </g>
+              </svg>
             </div>
             <p>
               Un’app web e mobile che confronta i prezzi dei carburanti in
@@ -261,7 +270,7 @@
               >Visita GeoPieno <span aria-hidden="true">↗</span></a
             >
           </article>
-          <article class="project">
+          <article class="project" data-project="keepify">
             <div class="project-heading">
               <img
                 src="public/projects/keepify-symbol.svg"
@@ -384,23 +393,27 @@
             />
           </li>
           <li>
-            <img
-              src="public/companies/logol.svg"
-              alt="Logol AG"
-              width="150"
-              height="60"
-              loading="lazy"
-            />
+            <a href="https://www.logol.com/" target="_blank" rel="noopener noreferrer">
+              <img
+                src="public/companies/logol.svg"
+                alt="Logol AG"
+                width="150"
+                height="60"
+                loading="lazy"
+              />
+            </a>
           </li>
           <li>
-            <img
-              class="dynabit-logo"
-              src="public/companies/dynabit.jpg"
-              alt="Dynabit SRLS"
-              width="110"
-              height="110"
-              loading="lazy"
-            />
+            <a href="https://www.dynabit.it/" target="_blank" rel="noopener noreferrer">
+              <img
+                class="dynabit-logo"
+                src="public/companies/dynabit.jpg"
+                alt="Dynabit SRLS"
+                width="110"
+                height="110"
+                loading="lazy"
+              />
+            </a>
           </li>
         </ul>
       </section>

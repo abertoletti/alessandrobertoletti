@@ -485,6 +485,17 @@ h3 {
   align-items: center;
   justify-content: center;
 }
+.company-logos a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  border-radius: 3px;
+}
+.company-logos a:hover:not(:focus-visible) {
+  outline: 1px solid var(--line);
+  outline-offset: 6px;
+}
 .company-logos img {
   max-width: 100%;
   object-fit: contain;
