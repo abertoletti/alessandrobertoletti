@@ -270,7 +270,7 @@ Le voci progetto associano simbolo approvato, titolo e descrizione breve, con un
 
 ### Atmosphere controls and menu
 
-Stato neutro: un controllo testuale unico. Stato attivo: stagione e azione contestuale, entrambe rappresentate da icone. La divisione/ricongiunzione dura 1050 ms, con raccordo che si assottiglia e un breve rimbalzo; il menu entra in 220 ms. Sotto i 700 px il menu è fissato a 66 px dal bordo superiore e 20 px da destra, con larghezza 240 px e altezza limitata alla finestra. I nomi accessibili e gli stati `aria-expanded`/`aria-pressed` restano parte del comportamento.
+Stato neutro: un controllo testuale unico. Stato attivo: stagione e azione contestuale, entrambe rappresentate da icone. La divisione dura circa 640 ms e la ricongiunzione 520 ms. Contorno, testo e icone seguono lo stesso movimento, con un breve rimbalzo all’arrivo. Con la preferenza per il movimento ridotto il passaggio è immediato. Il menu entra in 220 ms. Sotto i 700 px il menu è fissato a 66 px dal bordo superiore e 20 px da destra, con larghezza 240 px e altezza limitata alla finestra. I nomi accessibili e gli stati `aria-expanded`/`aria-pressed` restano parte del comportamento.
 
 ### Tool dock
 

@@ -1,5 +1,20 @@
 // Canvas renderers receive scene state explicitly; they do not own event handlers.
 const SeasonalRenderers = (() => {
+  const sandBanks = [
+    [0, 21, "#d4b77f45"],
+    [-7, 5.5, "#f9e5bbbf"],
+    [7, 5, "#b6976570"],
+    [0, 10, "#a4835066"],
+    [1, 4, "#9875485c"],
+    [-1.2, 1.7, "#d1b37e99"],
+  ];
+  const flowerPalettes = [
+    ["#fff9e9", "#ded6b5", "#d3a948"],
+    ["#d98fa9", "#ae547b", "#d8ad5a"],
+    ["#e89170", "#be533d", "#514736"],
+    ["#b4a3d4", "#7c64a7", "#d9bd66"],
+  ];
+
   function drawSand(ctx, sandStrokes, H, scrollY, grain) {
     ctx.save();
     ctx.lineCap = "round";
@@ -14,21 +29,15 @@ const SeasonalRenderers = (() => {
           l = Math.hypot(b.x - a.x, b.y - a.y) || 1;
         return { x: -(b.y - a.y) / l, y: (b.x - a.x) / l };
       };
+      const normals = points.map((_, i) => normal(i));
       // Continuous banks avoid overlapping segment caps and dark joints.
-      for (const [offset, width, color] of [
-        [0, 21, "#d4b77f45"],
-        [-7, 5.5, "#f9e5bbbf"],
-        [7, 5, "#b6976570"],
-        [0, 10, "#a4835066"],
-        [1, 4, "#9875485c"],
-        [-1.2, 1.7, "#d1b37e99"],
-      ]) {
+      for (const [offset, width, color] of sandBanks) {
         let bucket = -1;
         ctx.strokeStyle = color;
         ctx.lineWidth = width;
         for (let i = 0; i < points.length; i++) {
           const p = points[i],
-            n = normal(i),
+            n = normals[i],
             alpha = Math.round(p.opacity * 10) / 10;
           const edge =
             offset + (Math.abs(offset) > 3 ? Math.sin(i * 0.9) * 0.45 : 0);
@@ -40,7 +49,7 @@ const SeasonalRenderers = (() => {
             ctx.globalAlpha = alpha;
             bucket = alpha;
             const prev = points[Math.max(0, i - 1)],
-              pn = normal(Math.max(0, i - 1));
+              pn = normals[Math.max(0, i - 1)];
             ctx.moveTo(prev.x + pn.x * edge, prev.y - scrollY + pn.y * edge);
           }
           ctx.lineTo(x, y);
@@ -49,7 +58,7 @@ const SeasonalRenderers = (() => {
       }
       for (let i = 1; i < points.length; i++) {
         const p = points[i],
-          n = normal(i);
+          n = normals[i];
         if (p.y < scrollY - 20 || p.y > scrollY + H + 20) continue;
         ctx.globalAlpha = p.opacity;
         for (const side of [-1, 1]) {
@@ -72,12 +81,6 @@ const SeasonalRenderers = (() => {
     ctx.restore();
   }
   function drawFlowers(ctx, flowers, dt, animate, reduced, H, scrollY, grain) {
-    const palettes = [
-      ["#fff9e9", "#ded6b5", "#d3a948"],
-      ["#d98fa9", "#ae547b", "#d8ad5a"],
-      ["#e89170", "#be533d", "#514736"],
-      ["#b4a3d4", "#7c64a7", "#d9bd66"],
-    ];
     for (const f of flowers) {
       if (animate) f.age += dt;
       else if (reduced.matches) f.age = 12;
@@ -141,7 +144,7 @@ const SeasonalRenderers = (() => {
         ctx.ellipse(0, -2, 2.5 + bloom * 3, 4 + bloom * 6, 0, 0, Math.PI * 2);
         ctx.fill();
       }
-      const colors = palettes[f.type],
+      const colors = flowerPalettes[f.type],
         petals = [12, 8, 5, 7][f.type],
         opening = 0.08 + bloom * 0.92;
       for (let i = 0; i < petals; i++) {

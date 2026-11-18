@@ -1,5 +1,12 @@
 (() => {
   "use strict";
+  const beachPalette = {
+    drySand: [[0, "#e5cda400"], [0.4, "#e8d2ac45"], [1, "#ddc098d9"]],
+    wetSand: [[0, "#a78d6b40"], [1, "#a78d6b85"]],
+    water: [[0, "#b7d7c652"], [0.4, "#91c7bba3"], [0.78, "#529faaa8"], [1, "#347f91cc"]],
+    grainShadow: "#93744c19",
+    grainLight: "#fff7df66",
+  };
   const en = document.documentElement.lang === "en";
   const t = (it, english) => (en ? english : it);
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
@@ -32,40 +39,77 @@
   shell.setAttribute("aria-hidden", "true");
   shell.innerHTML = "<path/>";
   ui.prepend(shell);
+  const seasonToggle = ui.querySelector(".season-toggle");
+  const seasonLabel = document.createElement("span");
+  seasonLabel.className = "season-label";
+  seasonLabel.textContent = t("Atmosfera", "Atmosphere");
+  seasonToggle.append(seasonLabel);
+
+  const pinch = 0.68;
+  const smooth = (u) => u * u * (3 - 2 * u);
   let morphFrame = 0,
-    morphProgress = 0;
+    morphProgress = 0,
+    morphTarget = 0;
+
   function drawShell(q) {
-    const waist = 2 + 20 * q,
-      lower = 44 - waist;
-    const path =
-      q > 0.995
-        ? "M22 2a20 20 0 1 0 0 40a20 20 0 1 0 0-40M74 2a20 20 0 1 0 0 40a20 20 0 1 0 0-40"
-        : `M22 2C33 2 42 ${2 + 9 * q} 42 ${waist}C46 ${waist} 50 ${waist} 54 ${waist}C54 ${2 + 9 * q} 63 2 74 2A20 20 0 0 1 74 42C63 42 54 ${42 - 9 * q} 54 ${lower}C50 ${lower} 46 ${lower} 42 ${lower}C42 ${42 - 9 * q} 33 42 22 42A20 20 0 0 1 22 2Z`;
+    const joined = q < pinch;
+    const phase = joined ? q / pinch : (q - pinch) / (1 - pinch);
+    // Bring the lobes into contact at the pinch, then let them settle apart.
+    const shift = joined
+      ? 6 * smooth(phase)
+      : 6 * (1 - smooth(phase)) - 1.8 * Math.sin(Math.PI * phase) * phase;
+    const left = 22 + shift;
+    const right = 96 - left;
+    let path;
+    if (joined) {
+      const angle = (1 - phase) * Math.PI / 2;
+      const x = left + 20 * Math.cos(angle);
+      const y = 22 - 20 * Math.sin(angle);
+      const neck = y + (22 - y) * 0.3 * phase;
+      const handle = (48 - x) / 2;
+      path = `M${x} ${y} C${x + handle} ${y} ${48 - handle} ${neck} 48 ${neck}
+        S${96 - x - handle} ${y} ${96 - x} ${y}
+        A20 20 0 ${phase > 0 ? 1 : 0} 1 ${96 - x} ${44 - y}
+        C${96 - x - handle} ${44 - y} ${48 + handle} ${44 - neck} 48 ${44 - neck}
+        S${x + handle} ${44 - y} ${x} ${44 - y}
+        A20 20 0 ${phase > 0 ? 1 : 0} 1 ${x} ${y}Z`;
+    } else {
+      path = [left, right].map((x) =>
+        `M${x} 2a20 20 0 1 0 0 40a20 20 0 1 0 0-40Z`,
+      ).join("");
+    }
     shell.firstChild.setAttribute("d", path);
+    ui.style.setProperty("--lobe-shift", `${shift / 12}em`);
+    ui.style.setProperty("--season-label-opacity", 1 - smooth(Math.min(1, q * 2.5)));
+    ui.style.setProperty("--season-icon-opacity", smooth(Math.max(0, (q - 0.24) / 0.76)));
   }
+
   function morphControls(active) {
+    const to = active ? 1 : 0;
+    const instant = reduced.matches || document.body.classList.contains("no-play");
+    if (to === morphTarget && !instant) return;
     cancelAnimationFrame(morphFrame);
+    morphTarget = to;
     ui.classList.toggle("is-split", active);
-    const from = morphProgress,
-      to = active ? 1 : 0,
-      start = performance.now();
-    if (reduced.matches) {
+    const from = morphProgress;
+    if (instant || from === to) {
       morphProgress = to;
       drawShell(to);
       return;
     }
+    let start;
+    const duration = (active ? 640 : 520) * Math.max(0.32, Math.abs(to - from));
     function tick(now) {
-      const u = Math.min(1, (now - start) / 1050),
-        ease = u * u * (3 - 2 * u);
-      morphProgress = from + (to - from) * ease;
+      start ??= now;
+      const elapsed = Math.min(1, (now - start) / duration);
+      morphProgress = from + (to - from) * smooth(elapsed);
       drawShell(morphProgress);
-      const bounce = Math.sin(u * Math.PI * 3) * Math.sin(u * Math.PI) * 0.055;
-      shell.style.transform = `scale(${1 + bounce},${1 - bounce * 0.65})`;
-      if (u < 1) morphFrame = requestAnimationFrame(tick);
+      if (elapsed < 1) morphFrame = requestAnimationFrame(tick);
     }
     morphFrame = requestAnimationFrame(tick);
   }
   drawShell(0);
+  reduced.addEventListener("change", () => morphControls(morphTarget === 1));
   const dock = document.createElement("div");
   dock.className = "tool-dock";
   dock.hidden = true;
@@ -312,17 +356,21 @@
     });
     dirty = false;
   }
+  function resizeSnowRest() {
+    snowRestCanvas.width = canvas.width;
+    snowRestCanvas.height = canvas.height;
+    snowRestCanvas.style.width = W + "px";
+    snowRestCanvas.style.height = H + "px";
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    snowRestPaint.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
   function resize() {
     W = innerWidth;
     H = innerHeight;
     const dpr = Math.min(devicePixelRatio || 1, 2);
     canvas.width = W * dpr;
     canvas.height = H * dpr;
-    snowRestCanvas.width = canvas.width;
-    snowRestCanvas.height = canvas.height;
-    snowRestCanvas.style.width = W + "px";
-    snowRestCanvas.style.height = H + "px";
-    snowRestPaint.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (season === "winter") resizeSnowRest();
     snowRestDirty = true;
     canvas.style.width = W + "px";
     canvas.style.height = H + "px";
@@ -410,6 +458,13 @@
     snowRestDirty = true;
     snowRestPaintTime = 0;
     snowRestCanvas.hidden = next !== "winter";
+    if (next === "winter") {
+      if (snowRestCanvas.width !== canvas.width || snowRestCanvas.height !== canvas.height) {
+        resizeSnowRest();
+      }
+    } else if (snowRestCanvas.width || snowRestCanvas.height) {
+      snowRestCanvas.width = snowRestCanvas.height = 0;
+    }
     snowballs.reset();
     washWave = null;
     selectTool("");
@@ -435,9 +490,10 @@
       next === "none"
         ? t("Scegli un’atmosfera", "Choose an atmosphere")
         : names[next];
-    b.innerHTML =
-      svg(next) +
-      `<span>${next === "none" ? t("Atmosfera", "Atmosphere") : names[next]}</span><span class="chevron" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    if (next !== "none") {
+      b.querySelector(".icon")?.remove();
+      b.insertAdjacentHTML("beforeend", svg(next));
+    }
     ui.querySelectorAll("[data-season-choice]").forEach((el) =>
       el.setAttribute("aria-pressed", String(el.dataset.seasonChoice === next)),
     );
@@ -513,7 +569,7 @@
             : t("Soffio", "Blow");
     action.inert = season === "none";
     action.setAttribute("aria-hidden", String(season === "none"));
-    action.innerHTML = svg(icon) + `<span>${label}</span>`;
+    if (season !== "none") action.innerHTML = svg(icon) + `<span>${label}</span>`;
     action.setAttribute("aria-label", label);
     action.title = label;
     action.disabled =
@@ -521,8 +577,7 @@
       ((season === "autumn" || season === "winter") &&
         (!enabled() || reduced.matches));
     if (season === "summer" && washWave) action.disabled = true;
-    if (season === "summer") action.removeAttribute("aria-pressed");
-    else action.setAttribute("aria-pressed", String(!!tool));
+    action.setAttribute("aria-pressed", String(!!tool));
   }
   function selectTool(next) {
     if (sandDrawing) endDrawing({ pointerId: sandDrawing.id });
@@ -545,6 +600,12 @@
     cursor.innerHTML = tool ? svg(tool) : "";
     cursor.hidden = true;
     document.body.classList.remove("tool-pointer-active");
+    if (!tool && dock.contains(document.activeElement)) {
+      const action = ui.querySelector(".season-action");
+      const canFocusAction = season !== "none" && !action.disabled &&
+        (!reduced.matches || season === "spring" || season === "summer");
+      (canFocusAction ? action : seasonToggle).focus({ preventScroll: true });
+    }
     dock.hidden = !tool;
     waveButton.hidden = tool !== "shovel";
     dock.querySelector("button:not(.clean-sand):not(.restore-page)").ariaLabel =
@@ -887,15 +948,13 @@
     ctx.save();
     // Dry sand fades naturally into the page; no hard top edge.
     const sand = ctx.createLinearGradient(0, H - depth - 30, 0, H);
-    sand.addColorStop(0, "#e5cda400");
-    sand.addColorStop(0.4, "#e8d2ac45");
-    sand.addColorStop(1, "#ddc098d9");
+    for (const [offset, color] of beachPalette.drySand) sand.addColorStop(offset, color);
     ctx.fillStyle = sand;
     ctx.fillRect(0, H - depth - 30, W, depth + 30);
     for (let i = 0; i < W * 0.6; i++) {
       const x = grain(i) * W,
         y = H - grain(i + 900) * depth;
-      ctx.fillStyle = i % 3 ? "#93744c19" : "#fff7df66";
+      ctx.fillStyle = i % 3 ? beachPalette.grainShadow : beachPalette.grainLight;
       ctx.fillRect(x, y, grain(i + 7) * 1.3 + 0.3, 0.6);
     }
     ctx.beginPath();
@@ -904,8 +963,7 @@
     ctx.lineTo(W, H);
     ctx.closePath();
     const wet = ctx.createLinearGradient(0, H - depth, 0, H);
-    wet.addColorStop(0, "#a78d6b40");
-    wet.addColorStop(1, "#a78d6b85");
+    for (const [offset, color] of beachPalette.wetSand) wet.addColorStop(offset, color);
     ctx.fillStyle = wet;
     ctx.fill();
     // Each wash spreads a translucent sheet of shallow water over the sand.
@@ -915,10 +973,7 @@
     ctx.lineTo(W, H);
     ctx.closePath();
     const water = ctx.createLinearGradient(0, H - depth, 0, H);
-    water.addColorStop(0, "#b7d7c652");
-    water.addColorStop(0.4, "#91c7bba3");
-    water.addColorStop(0.78, "#529faaa8");
-    water.addColorStop(1, "#347f91cc");
+    for (const [offset, color] of beachPalette.water) water.addColorStop(offset, color);
     ctx.fillStyle = water;
     ctx.fill();
     ctx.save();

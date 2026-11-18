@@ -521,8 +521,8 @@
       },
       {
         "name": "control-split",
-        "value": "1050ms cubic-bezier(0.22, 1.2, 0.36, 1)",
-        "purpose": "Separazione dei controlli; raccordo SVG con smoothstep e rimbalzo separato."
+        "value": "640ms split; 520ms merge; smoothstep",
+        "purpose": "Divisione e ricongiunzione con raccordo SVG e contenuti sincronizzati."
       },
       {
         "name": "portrait-crossfade",
